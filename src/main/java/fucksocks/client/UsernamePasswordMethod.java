@@ -42,7 +42,7 @@ import fucksocks.utils.LogMessage.MsgType;
  * 
  * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
  */
-public class UsernamePasswordMethod implements SocksMethod{
+public class UsernamePasswordMethod extends AbstractSocksMethod{
 	
 	private static final Logger logger = LoggerFactory.getLogger(UsernamePasswordMethod.class);
 
