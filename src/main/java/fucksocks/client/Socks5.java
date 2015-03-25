@@ -211,6 +211,20 @@ public class Socks5 implements SocksProxy{
 	}
 	
 	@Override
+	public CommandReplyMesasge requestBind(String host, int port)
+			throws SocksException, IOException{
+		return  socksCmdSender.send(proxySocket, SocksCommand.BIND,
+				new InetSocketAddress(host, port), SOCKS_VERSION);
+	}
+	
+	@Override
+	public CommandReplyMesasge requestBind(InetAddress inetAddress, int port)
+			throws SocksException, IOException{
+		return  socksCmdSender.send(proxySocket, SocksCommand.BIND,
+				inetAddress, port, SOCKS_VERSION);
+	}
+	
+	@Override
 	public CommandReplyMesasge requestUdpAssociat(String host, int port) 
 			throws SocksException, IOException{
 		return  socksCmdSender.send(proxySocket, SocksCommand.UDP_ASSOCIATE,

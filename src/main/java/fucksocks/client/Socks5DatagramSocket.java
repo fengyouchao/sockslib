@@ -42,31 +42,31 @@ import fucksocks.common.SocksException;
  * @version 1.0
  */
 public class Socks5DatagramSocket extends DatagramSocket{
-	
+
 	/**
 	 * logger which subclass also can use.
 	 */
 	protected static final Logger logger = 
 			LoggerFactory.getLogger(Socks5DatagramSocket.class);
-	
+
 	/**
 	 * SOCKS proxy.
 	 */
 	private SocksProxy proxy;
-	
+
 	/**
 	 * Relay server's IP address.
 	 */
 	private InetAddress relayServerInetAddress;
-	
+
 	/**
 	 * Relay server's port which listens UDP  connection.
 	 */
 	private int relayServerPort;
-	
+
 	private Socks5DatagramPacketHandler datagramPacketHandler =
 			new Socks5DatagramPacketHandler();
-	
+
 	/**
 	 * Constructs a datagram socket with a {@link SocksProxy}. <br>
 	 * <b>Notice:</b> The proxy must be {@link Socks5}, because only SOCKS5
@@ -91,10 +91,10 @@ public class Socks5DatagramSocket extends DatagramSocket{
 				proxy.requestUdpAssociat(this.getLocalAddress(), this.getLocalPort());
 		this.relayServerInetAddress = mesasge.getIp();
 		this.relayServerPort = mesasge.getPort();
-		
+
 		datagramPacketHandler.setRelayServerInetAddress(relayServerInetAddress);
 		datagramPacketHandler.setRelayServerPort(relayServerPort);
-		
+
 		logger.info("relay server's address:"+relayServerInetAddress);
 		logger.info("relay server's port:"+relayServerPort);
 	}
@@ -104,14 +104,27 @@ public class Socks5DatagramSocket extends DatagramSocket{
 	public void send(DatagramPacket packet) throws SocksException, IOException {
 		super.send( datagramPacketHandler.encapsulate(packet) );
 	}
-	
+
 	@Override
 	public synchronized void receive(DatagramPacket packet) 
 			throws SocksException, IOException {
 		super.receive(packet);
 		datagramPacketHandler.decapsulate(packet);
 	}
-	
+
+	@Override
+	public void close() {
+		super.close();
+		//Close TCP connection.
+		try {
+			if(!proxy.getProxySocket().isClosed()){
+				proxy.getProxySocket().close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public SocksProxy getProxy() {
 		return proxy;
 	}
@@ -119,5 +132,6 @@ public class Socks5DatagramSocket extends DatagramSocket{
 	public void setProxy(SocksProxy proxy) {
 		this.proxy = proxy;
 	}
-	
+
+
 }

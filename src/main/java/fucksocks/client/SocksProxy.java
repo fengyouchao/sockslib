@@ -135,6 +135,12 @@ public interface SocksProxy {
 	 */
 	CommandReplyMesasge reqeustConnect(SocketAddress address) throws SocksException, IOException;
 	
+	public CommandReplyMesasge requestBind(String host, int port)
+			throws SocksException, IOException;
+	
+	public CommandReplyMesasge requestBind(InetAddress inetAddress, int port)
+			throws SocksException, IOException;
+	
 	/**
 	 * This method will send a UDP ASSOCIAT command to SOCKS server and ask SOCKS
 	 * server to establish a relay server.
