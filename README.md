@@ -13,7 +13,10 @@
 
 #### BIND
 
-	ServerSocket serverSocket = new SocksServerSocket(proxy, inetAddress,8080);
+	SocksServerSocket serverSocket = new SocksServerSocket(proxy, inetAddress,8080);
+	InetAddress bindAddress = serverSocket.getBindAddress();
+	Int bindPort  = serverSocket.getBindPort();
+	Socket socket = serverSocket.accept();
 
 #### UDP ASSOCIATE
 
