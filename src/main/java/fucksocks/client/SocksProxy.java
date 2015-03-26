@@ -135,11 +135,43 @@ public interface SocksProxy {
 	 */
 	CommandReplyMesasge reqeustConnect(SocketAddress address) throws SocksException, IOException;
 	
+	/**
+	 * This method will send a BIND command to SOKCS server.
+	 * 
+	 * @param host				Remote server's host.
+	 * @param port				Remote server's port.
+	 * @return					The message that reply by SOCKS server.
+	 * @throws SocksException	If any error about SOCKS protocol occurs.
+	 * @throws IOException		If any I/O error occurs.
+	 */
 	public CommandReplyMesasge requestBind(String host, int port)
 			throws SocksException, IOException;
 	
+	
+	/**
+	 * This method will send a BIND command to SOKCS server.
+	 * 
+	 * @param inetAddress		Remote server's IP address.
+	 * @param port				Remote server's port.
+	 * @return					The message that reply by SOCKS server.
+	 * @throws SocksException	If any error about SOCKS protocol occurs.
+	 * @throws IOException		If any I/O error occurs.
+	 */
 	public CommandReplyMesasge requestBind(InetAddress inetAddress, int port)
 			throws SocksException, IOException;
+	
+	/**
+	 * When binded server has income connection, this method will read second 
+	 * response message from SOCKS server. <br>
+	 * This method will be blocked if there is no income connection. When there 
+	 * is a income connection, this method will return a socket that looks like 
+	 * connect the remote host.
+	 * 
+	 * @return					Socket that connect the remote host.
+	 * @throws SocksException	If any error about SOCKS protocol occurs.
+	 * @throws IOException		If any I/O error occurs.
+	 */
+	Socket accept() throws SocksException, IOException;
 	
 	/**
 	 * This method will send a UDP ASSOCIAT command to SOCKS server and ask SOCKS
@@ -168,7 +200,7 @@ public interface SocksProxy {
 			throws SocksException, IOException;
 	
 	/**
-	 * Get InputStream from the socket that connected SOCKS server.
+	 * Gets InputStream from the socket that connected SOCKS server.
 	 * 
 	 * @return java.net.InputStream.
 	 * @throws IOException	if any I/O error occurs.
@@ -176,7 +208,7 @@ public interface SocksProxy {
 	InputStream getInputStream() throws IOException;
 	
 	/**
-	 * Get OutputStream from the socket that connected SOCKS server.
+	 * Gets OutputStream from the socket that connected SOCKS server.
 	 * 
 	 * @return	java.net.OutputStream.
 	 * @throws IOException	if any I/O error occurs.
@@ -184,7 +216,7 @@ public interface SocksProxy {
 	OutputStream getOutputStream() throws IOException;
 	
 	/**
-	 * Set Authentication.
+	 * Sets Authentication.
 	 * 
 	 * @param authentication {@link Authentication} instance.
 	 * @return	instance of SocksProxy.
@@ -195,14 +227,14 @@ public interface SocksProxy {
 	SocksProxy setAuthentication(Authentication authentication);
 	
 	/**
-	 * Get Authentication instance from the SocksProxy.
+	 * Gets Authentication instance from the SocksProxy.
 	 * 
 	 * @return {@link Authentication} instance.
 	 */
 	Authentication getAuthentication();
 	
 	/**
-	 * Set client's acceptable methods.
+	 * Sets client's acceptable methods.
 	 * 
 	 * @param methods methods.
 	 * @return	instance of SocksProxy.
@@ -210,14 +242,14 @@ public interface SocksProxy {
 	SocksProxy setAcceptableMethods(List<SocksMethod> methods);
 	
 	/**
-	 * Get clent's acceptable methods.
+	 * Gets clent's acceptable methods.
 	 * 
 	 * @return clent's acceptable methods.
 	 */
 	List<SocksMethod> getAcceptableMethods();
 	
 	/**
-	 * Set {@link SocksMethodRequestor}.
+	 * Sets {@link SocksMethodRequestor}.
 	 * 
 	 * @param requestor {@link SocksMethodRequestor}
 	 * @return	instance of SocksProxy.
@@ -225,17 +257,39 @@ public interface SocksProxy {
 	SocksProxy setSocksMethodRequestor(SocksMethodRequestor requestor);
 	
 	/**
-	 * Get {@link SocksMethodRequestor}.
+	 * Gets {@link SocksMethodRequestor}.
 	 * 
 	 * @return {@link SocksMethodRequestor}.
 	 */
 	SocksMethodRequestor getSocksMethodRequestor();
 	
+	/**
+	 * Gets version of SOCKS protocol.
+	 * 
+	 * @return Version of SOCKS protocol.
+	 */
 	int getSocksVersion();
+	
+	
+	/**
+	 * This method can create a same SocksProxy instance.
+	 * 
+	 * <p>The new instance created by this method has the same properties
+	 * with the original instance, but they have different socket instance.
+	 * The new instance's socket is also unconnected. 
+	 * </p>
+	 * 
+	 * @return The copy of this SocksProxy.
+	 */
+	SocksProxy copy();
 	
 	/**
 	 * Default SOCKS server port.
 	 */
 	public static final int SOCKS_DEFAULT_PORT = 1080;
+	
+	public static final byte ATYPE_IPV4 = 0x01;
+	public static final byte ATYPE_DOMAINNAME = 0x03;
+	public static final byte ATYPE_IPV6 = 0x04;
 
 }

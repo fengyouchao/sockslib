@@ -17,7 +17,6 @@
 package fucksocks.client;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -29,8 +28,9 @@ import fucksocks.common.SocksException;
 
 /**
  * The class <code>SocksServerSocket</code> is server socket 
- * that can bind a port at SOCKS server and accept connections 
- * by SOCKS4 or SOCKS5
+ * that can bind a port at SOCKS server and accept a connection 
+ * with SOCKS4 or SOCKS5. This server socket can only accept one 
+ * connection from specified IP address and port.
  * protocol.
  * 
  * @author Youchao Feng
@@ -39,38 +39,97 @@ import fucksocks.common.SocksException;
  */
 public class SocksServerSocket extends ServerSocket{
 	
+	/**
+	 * Logger.
+	 */
 	protected static final Logger logger = LoggerFactory.getLogger(SocksServerSocket.class);
 	
+	/**
+	 * SOCKS proxy.
+	 */
 	private SocksProxy proxy;
 	
-	private int port;
+	/**
+	 * The remote host's IP address that will connect the server. 
+	 */
+	private InetAddress incomeAddress;
 	
+	
+	/**
+	 * The remote host's port that will connect the server.
+	 */
+	private int incomePort;
+	
+	
+	/**
+	 * Server's IP address.
+	 */
 	private InetAddress bindAddress;
 	
-	public SocksServerSocket(SocksProxy proxy, int port, InetAddress bindAddress)
+	/**
+	 * Server's port.
+	 */
+	private int bindPort;
+	
+	/**
+	 * If {@link #accept()} is called, it will be <code>true</code>.
+	 */
+	private boolean alreadyAccepted = false;
+	
+	
+	/**
+	 * Constructs a server socket. This server socket will established in 
+	 * SOCKS server.
+	 * 
+	 * @param proxy				SOCKS proxy.
+	 * @param inetAddress		The IP address that server socket will accept.
+	 * @param port				The port that server socket will accept.
+	 * @throws SocksException	If any error about SOCKS protocol occurs.
+	 * @throws IOException		If any I/O error occurs.
+	 */
+	public SocksServerSocket(SocksProxy proxy, InetAddress inetAddress, int port)
 			throws SocksException, IOException {
 		this.proxy = proxy;
-		this.port = port;
-		this.bindAddress = bindAddress;
-	}
-	
-	public SocksServerSocket(SocksProxy proxy, int port)
-			throws SocksException, IOException {
-		this(proxy, port, InetAddress.getLocalHost());
+		this.incomePort = port;
+		this.incomeAddress = inetAddress;
+		proxy.buildConnection();
+		//Send BIND command to SOCKS server.
+		CommandReplyMesasge  replyMesasge = proxy.requestBind(incomeAddress, incomePort);
+		//Get a bind IP and port in proxy server.
+		bindAddress = replyMesasge.getIp();
+		bindPort = replyMesasge.getPort();
+		logger.debug("Bind at {}:{}", bindAddress, bindPort);
 	}
 
+	/**
+	 * Accepts a connection.<br>
+	 * <b>Notice:</b> This method can be called only once. It will throw
+	 * SocksException if this method is called more than once.
+	 */
 	@Override
-	public Socket accept() throws SocksException, IOException {
-		proxy.buildConnection();
-		CommandReplyMesasge  replyMesasge = proxy.requestBind(bindAddress, port);
-		bindAddress = replyMesasge.getIp();
-		port = replyMesasge.getPort();
-		logger.info("Bind at {}:{}", bindAddress, port);
+	public synchronized Socket accept() throws SocksException, IOException {
 		
-		InputStream inputStream = proxy.getInputStream();
-		byte[] bytes = new byte[2048];
-		int size = inputStream.read(bytes);
-		System.out.println(new String(bytes, 0, size));
-		return proxy.getProxySocket();
+		if(alreadyAccepted){
+			throw new SocksException("SOCKS4/SOCKS5 protocol only allows one income connection");
+		}
+
+		alreadyAccepted = true;
+		return proxy.accept();
+	}
+
+	public InetAddress getBindAddress() {
+		return bindAddress;
+	}
+
+	public void setBindAddress(InetAddress bindAddress) {
+		this.bindAddress = bindAddress;
+	}
+
+	public int getBindPort() {
+		return bindPort;
+	}
+
+	public void setBindPort(int bindPort) {
+		this.bindPort = bindPort;
 	}
 }

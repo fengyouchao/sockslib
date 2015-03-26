@@ -130,7 +130,8 @@ public class GenericSocksCommandSender implements SocksCommandSender{
 		return checkServerReply(inputStream);
 	}
 
-	private CommandReplyMesasge checkServerReply(InputStream inputStream) 
+	@Override
+	public CommandReplyMesasge checkServerReply(InputStream inputStream) 
 			throws SocksException, IOException{
 		byte serverReply = -1;
 		final byte[] bufferReceived = new byte[1024];
@@ -190,7 +191,7 @@ public class GenericSocksCommandSender implements SocksCommandSender{
 			throw SocksException.serverReplyException(serverReply);
 		}
 
-		logger.info("Connected SOCKS5 proxy successfully");
+		logger.debug("SOCKS server response success");
 		
 		byte[] receivedBytes = new byte[bufferReceivedSize];
 		System.arraycopy(bufferReceived, 0, receivedBytes, 0, bufferReceivedSize);

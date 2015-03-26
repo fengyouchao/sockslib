@@ -17,6 +17,7 @@
 package fucksocks.client;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -85,6 +86,9 @@ public interface SocksCommandSender {
 	public CommandReplyMesasge send(Socket socket, SocksCommand command, String host, int port,
 			int version) throws SocksException, IOException;
 	
+	public CommandReplyMesasge checkServerReply(InputStream inputStream)
+			throws SocksException, IOException;
+
 	static final int RESERVED = 0x00;
 	static final byte ATYPE_IPV4 = 0x01;
 	static final byte ATYPE_DOMAINNAME = 0x03;
