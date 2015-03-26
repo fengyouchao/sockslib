@@ -52,7 +52,10 @@ Socket socket = new SocksSocket(proxy, new InetSocketAddress("whois.internic.net
 <h4>
 <a id="bind" class="anchor" href="#bind" aria-hidden="true"><span class="octicon octicon-link"></span></a>BIND</h4>
 
-<pre><code>ServerSocket serverSocket = new SocksServerSocket(proxy, inetAddress,8080);
+<pre><code>SocksServerSocket serverSocket = new SocksServerSocket(proxy, inetAddress,8080);
+InetAddress bindAddress = serverSocket.getBindAddress();
+Int bindPort  = serverSocket.getBindPort();
+Socket socket = serverSocket.accept();
 </code></pre>
 
 <h4>
