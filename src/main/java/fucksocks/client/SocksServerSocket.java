@@ -18,8 +18,10 @@ package fucksocks.client;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,5 +133,9 @@ public class SocksServerSocket extends ServerSocket{
 
 	public void setBindPort(int bindPort) {
 		this.bindPort = bindPort;
+	}
+	
+	public SocketAddress getSocketAddress(){
+		return new InetSocketAddress(bindAddress, bindPort);
 	}
 }
