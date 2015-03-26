@@ -34,7 +34,7 @@ import fucksocks.utils.LogMessage.MsgType;
 import fucksocks.utils.UnsignedByte;
 
 /**
- * The class <code>GenericSocksCmdSender</code> implements {@link SocksCommandSender}.
+ * The class <code>GenericSocksCommandSender</code> implements {@link SocksCommandSender}.
  * 
  * @author Youchao Feng
  * @date  Mar 19, 2015 2:45:23 PM 
