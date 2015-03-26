@@ -135,7 +135,7 @@ public class SocksServerSocket extends ServerSocket{
 		this.bindPort = bindPort;
 	}
 	
-	public SocketAddress getSocketAddress(){
+	public SocketAddress getBindSocketAddress(){
 		return new InetSocketAddress(bindAddress, bindPort);
 	}
 }
