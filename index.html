@@ -50,6 +50,12 @@ Socket socket = new SocksSocket(proxy, new InetSocketAddress("whois.internic.net
 </code></pre>
 
 <h4>
+<a id="bind" class="anchor" href="#bind" aria-hidden="true"><span class="octicon octicon-link"></span></a>BIND</h4>
+
+<pre><code>ServerSocket serverSocket = new SocksServerSocket(proxy, inetAddress,8080);
+</code></pre>
+
+<h4>
 <a id="udp-associate" class="anchor" href="#udp-associate" aria-hidden="true"><span class="octicon octicon-link"></span></a>UDP ASSOCIATE</h4>
 
 <pre><code>DatagramSocket socket = new Socks5DatagramSocket(proxy);
