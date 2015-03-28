@@ -29,7 +29,6 @@ import fucksocks.client.Socks5;
 import fucksocks.client.SocksProxy;
 import fucksocks.client.SocksSocket;
 import fucksocks.common.SocksException;
-import fucksocks.common.UsernamePasswordAuthencation;
 
 /**
  * 
@@ -46,7 +45,6 @@ public class TestSocks5Connect {
 	public static void main(String[] args) {
 
 		SocksProxy proxy = new Socks5(new InetSocketAddress("localhost",1080));
-		proxy.setAuthentication(new UsernamePasswordAuthencation("proxyuser","12345"));
 		
 		try {
 			

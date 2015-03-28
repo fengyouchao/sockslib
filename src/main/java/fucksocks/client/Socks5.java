@@ -34,7 +34,7 @@ import fucksocks.common.AnonymousAuthentication;
 import fucksocks.common.Authentication;
 import fucksocks.common.SocksCommand;
 import fucksocks.common.SocksException;
-import fucksocks.common.UsernamePasswordAuthencation;
+import fucksocks.common.UsernamePasswordAuthentication;
 
 /**
  * The class <code>Socks5</code> has implements SOCKS5 protocol.
@@ -124,7 +124,7 @@ public class Socks5 implements SocksProxy{
 	 */
 	public Socks5(SocketAddress socketAddress, String username, String password){
 		this(socketAddress);
-		setAuthentication(new UsernamePasswordAuthencation(username, password));
+		setAuthentication(new UsernamePasswordAuthentication(username, password));
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class Socks5 implements SocksProxy{
 		this();
 		this.inetAddress = InetAddress.getByName(host);
 		this.port = port;
-		this.authentication = new UsernamePasswordAuthencation(username, password);
+		this.authentication = new UsernamePasswordAuthentication(username, password);
 	}
 
 	@Override

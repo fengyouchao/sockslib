@@ -24,13 +24,12 @@ import java.net.InetSocketAddress;
 import fucksocks.client.Socks5;
 import fucksocks.client.Socks5DatagramSocket;
 import fucksocks.common.SocksException;
-import fucksocks.common.UsernamePasswordAuthencation;
 
 public class TestSocks5UDPAssociate {
 
 	public static void main(String[] args) {
+		
 		Socks5 proxy = new Socks5(new InetSocketAddress("localhost",1080));
-		proxy.setAuthentication(new UsernamePasswordAuthencation("proxyuser","12345"));
 
 		try {
 			@SuppressWarnings("resource")

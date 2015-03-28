@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 import fucksocks.common.Authentication;
 import fucksocks.common.AuthenticationException;
 import fucksocks.common.SocksException;
-import fucksocks.common.UsernamePasswordAuthencation;
+import fucksocks.common.UsernamePasswordAuthentication;
 import fucksocks.utils.LogMessage;
 import fucksocks.utils.LogMessage.MsgType;
 
@@ -58,13 +58,13 @@ public class UsernamePasswordMethod extends AbstractSocksMethod{
 	public void doMethod(SocksProxy socksProxy) throws SocksException, IOException {
 		
 		Authentication auth = socksProxy.getAuthentication();
-		if(auth == null || ! (auth instanceof UsernamePasswordAuthencation) ){
+		if(auth == null || ! (auth instanceof UsernamePasswordAuthentication) ){
 			throw new SocksException("Need Username/Password authentication");
 		}
-		UsernamePasswordAuthencation authencation = (UsernamePasswordAuthencation) auth;
+		UsernamePasswordAuthentication authentication = (UsernamePasswordAuthentication) auth;
 		
-		String username = authencation.getUsername();
-		String password = authencation.getPassword();
+		String username = authentication.getUsername();
+		String password = authentication.getPassword();
 		InputStream inputStream = socksProxy.getInputStream();
 		OutputStream outputStream = socksProxy.getOutputStream();
 		/**

@@ -25,7 +25,7 @@ package fucksocks.common;
  * @date  Mar 18, 2015 9:58:58 AM 
  * @version 1.0
  */
-public class UsernamePasswordAuthencation implements Authentication{
+public class UsernamePasswordAuthentication implements Authentication{
 	
 	/**
 	 * username.
@@ -37,11 +37,11 @@ public class UsernamePasswordAuthencation implements Authentication{
 	 */
 	private String password;
 	
-	public UsernamePasswordAuthencation(){
+	public UsernamePasswordAuthentication(){
 		this(null,null);
 	}
 	
-	public UsernamePasswordAuthencation(String username, String password){
+	public UsernamePasswordAuthentication(String username, String password){
 		this.username = username;
 		this.password = password;
 	}
