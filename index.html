@@ -45,24 +45,21 @@
 <h4>
 <a id="connect" class="anchor" href="#connect" aria-hidden="true"><span class="octicon octicon-link"></span></a>CONNECT</h4>
 
-<pre><code>SocksProxy proxy = new Socks5(new InetSocketAddress("localhost",1080));
-Socket socket = new SocksSocket(proxy, new InetSocketAddress("whois.internic.net",43));
-</code></pre>
+<div class="highlight highlight-java"><pre>    <span class="pl-smi">SocksProxy</span> proxy <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">Socks5</span>(<span class="pl-k">new</span> <span class="pl-smi">InetSocketAddress</span>(<span class="pl-s"><span class="pl-pds">"</span>localhost<span class="pl-pds">"</span></span>,<span class="pl-c1">1080</span>));
+    <span class="pl-smi">Socket</span> socket <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">SocksSocket</span>(proxy, <span class="pl-k">new</span> <span class="pl-smi">InetSocketAddress</span>(<span class="pl-s"><span class="pl-pds">"</span>whois.internic.net<span class="pl-pds">"</span></span>,<span class="pl-c1">43</span>));</pre></div>
 
 <h4>
 <a id="bind" class="anchor" href="#bind" aria-hidden="true"><span class="octicon octicon-link"></span></a>BIND</h4>
 
-<pre><code>SocksServerSocket serverSocket = new SocksServerSocket(proxy, inetAddress,8080);
-InetAddress bindAddress = serverSocket.getBindAddress();
-Int bindPort  = serverSocket.getBindPort();
-Socket socket = serverSocket.accept();
-</code></pre>
+<div class="highlight highlight-java"><pre>    <span class="pl-smi">SocksServerSocket</span> serverSocket <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">SocksServerSocket</span>(proxy, inetAddress,<span class="pl-c1">8080</span>);
+    <span class="pl-smi">InetAddress</span> bindAddress <span class="pl-k">=</span> serverSocket<span class="pl-k">.</span>getBindAddress();
+    <span class="pl-k">int</span> bindPort  <span class="pl-k">=</span> serverSocket<span class="pl-k">.</span>getBindPort();
+    <span class="pl-smi">Socket</span> socket <span class="pl-k">=</span> serverSocket<span class="pl-k">.</span>accept();</pre></div>
 
 <h4>
 <a id="udp-associate" class="anchor" href="#udp-associate" aria-hidden="true"><span class="octicon octicon-link"></span></a>UDP ASSOCIATE</h4>
 
-<pre><code>DatagramSocket socket = new Socks5DatagramSocket(proxy);
-</code></pre>
+<div class="highlight highlight-java"><pre>   <span class="pl-smi">DatagramSocket</span> socket <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">Socks5DatagramSocket</span>(proxy);</pre></div>
         </section>
 
         <footer>
