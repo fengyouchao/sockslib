@@ -19,7 +19,7 @@ package fucksocks.server;
 import java.io.IOException;
 import java.net.Socket;
 
-import fucks.common.io.StreamPipe;
+import fucksocks.common.io.StreamPipe;
 
 public class SingleSocketPipe extends StreamPipe{
 

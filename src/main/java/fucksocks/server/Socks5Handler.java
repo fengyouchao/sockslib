@@ -24,8 +24,8 @@ import java.net.UnknownHostException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fucks.common.io.Pipe;
-import fucks.common.io.SocketPipe;
+import fucksocks.common.io.Pipe;
+import fucksocks.common.io.SocketPipe;
 import fucksocks.common.methods.SocksMethod;
 import fucksocks.server.msg.CommandMessage;
 import fucksocks.server.msg.CommandResponseMessage;

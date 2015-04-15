@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fucks.common.io;
+package fucksocks.common.io;
 
 
 
