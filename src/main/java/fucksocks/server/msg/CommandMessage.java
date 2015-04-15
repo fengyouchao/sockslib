@@ -33,7 +33,7 @@ import fucksocks.utils.SocksUtil;
  * @version 1.0
  *
  */
-public class CommandMessage implements IncomeMessage{
+public class CommandMessage implements ReadableMessage{
 	
 	protected static final int ATYPE_IPV4 = 0x01;
 	protected static final int ATYPE_DOMAINNAME = 0x03;
@@ -85,6 +85,7 @@ public class CommandMessage implements IncomeMessage{
 				break;
 			case 0x03:
 				command = SocksCommand.UDP_ASSOCIATE;
+				break;
 
 			default:
 				break;
@@ -109,6 +110,7 @@ public class CommandMessage implements IncomeMessage{
 					domainBytes[i] = (byte) inputStream.read();
 				}
 				host = new String(domainBytes, Charset.forName("UTF-8"));
+				inetAddress = InetAddress.getByName(host);
 			default:
 				break;
 			}

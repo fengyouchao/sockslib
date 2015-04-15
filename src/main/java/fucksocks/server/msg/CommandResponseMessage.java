@@ -71,7 +71,6 @@ public class CommandResponseMessage implements Message{
 			bytes[9] = SocksUtil.getSecondByteFromPort(bindPort);
 		}
 		
-		// TODO Auto-generated method stub
 		return bytes;
 	}
 

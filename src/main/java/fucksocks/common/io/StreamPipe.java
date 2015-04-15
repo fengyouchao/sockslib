@@ -36,7 +36,11 @@ import org.slf4j.LoggerFactory;
  */
 public class StreamPipe implements Runnable, Pipe{
 
-	private int tag;
+	
+	/**
+	 * Name of the pipe.
+	 */
+	private String name;
 
 	protected static final Logger logger = LoggerFactory.getLogger(StreamPipe.class);
 
@@ -88,6 +92,13 @@ public class StreamPipe implements Runnable, Pipe{
 		this.to = to;
 		pipeListeners = new ArrayList<>();
 	}
+	
+	public StreamPipe(InputStream from, OutputStream to, String name){
+		this.from = from;
+		this.to = to;
+		pipeListeners = new ArrayList<>();
+		this.name = name;
+	}
 
 	@Override
 	public boolean start(){
@@ -125,13 +136,8 @@ public class StreamPipe implements Runnable, Pipe{
 
 		while ( running ) {
 			int size =  doTransfer(buffer);
-			for(PipeListener listener : pipeListeners){
-				listener.onTransfered(this, buffer, size);
-			}
 			if(size == -1){
-				System.out.println("======================================="+tag);
-				stop();
-				break;
+					stop();
 			}
 		}
 	}
@@ -146,16 +152,22 @@ public class StreamPipe implements Runnable, Pipe{
 
 		int length = -1;
 		try {
-			System.out.println(tag+"===");
 			length = from.read(buffer);
 			if (length > 0) {	//transfer the buffer to output stream.
 				to.write(buffer, 0, length);
 				to.flush();
+				for (PipeListener listener : pipeListeners) {
+					listener.onTransfered(this, buffer, length);
+				}
 			}
 
 		} catch (IOException e) {
-			System.out.println("ex:"+tag);
-			e.printStackTrace();
+			if(e.getMessage().equals("Socket closed")){
+				logger.debug("Socket is closed, the pipe[{}] going to close", name);
+			}else{
+				logger.error("Unknow excepition:{}", e.getMessage());
+			}
+			stop();
 		}
 
 		return length;
@@ -185,14 +197,6 @@ public class StreamPipe implements Runnable, Pipe{
 		return running;
 	}
 
-	public int getTag() {
-		return tag;
-	}
-
-	public void setTag(int tag) {
-		this.tag = tag;
-	}
-
 	@Override
 	public void addPipeListener(PipeListener pipeListener) {
 		pipeListeners.add(pipeListener);
@@ -209,6 +213,14 @@ public class StreamPipe implements Runnable, Pipe{
 
 	public void setPipeListeners(List<PipeListener> pipeListeners) {
 		this.pipeListeners = pipeListeners;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

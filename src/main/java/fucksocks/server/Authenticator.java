@@ -16,18 +16,8 @@
 
 package fucksocks.server;
 
-/**
- * The interface <code>SocketHandler</code> represents a 
- * socket handler.
- * 
- * @author Youchao Feng
- * @date  Mar 25, 2015 11:33:28 AM 
- * @version 1.0
- */
-public interface SessionHandler extends Runnable{
+public interface Authenticator {
 	
-	void handle(Session session) throws Exception;
 	
-	void setSession(Session session);
 
 }

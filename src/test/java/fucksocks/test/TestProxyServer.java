@@ -25,15 +25,6 @@ import fucksocks.server.SocksProxyServer;
 
 public class TestProxyServer {
 
-	/**
-	 * @param args
-	 */
-	/**
-	 * @param args
-	 */
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class);

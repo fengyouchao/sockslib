@@ -19,6 +19,9 @@ package fucksocks.common.io;
 import java.io.IOException;
 import java.net.Socket;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * The class <code>SocketPipe</code> represents pipe that can transfer data from one 
@@ -31,6 +34,8 @@ import java.net.Socket;
  *
  */
 public class SocketPipe implements Pipe{
+	
+	protected static final Logger logger = LoggerFactory.getLogger(SocketPipe.class);
 
 	private Pipe pipe1;
 
@@ -47,9 +52,9 @@ public class SocketPipe implements Pipe{
 		this.socket1 = socket1;
 		this.socket2 = socket2;
 		pipe1 = new StreamPipe(socket1.getInputStream(), socket2.getOutputStream());
-		((StreamPipe)pipe1).setTag(0);
+		((StreamPipe)pipe1).setName("OUTPUT_PIPE");
 		pipe2 = new StreamPipe(socket2.getInputStream(), socket1.getOutputStream());
-		((StreamPipe)pipe2).setTag(1);
+		((StreamPipe)pipe2).setName("INPUT_PIPE");;
 
 		pipe1.addPipeListener(new PipeListnerImp());
 		pipe2.addPipeListener(new PipeListnerImp());
@@ -68,23 +73,16 @@ public class SocketPipe implements Pipe{
 		if (pipe1.stop() ||  pipe2.stop()){
 			try {
 				if(!pipe1.isRunning() && !pipe2.isRunning()) {
-					
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
 					socket1.close();
 					socket2.close();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println("Socket pipe stoped");
+			logger.debug("Socket pipe stoped");
 
 		}
-		return true;
+		return !pipe1.isRunning() && !pipe2.isRunning();
 	}
 
 	@Override
@@ -119,7 +117,8 @@ public class SocketPipe implements Pipe{
 
 		@Override
 		public void onClosed(Pipe pipe) {
-			System.out.println("on Closed: pipe tag:"+((StreamPipe)pipe).getTag());
+			StreamPipe streamPipe = (StreamPipe)pipe;
+			logger.debug("Pipe[{}] closed",streamPipe.getName());
 			stop();
 		}
 

@@ -18,16 +18,19 @@ package fucksocks.server.msg;
 
 import java.io.InputStream;
 
+import fucksocks.server.Session;
+
 /**
  * 
- * The class <code>IncomeMessage</code> represents
+ * The class <code>ReadableMessage</code> represents a message that can be read by 
+ * {@link Session}.
  * 
  * @author Youchao Feng
  * @date Apr 5, 2015 10:35:12 AM
  * @version 1.0
  *
  */
-public interface IncomeMessage extends Message{
+public interface ReadableMessage extends Message{
 	
 	public void read(InputStream inputStream);
 

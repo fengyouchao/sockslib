@@ -20,10 +20,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.Map;
 
 import fucksocks.server.msg.Message;
-import fucksocks.server.msg.IncomeMessage;
+import fucksocks.server.msg.ReadableMessage;
 
 
 /**
@@ -45,11 +46,16 @@ public class SocksSession implements Session{
 	private OutputStream outputStream;
 	
 	private Map<Long, Session> sessions;
+	
+	private SocketAddress remoteSocketAddress;
 
 	public SocksSession() {
 	}
 
 	public SocksSession(long id, Socket socket, Map<Long, Session> sessions){
+		if(!socket.isConnected()){
+			throw new IllegalArgumentException("Socket should be a connected socket");
+		}
 		this.id = id;
 		this.socket = socket;
 		this.sessions = sessions;
@@ -59,6 +65,7 @@ public class SocksSession implements Session{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		remoteSocketAddress = socket.getRemoteSocketAddress();
 
 	}
 
@@ -93,7 +100,7 @@ public class SocksSession implements Session{
 	}
 
 	@Override
-	public int read(IncomeMessage message) {
+	public int read(ReadableMessage message) {
 		message.read(inputStream);
 		return message.getBytes().length;
 	}
@@ -145,6 +152,11 @@ public class SocksSession implements Session{
 	@Override
 	public Map<Long, Session> getManagedSessions() {
 		return sessions;
+	}
+	
+	@Override
+	public SocketAddress getRemoteAddress(){
+		return remoteSocketAddress;
 	}
 
 }

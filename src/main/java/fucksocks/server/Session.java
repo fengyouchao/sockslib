@@ -19,10 +19,11 @@ package fucksocks.server;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.Map;
 
-import fucksocks.server.msg.IncomeMessage;
 import fucksocks.server.msg.Message;
+import fucksocks.server.msg.ReadableMessage;
 
 /**
  * 
@@ -66,22 +67,61 @@ public interface Session {
 	public void write(Message message);
 	
 	/**
-	 * Reads
-	 * @param byetes
-	 * @return
+	 * Read a buffer.
+	 * 
+	 * @param byetes Buffer which read in.
+	 * @return	Read length
 	 */
 	public int read(byte[] byetes);
 	
-	public int read(IncomeMessage message);
+	/**
+	 * Reads a message.
+	 * 
+	 * @param message	a readable message.
+	 * @return	Read bytes size.
+	 */
+	public int read(ReadableMessage message);
 	
+	/**
+	 * Gets session ID.
+	 * 
+	 * @return session ID.
+	 */
 	public long getId();
 	
+	
+	/**
+	 * Closes connection.
+	 */
 	public void close();
 	
+	/**
+	 * Gets input stream.
+	 * 
+	 * @return Input stream.
+	 */
 	public InputStream getInputStream();
 
+	/**
+	 * Gets output stream.
+	 * 
+	 * @return Output stream.
+	 */
 	public OutputStream getOutputStream();
 	
+	
+	/**
+	 * Gets all sessions that be managed.
+	 * 
+	 * @return	All sessions.
+	 */
 	public Map<Long, Session> getManagedSessions();
+	
+	/**
+	 * Get remote host's IP address and port.
+	 * 
+	 * @return Remote host's IP address and port.
+	 */
+	public SocketAddress getRemoteAddress();
 
 }

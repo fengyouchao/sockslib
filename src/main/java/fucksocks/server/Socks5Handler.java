@@ -24,6 +24,7 @@ import java.net.UnknownHostException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fucksocks.common.NotImplementException;
 import fucksocks.common.io.Pipe;
 import fucksocks.common.io.SocketPipe;
 import fucksocks.common.methods.SocksMethod;
@@ -50,10 +51,16 @@ public class Socks5Handler implements SessionHandler{
 	}
 
 	@Override
-	public void handle(Session session) {
+	public void handle(Session session) throws Exception {
 
 		MethodSelectionMessage msg = new MethodSelectionMessage();
 		session.read(msg);
+		
+		if(msg.getVersion() != VERSION){
+			logger.debug("Portocol error, close connection from {}", session.getRemoteAddress());;
+			session.close();
+			return;
+		}
 		logger.debug(LogMessage.bytesToHexString(msg.getBytes()));
 
 		SocksMethod selectedMethod = methodSelector.select(msg);
@@ -65,7 +72,32 @@ public class Socks5Handler implements SessionHandler{
 		CommandMessage commandMessage = new CommandMessage();
 		session.read(commandMessage);	//Read command request.
 
-		logger.debug("Rquest:{}  {}:{}", commandMessage.getCommand(), commandMessage.getInetAddress(), commandMessage.getPort());
+		logger.info("Session[{}] send Rquest:{}  {}:{}", 
+				session.getId(), commandMessage.getCommand(),
+				commandMessage.getInetAddress(), commandMessage.getPort());
+
+
+		/****************************************************************************/
+
+		switch (commandMessage.getCommand()) {
+
+		case BIND:
+			throw new NotImplementException("Not implement BIND command");
+		case CONNECT:
+			doConnect(session, commandMessage);
+			break;
+		case UDP_ASSOCIATE:
+			throw new NotImplementException("Not implement UDP ASSOCIATE command");
+		default:
+			throw new NotImplementException("Not support command");
+
+		}
+
+
+
+	}
+
+	private void doConnect(Session session2, CommandMessage commandMessage) throws Exception{
 
 		ServerReply reply = null;
 		Socket socket = null;
@@ -73,16 +105,9 @@ public class Socks5Handler implements SessionHandler{
 		int bindPort = 0;
 
 		//set default bind address.
-		try {
-			byte[] defaultAddress = {0,0,0,0};
-			bindAddress = InetAddress.getByAddress(defaultAddress);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-
-
-		/****************************************************************************/
-		//do connect
+		byte[] defaultAddress = {0,0,0,0};
+		bindAddress = InetAddress.getByAddress(defaultAddress);
+		//DO connect
 		try {
 			if (!commandMessage.isDomain()) {
 				socket = new Socket(commandMessage.getInetAddress(), commandMessage.getPort());
@@ -117,25 +142,9 @@ public class Socks5Handler implements SessionHandler{
 			session.close();
 			return;
 		}
-		//
-		//		ConnectionJob connectionJob = new ConnectionJob(socket, session);
-		//		connectionJob.start();
 
-		try {
-			//			StreamPipe client2ServerPipe = new SingleSocketPipe(session.getSocket(), socket);
-			//			client2ServerPipe.setTag(0);
-			//			client2ServerPipe.start();
-			//			StreamPipe server2ClientPipe = new SingleSocketPipe(socket, session.getSocket());
-			//			server2ClientPipe.setTag(1);
-			//			server2ClientPipe.start();
-			Pipe pipe = new SocketPipe(session.getSocket(), socket);
-			pipe.start();
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		Pipe pipe = new SocketPipe(session.getSocket(), socket);
+		pipe.start();
 
 
 	}
@@ -147,7 +156,12 @@ public class Socks5Handler implements SessionHandler{
 
 	@Override
 	public void run() {
-		handle(session);
+		try {
+			handle(session);
+		} catch (Exception e) {
+			session.close();
+			e.printStackTrace();
+		}
 	}
 
 }

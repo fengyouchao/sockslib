@@ -32,7 +32,8 @@ import fucksocks.common.SocksException;
 
 public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
 
-	protected static final Logger logger = LoggerFactory.getLogger(GenericSocksProxyServer.class);
+	protected static final Logger logger = LoggerFactory.getLogger( 
+			GenericSocksProxyServer.class);
 
 	/**
 	 * Number of threads in thread pool.
@@ -88,10 +89,12 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
 		while(!stop){
 			try {
 				Socket socket = serverSocket.accept();
-				logger.debug("Accept from:{}", socket.getRemoteSocketAddress());
 				
 				Session session =  new SocksSession(getNextSessionId(), socket, sessions);
 				sessions.put(session.getId(), session);
+				logger.info("Accept from:{}, allocate session ID[{}]",
+						socket.getRemoteSocketAddress(), session.getId());
+				
 				SessionHandler sessionHandler = sessionHandlerClass.newInstance();
 				sessionHandler.setSession(session);
 				executorService.execute(sessionHandler);

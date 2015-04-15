@@ -28,7 +28,7 @@ import java.io.InputStream;
  * @version 1.0
  *
  */
-public class MethodSelectionMessage implements IncomeMessage{
+public class MethodSelectionMessage implements ReadableMessage{
 
 	private int version;
 
