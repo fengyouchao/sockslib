@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package fucksocks.client;
+package fucksocks.common.methods;
 
 import java.io.IOException;
 
+import fucksocks.client.SocksProxy;
 import fucksocks.common.SocksException;
+import fucksocks.server.Session;
 
 /**
- * The class <code>NoAcceptableMethods</code> represents a method which 
+ * The class <code>NoAcceptableMethod</code> represents a method which 
  * indicates none of the methods listed by the client are acceptable.
  * <p>
  * When server replies this method, the client will disconnect SOCKS
@@ -35,7 +37,7 @@ import fucksocks.common.SocksException;
  * @see AbstractSocksMethod
  * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
  */
-public class NoAcceptableMethods extends AbstractSocksMethod{
+public class NoAcceptableMethod extends AbstractSocksMethod{
 
 	@Override
 	public final int getByte() {
@@ -50,6 +52,11 @@ public class NoAcceptableMethods extends AbstractSocksMethod{
 			socksProxy.getProxySocket().close();
 		}
 		throw SocksException.noAcceptableMethods();
+	}
+
+	@Override
+	public void doMethod(Session session) {
+		session.close();
 	}
 
 }

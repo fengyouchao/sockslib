@@ -14,28 +14,19 @@
  * limitations under the License.
  */
 
-package fucksocks.client;
-
-import fucksocks.common.SocksException;
+package fucksocks.server.msg;
 
 /**
- * The class <code>GssApiMethod</code> is represents  GSS API
- * method in SOCKS protocol.
+ * 
+ * The class <code>Message</code> represents
  * 
  * @author Youchao Feng
- * @date  Mar 19, 2015 2:45:37 PM 
+ * @date Apr 5, 2015 10:25:45 AM
  * @version 1.0
+ *
  */
-public class GssApiMethod extends AbstractSocksMethod{
-
-	@Override
-	public final int getByte() {
-		return 0x01;
-	}
-
-	@Override
-	public void doMethod(SocksProxy socksProxy) throws SocksException {
-		//TODO implements later.
-	}
+public interface Message {
+	
+	public byte[] getBytes();
 
 }

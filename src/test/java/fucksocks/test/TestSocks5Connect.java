@@ -65,6 +65,7 @@ public class TestSocks5Connect {
 					bytelist.add(whoisrecords[i]);
 				}
 			}
+			System.out.println("size:"+bytelist.size());
 			byte[] resultbyte = new byte[bytelist.size()];
 			for(int i=0;i< resultbyte.length;i++){
 				resultbyte[i] = bytelist.get(i);

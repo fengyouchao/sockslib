@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fucksocks.client;
+package fucksocks.common.methods;
 
 import java.util.HashMap;
 
@@ -35,7 +35,7 @@ public class SocksMethodRegistry {
 	static {
 		putMethod(NoAuthencationRequiredMethod.class);
 		putMethod(GssApiMethod.class);
-		putMethod(NoAcceptableMethods.class);
+		putMethod(NoAcceptableMethod.class);
 		putMethod(UsernamePasswordMethod.class);
 	}
 

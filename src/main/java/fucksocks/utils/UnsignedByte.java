@@ -50,7 +50,7 @@ public final class UnsignedByte {
 	}
 	
 	/**
-	 * Get unsigned value as an integer.
+	 * Gets unsigned value as an integer.
 	 * 
 	 * @return Unsigned value as an integer.
 	 */
@@ -59,7 +59,7 @@ public final class UnsignedByte {
 	}
 	
 	/**
-	 * Get unsigned value as an integer.
+	 * Gets unsigned value as an integer.
 	 * 
 	 * @return value as a normal Java byte.
 	 */
@@ -68,13 +68,23 @@ public final class UnsignedByte {
 	}
 	
 	/**
-	 * Get unsigned byte from a signed byte.
+	 * Gets unsigned byte from a signed byte.
 	 * 
 	 * @param b signed byte.
 	 * @return	unsigned byte as Integer.(0 ~ 255)
 	 */
 	public static int toInt(byte b){
 		return b & 0xFF;
+	}
+	
+	/**
+	 * Gets hex string of a byte.
+	 * 
+	 * @param b byte
+	 * @return
+	 */
+	public static String toHexString(byte b){
+		return Integer.toHexString( toInt(b) );
 	}
 
 	@Override

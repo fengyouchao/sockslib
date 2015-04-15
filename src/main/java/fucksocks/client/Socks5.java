@@ -35,6 +35,10 @@ import fucksocks.common.Authentication;
 import fucksocks.common.SocksCommand;
 import fucksocks.common.SocksException;
 import fucksocks.common.UsernamePasswordAuthentication;
+import fucksocks.common.methods.GssApiMethod;
+import fucksocks.common.methods.NoAuthencationRequiredMethod;
+import fucksocks.common.methods.SocksMethod;
+import fucksocks.common.methods.UsernamePasswordMethod;
 
 /**
  * The class <code>Socks5</code> has implements SOCKS5 protocol.

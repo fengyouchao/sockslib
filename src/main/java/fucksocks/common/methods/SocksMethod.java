@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package fucksocks.client;
+package fucksocks.common.methods;
 
 import java.io.IOException;
 
+import fucksocks.client.SocksProxy;
 import fucksocks.common.SocksException;
+import fucksocks.server.Session;
 
 
 /**
@@ -52,17 +54,24 @@ public interface SocksMethod {
 	/**
 	 * method byte.
 	 * 
-	 * @return byte;
+	 * @return byte.
 	 */
 	int getByte();
 	
 	/**
-	 * Do method job.
+	 * Do method job. This method will be called by SOCKS client.
 	 * 
 	 * @param socksProxy		SocksProxy instance.
 	 * @throws SocksException	If there are any errors about SOCKS protocol.
 	 * @throws IOException		if there are any IO errors.
 	 */
 	void doMethod(SocksProxy socksProxy) throws SocksException, IOException;
+	
+	/**
+	 * Do method job. This method will be called by SOCKS server.
+	 * 
+	 * @param session Session.
+	 */
+	void doMethod(Session session);
 
 }

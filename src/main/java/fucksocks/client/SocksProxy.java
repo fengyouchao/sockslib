@@ -27,6 +27,7 @@ import java.util.List;
 
 import fucksocks.common.Authentication;
 import fucksocks.common.SocksException;
+import fucksocks.common.methods.SocksMethod;
 
 /**
  * The interface <code>SocksProxy</code> define a SOCKS proxy.

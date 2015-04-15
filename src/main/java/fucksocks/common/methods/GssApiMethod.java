@@ -14,39 +14,37 @@
  * limitations under the License.
  */
 
-package fucksocks.client;
+package fucksocks.common.methods;
 
+import fucksocks.client.SocksProxy;
+import fucksocks.common.SocksException;
+import fucksocks.server.Session;
 
 /**
- * The class <code>AbstractSocksMethod</code> is a abstract class that implements 
- * {@link SocksMethod}.
- * <p>
- * This class has override {@link #hashCode()} and {@link #equals(Object)}
- * methods. Two methods are same if the byte that return by {@link #getByte()} 
- * is equal.
- * </p>
+ * The class <code>GssApiMethod</code> is represents  GSS API
+ * method in SOCKS protocol.
  * 
  * @author Youchao Feng
- * @date  Mar 24, 2015 4:38:50 PM 
+ * @date  Mar 19, 2015 2:45:37 PM 
  * @version 1.0
- * 
- * @see SocksMethod
  */
-public abstract class AbstractSocksMethod implements SocksMethod{
+public class GssApiMethod extends AbstractSocksMethod{
 
 	@Override
-	public int hashCode() {
-		return new Integer(getByte()).hashCode();
+	public final int getByte() {
+		return 0x01;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof SocksMethod && 
-				((SocksMethod) obj).getByte() == this.getByte()){
-			return true;
-		}
-		return false;
+	public void doMethod(SocksProxy socksProxy) throws SocksException {
+		//TODO implements later.
 	}
-	
+
+	@Override
+	public void doMethod(Session session) {
+		//TODO implements later.
+		
+	}
+
 
 }

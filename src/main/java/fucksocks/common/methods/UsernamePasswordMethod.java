@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fucksocks.client;
+package fucksocks.common.methods;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,10 +23,13 @@ import java.io.OutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fucksocks.client.Socks5;
+import fucksocks.client.SocksProxy;
 import fucksocks.common.Authentication;
 import fucksocks.common.AuthenticationException;
 import fucksocks.common.SocksException;
 import fucksocks.common.UsernamePasswordAuthentication;
+import fucksocks.server.Session;
 import fucksocks.utils.LogMessage;
 import fucksocks.utils.LogMessage.MsgType;
 
@@ -112,6 +115,12 @@ public class UsernamePasswordMethod extends AbstractSocksMethod{
 			socksProxy.getProxySocket().close();
 			throw new AuthenticationException("Username or password error");
 		}
+	}
+
+	@Override
+	public void doMethod(Session session) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

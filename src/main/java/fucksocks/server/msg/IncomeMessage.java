@@ -14,34 +14,21 @@
  * limitations under the License.
  */
 
-package fucksocks.client;
+package fucksocks.server.msg;
 
-import java.io.IOException;
-
-import fucksocks.common.SocksException;
-
+import java.io.InputStream;
 
 /**
- * The class <code>NoAuthencationRequiredMethod</code> represents method which mean
- * NO AUTHENTICATION REQUIRED.
+ * 
+ * The class <code>IncomeMessage</code> represents
  * 
  * @author Youchao Feng
- * @date  Mar 17, 2015 11:34:01 AM 
+ * @date Apr 5, 2015 10:35:12 AM
  * @version 1.0
- * 
- * @see  <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
+ *
  */
-public class NoAuthencationRequiredMethod extends AbstractSocksMethod{
-
-	@Override
-	public final int getByte() {
-		return 0x00;
-	}
-
-	@Override
-	public void doMethod(SocksProxy socksProxy) throws SocksException,
-			IOException {
-		// Do nothing.
-	}
+public interface IncomeMessage extends Message{
+	
+	public void read(InputStream inputStream);
 
 }

@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
 import fucksocks.common.SocksException;
 import fucksocks.utils.LogMessage;
 import fucksocks.utils.LogMessage.MsgType;
+import fucksocks.common.methods.SocksMethod;
+import fucksocks.common.methods.SocksMethodRegistry;
 
 /**
  * The class <code>GenericSocksMethodRequestor</code> implements

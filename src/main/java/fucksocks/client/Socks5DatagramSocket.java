@@ -89,14 +89,15 @@ public class Socks5DatagramSocket extends DatagramSocket{
 		proxy.buildConnection();
 		CommandReplyMesasge mesasge = 
 				proxy.requestUdpAssociat(this.getLocalAddress(), this.getLocalPort());
+		
+		logger.debug("create datagram socket at[{}:{}]", this.getLocalAddress(), this.getLocalPort());
 		this.relayServerInetAddress = mesasge.getIp();
 		this.relayServerPort = mesasge.getPort();
 
 		datagramPacketHandler.setRelayServerInetAddress(relayServerInetAddress);
 		datagramPacketHandler.setRelayServerPort(relayServerPort);
 
-		logger.info("relay server's address:"+relayServerInetAddress);
-		logger.info("relay server's port:"+relayServerPort);
+		logger.info("relay server's address[{}:{}]", relayServerInetAddress, relayServerPort);
 	}
 
 

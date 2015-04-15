@@ -35,6 +35,18 @@ public class LogMessage {
 		return debugMsg.toString();
 	}
 	
+	public static String bytesToHexString(byte[] bytes){
+		StringBuffer buffer = new StringBuffer();
+		
+		for (int i = 0; i < bytes.length; i++) {
+			buffer.append(UnsignedByte.toHexString(bytes[i]));
+			if ( i < bytes.length - 1) {
+				buffer.append(" ");
+			}
+		}
+		return buffer.toString();
+	}
+	
 	public enum MsgType{
 		SEND, RECEIVE
 	}

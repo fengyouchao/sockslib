@@ -21,6 +21,7 @@ import java.net.Socket;
 import java.util.List;
 
 import fucksocks.common.SocksException;
+import fucksocks.common.methods.SocksMethod;
 
 /**
  * The interface <code>SocksMethodRequestor</code> is a tool that can 
