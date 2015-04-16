@@ -1,6 +1,6 @@
 # Fucksocks
 
-**Fucksocks** a Java implementation of **SOCKS4/SOCKS5** protocol. This project is under developing.
+**Fucksocks** a Java implementation of **SOCKS5** protocol. This project is under developing.
 
 ## Quick start
 
@@ -26,4 +26,11 @@
 
 ```java
    DatagramSocket socket = new Socks5DatagramSocket(proxy);
+```
+
+### SCOKS5 Server(Only support CONNECT method now)
+
+```java
+    SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class);
+    proxyServer.start(1080);// Creat a SOCKS5 server bind at port 1080
 ```
