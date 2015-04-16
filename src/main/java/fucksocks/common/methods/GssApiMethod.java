@@ -16,6 +16,8 @@
 
 package fucksocks.common.methods;
 
+import java.io.IOException;
+
 import fucksocks.client.SocksProxy;
 import fucksocks.common.SocksException;
 import fucksocks.server.Session;
@@ -41,9 +43,14 @@ public class GssApiMethod extends AbstractSocksMethod{
 	}
 
 	@Override
-	public void doMethod(Session session) {
+	public void doMethod(Session session) throws SocksException, IOException {
 		//TODO implements later.
 		
+	}
+
+	@Override
+	public String getMethodName() {
+		return "GSS API";
 	}
 
 

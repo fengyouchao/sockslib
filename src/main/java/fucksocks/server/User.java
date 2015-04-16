@@ -16,21 +16,43 @@
 
 package fucksocks.server;
 
-import fucksocks.common.Authentication;
-import fucksocks.common.AuthenticationException;
 
 /**
  * 
- * The class <code>Authenticator</code> represents an authenticator.
+ * The class <code>User</code> represents a user
  *
  * @author Youchao Feng
- * @date Apr 16, 2015 11:29:56 AM
+ * @date Apr 16, 2015 11:29:44 AM
  * @version 1.0
  *
  */
-public interface Authenticator {
+public class User {
 	
-	void doAuthenticate(Authentication authentication, Session session)
-			throws AuthenticationException;
+	private String username;
+	
+	private String password;
+	
+	public User(){}
+	
+	public User(String username, String password) {
+		this.username = username;
+		this.password = password;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 }

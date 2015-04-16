@@ -38,6 +38,9 @@ public class CommandMessage implements ReadableMessage{
 	protected static final int ATYPE_IPV4 = 0x01;
 	protected static final int ATYPE_DOMAINNAME = 0x03;
 	protected static final int ATYPE_IPV6 = 0x04;
+	protected static final int CMD_CONNECT = 0x01;
+	protected static final int CMD_BIND = 0x02;
+	protected static final int CMD_UDP_ASSOCIATE = 0x03;
 	
 	private int version;
 	
@@ -76,14 +79,15 @@ public class CommandMessage implements ReadableMessage{
 			
 			version = inputStream.read();
 			int cmd = inputStream.read();
+			
 			switch (cmd) {
-			case 0x01:
+			case CMD_CONNECT:
 				command = SocksCommand.CONNECT;
 				break;
-			case 0x02:
+			case CMD_BIND:
 				command = SocksCommand.BIND;
 				break;
-			case 0x03:
+			case CMD_UDP_ASSOCIATE:
 				command = SocksCommand.UDP_ASSOCIATE;
 				break;
 
@@ -103,7 +107,6 @@ public class CommandMessage implements ReadableMessage{
 				break;
 				
 			case ATYPE_DOMAINNAME:
-//				throw new RuntimeException("Not suppot");
 				int domainLength = inputStream.read();
 				byte[] domainBytes = new byte[domainLength];
 				for(int i = 0; i < domainBytes.length; i++){

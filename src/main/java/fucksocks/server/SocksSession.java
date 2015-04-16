@@ -48,6 +48,8 @@ public class SocksSession implements Session{
 	private Map<Long, Session> sessions;
 	
 	private SocketAddress remoteSocketAddress;
+	
+	private Map<Object, Object> attributes;
 
 	public SocksSession() {
 	}
@@ -157,6 +159,31 @@ public class SocksSession implements Session{
 	@Override
 	public SocketAddress getRemoteAddress(){
 		return remoteSocketAddress;
+	}
+
+	@Override
+	public void setAttribute(Object key, Object value) {
+		attributes.put(key, value);
+	}
+
+	@Override
+	public Object getAttribute(Object key) {
+		return attributes.get(key);
+	}
+
+	@Override
+	public Map<Object, Object> getAttributes() {
+		return attributes;
+	}
+
+	@Override
+	public void clearAllAttributes() {
+		attributes.clear();
+	}
+
+	@Override
+	public boolean isClose() {
+		return socket.isClosed();
 	}
 
 }

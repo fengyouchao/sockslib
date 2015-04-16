@@ -16,21 +16,26 @@
 
 package fucksocks.server;
 
-import fucksocks.common.Authentication;
-import fucksocks.common.AuthenticationException;
+import java.util.List;
 
 /**
  * 
- * The class <code>Authenticator</code> represents an authenticator.
+ * The class <code>UserManager</code> represents a manager that can manage 
+ * users.
  *
  * @author Youchao Feng
- * @date Apr 16, 2015 11:29:56 AM
+ * @date Apr 16, 2015 11:30:18 AM
  * @version 1.0
  *
  */
-public interface Authenticator {
+public interface UserManager {
 	
-	void doAuthenticate(Authentication authentication, Session session)
-			throws AuthenticationException;
+	void addUser(String username, String password);
+	
+	User findUser(String username, String password);
+	
+	User deleteUser(String username);
+	
+	List<User> findAll();
 
 }

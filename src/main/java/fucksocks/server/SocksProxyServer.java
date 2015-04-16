@@ -17,8 +17,10 @@
 package fucksocks.server;
 
 import java.io.IOException;
+import java.util.Map;
 
 import fucksocks.common.SocksException;
+import fucksocks.common.methods.SocksMethod;
 
 
 /**
@@ -52,6 +54,12 @@ public interface SocksProxyServer {
 	 * Shutdown a SOCKS server.
 	 */
 	void shutdown();
+	
+	void setAuthenticator(Authenticator authenticator);
+	
+	void setSupportedMethod(SocksMethod... methods );
+	
+	public Map<Long, Session> getManagedSessions();
 	
 	static final int DEFAULT_SOCKS_PORT = 1080;
 

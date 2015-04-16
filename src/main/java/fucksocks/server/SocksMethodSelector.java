@@ -85,6 +85,20 @@ public class SocksMethodSelector implements MethodSelector{
 	public void clearAllSupportMethods(){
 		supportMethods.clear();
 	}
+
+	@Override
+	public void addSupportMethod(SocksMethod socksMethod) {
+		supportMethods.add(socksMethod.getByte());
+	}
+
+	@Override
+	public void setSupportMethod(SocksMethod... methods) {
+		supportMethods.clear();
+		for (int i = 0; i < methods.length; i++) {
+			supportMethods.add(methods[i].getByte());
+		}
+		
+	}
 	
 	
 

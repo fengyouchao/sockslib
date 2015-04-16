@@ -75,5 +75,10 @@ public interface MethodSelector {
 	 * @param method The method will be added.
 	 */
 	public void addSupportMethod(int method);
+	
+	public void addSupportMethod(SocksMethod socksMethod);
+	
+	public void setSupportMethod(SocksMethod... methods);
+	
 
 }

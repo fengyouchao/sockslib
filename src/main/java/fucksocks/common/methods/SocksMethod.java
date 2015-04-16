@@ -59,6 +59,13 @@ public interface SocksMethod {
 	int getByte();
 	
 	/**
+	 * Gets method's name.
+	 * 
+	 * @return Name of the method.
+	 */
+	String getMethodName();
+	
+	/**
 	 * Do method job. This method will be called by SOCKS client.
 	 * 
 	 * @param socksProxy		SocksProxy instance.
@@ -71,7 +78,9 @@ public interface SocksMethod {
 	 * Do method job. This method will be called by SOCKS server.
 	 * 
 	 * @param session Session.
+	 * @throws SocksException TODO
+	 * @throws IOException TODO
 	 */
-	void doMethod(Session session);
+	void doMethod(Session session) throws SocksException, IOException;
 
 }

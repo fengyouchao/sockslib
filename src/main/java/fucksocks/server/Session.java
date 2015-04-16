@@ -123,5 +123,15 @@ public interface Session {
 	 * @return Remote host's IP address and port.
 	 */
 	public SocketAddress getRemoteAddress();
+	
+	public void setAttribute(Object key, Object value);
+	
+	public Object getAttribute(Object key);
+	
+	public Map<Object, Object> getAttributes();
+	
+	public void clearAllAttributes();
+	
+	public boolean isClose();
 
 }

@@ -47,9 +47,14 @@ public class NoAuthencationRequiredMethod extends AbstractSocksMethod{
 	}
 
 	@Override
-	public void doMethod(Session session) {
+	public void doMethod(Session session) throws SocksException, IOException {
 		// Do nothing
 		
+	}
+
+	@Override
+	public String getMethodName() {
+		return "NO Authentication Required";
 	}
 
 }

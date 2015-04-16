@@ -25,9 +25,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fucksocks.common.NotImplementException;
+import fucksocks.common.SocksException;
 import fucksocks.common.io.Pipe;
 import fucksocks.common.io.SocketPipe;
 import fucksocks.common.methods.SocksMethod;
+import fucksocks.server.filters.FilterChain;
 import fucksocks.server.msg.CommandMessage;
 import fucksocks.server.msg.CommandResponseMessage;
 import fucksocks.server.msg.MethodSelectionMessage;
@@ -35,27 +37,46 @@ import fucksocks.server.msg.MethodSeleteionResponseMessage;
 import fucksocks.server.msg.ServerReply;
 import fucksocks.utils.LogMessage;
 
-public class Socks5Handler implements SessionHandler{
+/**
+ * 
+ * The class <code>Socks5Handler</code> represents a handler that can handle SOCKS5 
+ * protocol.
+ *
+ * @author Youchao Feng
+ * @date Apr 16, 2015 11:03:49 AM
+ * @version 1.0
+ *
+ */
+public class Socks5Handler implements SocksHandler{
 
+	/**
+	 * Logger
+	 */
 	private static final Logger logger =LoggerFactory.getLogger(Socks5Handler.class);
 
+	/**
+	 * Protocol version.
+	 */
 	private static final int VERSION = 0x5;
 
+	/**
+	 * Session.
+	 */
 	private Session session;
 
+	/**
+	 * Method selector.
+	 */
 	private MethodSelector methodSelector;
 
-	public Socks5Handler() {
-		methodSelector = new SocksMethodSelector();
-		methodSelector.addSupportMethod(0x00);
-	}
+	private FilterChain filterChain;
 
 	@Override
 	public void handle(Session session) throws Exception {
 
 		MethodSelectionMessage msg = new MethodSelectionMessage();
 		session.read(msg);
-		
+
 		if(msg.getVersion() != VERSION){
 			logger.debug("Portocol error, close connection from {}", session.getRemoteAddress());;
 			session.close();
@@ -64,10 +85,13 @@ public class Socks5Handler implements SessionHandler{
 		logger.debug(LogMessage.bytesToHexString(msg.getBytes()));
 
 		SocksMethod selectedMethod = methodSelector.select(msg);
-		logger.debug("Server seleted:{}",Integer.toHexString(selectedMethod.getByte()));
+		logger.debug("Server seleted:{}",selectedMethod.getMethodName());
 		//send select method.
 		session.write(new MethodSeleteionResponseMessage(VERSION, selectedMethod));
+
+		//do method.
 		selectedMethod.doMethod(session);
+
 
 		CommandMessage commandMessage = new CommandMessage();
 		session.read(commandMessage);	//Read command request.
@@ -97,7 +121,7 @@ public class Socks5Handler implements SessionHandler{
 
 	}
 
-	private void doConnect(Session session2, CommandMessage commandMessage) throws Exception{
+	private void doConnect(Session session, CommandMessage commandMessage) throws Exception{
 
 		ServerReply reply = null;
 		Socket socket = null;
@@ -131,7 +155,7 @@ public class Socks5Handler implements SessionHandler{
 			else if (e instanceof UnknownHostException) {
 				reply = ServerReply.NETWORK_UNREACHABLE;
 			}
-			e.printStackTrace();
+			logger.debug(e.getMessage());
 		}
 
 
@@ -145,7 +169,11 @@ public class Socks5Handler implements SessionHandler{
 
 		Pipe pipe = new SocketPipe(session.getSocket(), socket);
 		pipe.start();
-
+		
+		//wait for pipe exit.
+		while(pipe.isRunning()){
+			Thread.sleep(1000);
+		}
 
 	}
 
@@ -154,14 +182,38 @@ public class Socks5Handler implements SessionHandler{
 		this.session = session;
 	}
 
+
 	@Override
 	public void run() {
 		try {
 			handle(session);
 		} catch (Exception e) {
 			session.close();
+			logger.error(e.getMessage());
 			e.printStackTrace();
+			logger.info("Session[{}] closed", session.getId());
+//			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public FilterChain getFilterChain() {
+		return filterChain;
+	}
+
+	@Override
+	public void setFilterChain(FilterChain filterChain) {
+		this.filterChain = filterChain;
+	}
+
+	@Override
+	public MethodSelector getMethodSelector() {
+		return methodSelector;
+	}
+
+	@Override
+	public void setMethodSelector(MethodSelector methodSelector) {
+		this.methodSelector = methodSelector;
 	}
 
 }

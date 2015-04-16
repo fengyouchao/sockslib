@@ -30,6 +30,8 @@ import fucksocks.common.AuthenticationException;
 import fucksocks.common.SocksException;
 import fucksocks.common.UsernamePasswordAuthentication;
 import fucksocks.server.Session;
+import fucksocks.server.UsernamePasswordAuthenticator;
+import fucksocks.server.msg.UsernamePasswordMessage;
 import fucksocks.utils.LogMessage;
 import fucksocks.utils.LogMessage.MsgType;
 
@@ -37,7 +39,8 @@ import fucksocks.utils.LogMessage.MsgType;
 /**
  * The class <code>UsernamePasswordMethod</code> represents the method that
  * need USERNAME/PASSWORD authentication.<br>
- * <b>Notice:</b> This method is only supported by SOCKS5 protocol.
+ * <b>Notice:</b> This method is only supported by SOCKS5 protocol. It will 
+ * be used in client and server.
  * 
  * @author Youchao Feng
  * @date  Mar 17, 2015 5:09:23 PM 
@@ -49,6 +52,8 @@ public class UsernamePasswordMethod extends AbstractSocksMethod{
 	
 	private static final Logger logger = LoggerFactory.getLogger(UsernamePasswordMethod.class);
 
+	private static UsernamePasswordAuthenticator authenticator;
+	
 	@Override
 	public final int getByte() {
 		return 0x02;
@@ -107,7 +112,7 @@ public class UsernamePasswordMethod extends AbstractSocksMethod{
 		inputStream.read(authencationResult);
 		//logger
 		logger.debug("{}", LogMessage.create(authencationResult, MsgType.RECEIVE));
-		
+
 		if(authencationResult[1] != Socks5.AUTHENTICATION_SUCCEEDED){
 			//Close connection if authentication is failed.
 			outputStream.close();
@@ -118,9 +123,25 @@ public class UsernamePasswordMethod extends AbstractSocksMethod{
 	}
 
 	@Override
-	public void doMethod(Session session) {
-		// TODO Auto-generated method stub
-		
+	public void doMethod(Session session) throws SocksException, IOException {
+		UsernamePasswordMessage usernamePasswordMessage = new UsernamePasswordMessage();
+		session.read(usernamePasswordMessage);
+		System.out.println(usernamePasswordMessage.getUsername()+"==========");
+		System.out.println(usernamePasswordMessage.getPassword()+"==========");
+		authenticator.doAuthenticate(usernamePasswordMessage.getUsernamePasswordAutentication(), 
+				session);
 	}
 
+	public static UsernamePasswordAuthenticator getAuthenticator() {
+		return authenticator;
+	}
+
+	public static void setAuthenticator(UsernamePasswordAuthenticator authenticator) {
+		UsernamePasswordMethod.authenticator = authenticator;
+	}
+
+	@Override
+	public String getMethodName() {
+		return "USERNAME/PASSWORD authentication";
+	}
 }

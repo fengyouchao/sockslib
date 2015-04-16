@@ -55,8 +55,14 @@ public class NoAcceptableMethod extends AbstractSocksMethod{
 	}
 
 	@Override
-	public void doMethod(Session session) {
+	public void doMethod(Session session) throws SocksException, IOException {
 		session.close();
+		throw SocksException.noAcceptableMethods();
+	}
+
+	@Override
+	public String getMethodName() {
+		return "No Acceptable Method";
 	}
 
 }

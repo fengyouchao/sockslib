@@ -14,23 +14,8 @@
  * limitations under the License.
  */
 
-package fucksocks.server;
+package fucksocks.server.filters;
 
-import fucksocks.common.Authentication;
-import fucksocks.common.AuthenticationException;
-
-/**
- * 
- * The class <code>Authenticator</code> represents an authenticator.
- *
- * @author Youchao Feng
- * @date Apr 16, 2015 11:29:56 AM
- * @version 1.0
- *
- */
-public interface Authenticator {
-	
-	void doAuthenticate(Authentication authentication, Session session)
-			throws AuthenticationException;
+public interface CommandFilter extends Filter{
 
 }

@@ -22,12 +22,18 @@ import fucksocks.common.SocksException;
 import fucksocks.server.GenericSocksProxyServer;
 import fucksocks.server.Socks5Handler;
 import fucksocks.server.SocksProxyServer;
+import fucksocks.server.UsernamePasswordAuthenticator;
 
 public class TestProxyServer {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		UsernamePasswordAuthenticator authenticator = new UsernamePasswordAuthenticator();
+		authenticator.addUser("socks", "1234");
+		
 		SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class);
+		proxyServer.setAuthenticator(authenticator);
+		
 		try {
 			proxyServer.start();
 		} catch (SocksException e) {

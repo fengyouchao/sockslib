@@ -27,7 +27,12 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fucksocks.common.AnonymousAuthentication;
 import fucksocks.common.SocksException;
+import fucksocks.common.methods.NoAuthencationRequiredMethod;
+import fucksocks.common.methods.SocksMethod;
+import fucksocks.common.methods.UsernamePasswordMethod;
+import fucksocks.server.filters.FilterChain;
 
 
 public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
@@ -55,7 +60,7 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
 	/**
 	 * SOCKS socket handler class.
 	 */
-	private Class<? extends SessionHandler> sessionHandlerClass;
+	private Class<? extends SocksHandler> socksHandlerClass;
 
 	/**
 	 * Sessions that server managed.
@@ -71,15 +76,21 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
 	 * Thread that start the server.
 	 */
 	private Thread thread;
+	
+	private Authenticator authenticator;
+	
+	private MethodSelector methodSelector = new SocksMethodSelector();
+	
+	private FilterChain filterChain;
 
 
-	public GenericSocksProxyServer(Class<? extends SessionHandler> socketHandlerClass) {
+	public GenericSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass) {
 		this(socketHandlerClass, Executors.newFixedThreadPool(THREAD_NUMBER));
 	}
 
-	public GenericSocksProxyServer(Class<? extends SessionHandler> socketHandlerClass, 
+	public GenericSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, 
 			ExecutorService executorService){
-		this.sessionHandlerClass = socketHandlerClass;
+		this.socksHandlerClass = socketHandlerClass;
 		this.executorService = executorService;
 		sessions = new HashMap<>();
 	}
@@ -95,9 +106,21 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
 				logger.info("Accept from:{}, allocate session ID[{}]",
 						socket.getRemoteSocketAddress(), session.getId());
 				
-				SessionHandler sessionHandler = sessionHandlerClass.newInstance();
-				sessionHandler.setSession(session);
-				executorService.execute(sessionHandler);
+				SocksHandler socksHandler = socksHandlerClass.newInstance();
+				
+				/**临时实现方式，以后可能更改**/
+				if(authenticator != null){
+					UsernamePasswordMethod.setAuthenticator(
+							(UsernamePasswordAuthenticator)authenticator);
+					methodSelector.addSupportMethod(new UsernamePasswordMethod());
+				}
+				
+				/*initialize socks handler*/
+				socksHandler.setSession(session);
+				socksHandler.setMethodSelector(methodSelector);
+				socksHandler.setFilterChain(filterChain);
+				
+				executorService.execute(socksHandler);
 //				thread.start();
 			} catch (InstantiationException e) {
 				e.printStackTrace();
@@ -146,7 +169,7 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
 		thread = new Thread(this);
 		thread.start();
 
-		logger.debug("Create proxy server at port:{}", bindPort);
+		logger.info("Create proxy server at port:{}", bindPort);
 	}
 
 	/**
@@ -163,13 +186,24 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
 		return executorService;
 	}
 
-	private synchronized long getNextSessionId(){
+	private synchronized long getNextSessionId() {
 		nextSessionId++;
 		return nextSessionId;
 	}
 
-	public Map<Long, Session> getSessions() {
+	@Override
+	public Map<Long, Session> getManagedSessions() {
 		return sessions;
+	}
+
+	@Override
+	public void setAuthenticator(Authenticator authenticator) {
+		this.authenticator = authenticator;
+	}
+
+	@Override
+	public void setSupportedMethod(SocksMethod... methods) {
+		methodSelector.setSupportMethod(methods);
 	}
 
 }
