@@ -48,14 +48,14 @@ public interface MethodSelector {
 	 * 
 	 * @param supportMethods	methods that server supported.
 	 */
-	public void setSupportMethods(Set<Integer> supportMethods);
+	public void setSupportMethods(Set<SocksMethod> supportMethods);
 
 	/**
 	 * Gets methods that server supported.
 	 * 
 	 * @return The methods that server supported.
 	 */
-	public Set<Integer> getSupportMethods();
+	public Set<SocksMethod> getSupportMethods();
 
 	/**
 	 * Clears all methods that server supported.
@@ -67,14 +67,7 @@ public interface MethodSelector {
 	 * 
 	 * @param method The method which will be removed.
 	 */
-	public void removeSupportMethod(int method);
-
-	/**
-	 * Adds a method to method set that server supported.
-	 * 
-	 * @param method The method will be added.
-	 */
-	public void addSupportMethod(int method);
+	public void removeSupportMethod(SocksMethod socksMethod);
 	
 	public void addSupportMethod(SocksMethod socksMethod);
 	

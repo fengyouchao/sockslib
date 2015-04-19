@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The class <code>StreamPipe</code> represents a pipe the can transfer stream from a 
+ * The class <code>StreamPipe</code> represents a pipe the can transfer data from a 
  * input stream to a output stream.
  * 
  * @author Youchao Feng
@@ -36,18 +36,12 @@ import org.slf4j.LoggerFactory;
  */
 public class StreamPipe implements Runnable, Pipe{
 
-	
-	/**
-	 * Name of the pipe.
-	 */
-	private String name;
-
 	protected static final Logger logger = LoggerFactory.getLogger(StreamPipe.class);
 
 	/**
 	 * Default buffer size.
 	 */
-	private static final int BUFFER_SIZE = 4096;
+	private static final int BUFFER_SIZE = 1024 * 1024 * 5;
 
 
 	/**
@@ -79,6 +73,11 @@ public class StreamPipe implements Runnable, Pipe{
 	 * A flag.
 	 */
 	private boolean running = false;
+	
+	/**
+	 * Name of the pipe.
+	 */
+	private String name;
 
 
 	/**
@@ -122,8 +121,9 @@ public class StreamPipe implements Runnable, Pipe{
 			if(runningThread != null){
 				runningThread.interrupt();
 			}
-			for(PipeListener listener: pipeListeners){
-				listener.onClosed(this);
+			for(int i = 0; i < pipeListeners.size(); i++){
+				PipeListener listener = pipeListeners.get(i);
+				listener.onStoped(this);
 			}
 			return true;
 		}
@@ -172,26 +172,31 @@ public class StreamPipe implements Runnable, Pipe{
 
 		return length;
 	}
+	
+	@Override
+	public boolean close() {
+		stop();
+		
+		try {
+			from.close();
+			to.close();
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
-	/* (non-Javadoc)
-	 * @see fucksocks.server.Pipe#getBufferSize()
-	 */
 	@Override
 	public int getBufferSize() {
 		return bufferSize;
 	}
 
-	/* (non-Javadoc)
-	 * @see fucksocks.server.Pipe#setBufferSize(int)
-	 */
 	@Override
 	public void setBufferSize(int bufferSize) {
 		this.bufferSize = bufferSize;
 	}
 
-	/* (non-Javadoc)
-	 * @see fucksocks.server.Pipe#isStop()
-	 */
 	@Override
 	public boolean isRunning() {
 		return running;

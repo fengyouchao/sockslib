@@ -16,17 +16,17 @@
 
 package fucksocks.server.msg;
 
+
 /**
- * 
- * The class <code>Message</code> represents
+ * The interface <code>Message</code> represents socks message.
  * 
  * @author Youchao Feng
- * @date Apr 5, 2015 10:25:45 AM
+ * @date Apr 19, 2015 6:55:16 PM
  * @version 1.0
  *
  */
 public interface Message {
 	
-	public byte[] getBytes();
+	int getLength();
 
 }

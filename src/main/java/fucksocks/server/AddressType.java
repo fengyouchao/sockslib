@@ -14,26 +14,16 @@
  * limitations under the License.
  */
 
-package fucksocks.server.msg;
+package fucksocks.server;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import fucksocks.common.SocksException;
-import fucksocks.server.Session;
-
-/**
- * 
- * The interface <code>ReadableMessage</code> represents a message that can be read by 
- * {@link Session}.
- * 
- * @author Youchao Feng
- * @date Apr 5, 2015 10:35:12 AM
- * @version 1.0
- *
- */
-public interface ReadableMessage extends Message {
+public class AddressType {
 	
-	public void read(InputStream inputStream) throws SocksException, IOException;
+	public static final int IPV4 = 0x01;
+	public static final int DOMAINNAME = 0x03;
+	public static final int IPV6 = 0x04;
+	
+	public static boolean isSupport(int type) {
+		return type == IPV4 || type == DOMAINNAME || type == IPV6;
+	}
 
 }

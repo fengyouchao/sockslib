@@ -19,7 +19,6 @@ package fucksocks.server;
 import java.io.IOException;
 import java.util.Map;
 
-import fucksocks.common.SocksException;
 import fucksocks.common.methods.SocksMethod;
 
 
@@ -36,31 +35,46 @@ public interface SocksProxyServer {
 	/**
 	 * Starts a SOCKS server bind a default port. 
 	 * 
-	 * @throws SocksException	If any error about SOCKS protocol occurs.
 	 * @throws IOException		If any I/O error occurs.
 	 */
-	void start() throws SocksException, IOException;
+	public void start() throws IOException;
 	
 	/**
 	 * Starts a SOCKS server and binds a port.
 	 * 
 	 * @param bindPort			The port that SOCKS server listened..
-	 * @throws SocksException	If any error about SOCKS protocol occurs.
 	 * @throws IOException		If any I/O error occurs.
 	 */
-	void start(int bindPort) throws SocksException, IOException;
+	public void start(int bindPort) throws IOException;
 	
 	/**
 	 * Shutdown a SOCKS server.
 	 */
-	void shutdown();
+	public void shutdown();
 	
-	void setAuthenticator(Authenticator authenticator);
 	
-	void setSupportedMethod(SocksMethod... methods );
+	public SocksHandler createSocksHandler();
+	
+	/**
+	 * Initializes {@link SocksHandler}. 
+	 * 
+	 * @param socksHandler The instance of {@link SocksHandler}.
+	 */
+	public void initializeSocksHandler(SocksHandler socksHandler);
+	
+	public void setSupportedMethod(SocksMethod... methods );
 	
 	public Map<Long, Session> getManagedSessions();
 	
-	static final int DEFAULT_SOCKS_PORT = 1080;
+	public void setBufferSize(int bufferSize);
+	
+	public int getBufferSize();
+	
+	public int getTimeout();
+
+	public void setTimeout(int timeout);
+
+	
+	public static final int DEFAULT_SOCKS_PORT = 1080;
 
 }

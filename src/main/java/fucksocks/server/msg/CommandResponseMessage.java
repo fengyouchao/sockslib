@@ -17,61 +17,97 @@
 package fucksocks.server.msg;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
+import fucksocks.common.NotImplementException;
+import fucksocks.server.AddressType;
 import fucksocks.utils.SocksUtil;
 
 /**
  * 
- * The class <code>CommandResponseMessage</code> represents
+ * The class <code>CommandResponseMessage</code> represents a command 
+ * response message.
  * 
  * @author Youchao Feng
  * @date Apr 6, 2015 11:10:25 AM
  * @version 1.0
  *
  */
-public class CommandResponseMessage implements Message{
-	
+public class CommandResponseMessage implements WritableMessage{
+
 	private int version = 5;
-	
+
 	private int reserved = 0x00;
-	
-	private int addresssType;
-	
+
+	private int addressType = AddressType.IPV4;
+
 	private InetAddress bindAddress;
-	
+
 	private int bindPort;
-	
+
 	private ServerReply reply;
-	
+
+	public CommandResponseMessage(ServerReply reply) {
+		byte[] defaultAddress = {0,0,0,0};
+		this.reply = reply;
+		try {
+			bindAddress = InetAddress.getByAddress(defaultAddress);
+			addressType = 0x01;
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public CommandResponseMessage(int version, ServerReply reply, InetAddress bindAddress, int bindPort) {
 		this.version = version;
 		this.reply = reply;
 		this.bindAddress = bindAddress;
 		this.bindPort = bindPort;
-		if(bindAddress.getAddress().length==4){
-			addresssType = 0x01;
+		if(bindAddress.getAddress().length== 4){
+			addressType = 0x01;
 		}else{
-			addresssType = 0x04;
+			addressType = 0x04;
 		}
 	}
 
 	@Override
 	public byte[] getBytes() {
 		byte[] bytes = null;
-		if(addresssType == 1){
+
+		switch (addressType) {
+		case AddressType.IPV4:
 			bytes = new byte[10];
-			bytes[0] = (byte)version;
-			bytes[1] = reply.getValue();
-			bytes[2] = (byte)reserved;
-			bytes[3] = (byte)addresssType;
 			for (int i = 0; i < bindAddress.getAddress().length; i++) {
 				bytes[i+4] = bindAddress.getAddress()[i];
 			}
 			bytes[8] = SocksUtil.getFisrtByteFromPort(bindPort);
 			bytes[9] = SocksUtil.getSecondByteFromPort(bindPort);
+			break;
+		case AddressType.IPV6:
+			bytes = new byte[22];
+			for (int i = 0; i < bindAddress.getAddress().length; i++) {
+				bytes[i+4] = bindAddress.getAddress()[i];
+			}
+			bytes[20] = SocksUtil.getFisrtByteFromPort(bindPort);
+			bytes[21] = SocksUtil.getSecondByteFromPort(bindPort);
+			break;
+		case AddressType.DOMAINNAME:
+			throw new NotImplementException();
+		default:
+			break;
 		}
-		
+
+		bytes[0] = (byte)version;
+		bytes[1] = reply.getValue();
+		bytes[2] = (byte)reserved;
+		bytes[3] = (byte)addressType;
+
 		return bytes;
+	}
+
+	@Override
+	public int getLength() {
+		return getBytes().length;
 	}
 
 }

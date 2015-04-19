@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The class <code>SocketPipe</code> represents pipe that can transfer data from one 
- * socket to another socket. The tow socket should be connected sockets. if any of the 
+ * socket to another socket. The tow socket should be connected sockets. If any of the 
  * them occurred error the pipe will close all of them. 
  *
  * @author Youchao Feng
@@ -34,17 +34,46 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class SocketPipe implements Pipe{
-	
+
+	/**
+	 * Logger
+	 */
 	protected static final Logger logger = LoggerFactory.getLogger(SocketPipe.class);
 
+	/**
+	 * Pipe one.
+	 */
 	private Pipe pipe1;
 
+	/**
+	 * Pipe tow.
+	 */
 	private Pipe pipe2;
 
+	/**
+	 * Socket one.
+	 */
 	private Socket socket1;
 
+	/**
+	 * Socket two.
+	 */
 	private Socket socket2;
 
+	/**
+	 * flag.
+	 */
+	private boolean running = false;
+
+	private PipeListener listener = new PipeListnerImp();
+
+	/**
+	 * Constructs SocketPipe instance by tow connected sockets.
+	 * 
+	 * @param socket1		A connected socket.
+	 * @param socket2		Another connected socket.
+	 * @throws IOException	If an I/O error occurred.
+	 */
 	public SocketPipe(Socket socket1, Socket socket2) throws IOException {
 		if(socket1.isClosed() || socket2.isClosed()){
 			throw new IllegalArgumentException("socket should be connected");
@@ -56,33 +85,52 @@ public class SocketPipe implements Pipe{
 		pipe2 = new StreamPipe(socket2.getInputStream(), socket1.getOutputStream());
 		((StreamPipe)pipe2).setName("INPUT_PIPE");;
 
-		pipe1.addPipeListener(new PipeListnerImp());
-		pipe2.addPipeListener(new PipeListnerImp());
+		pipe1.addPipeListener(listener);
+		pipe2.addPipeListener(listener);
 	}
 
 	@Override
 	public boolean start() {
 		pipe1.start();
 		pipe2.start();
-		return true;
+		running = true;
+		return running;
 	}
 
 	@Override
 	public boolean stop() {
-
-		if (pipe1.stop() ||  pipe2.stop()){
-			try {
-				if(!pipe1.isRunning() && !pipe2.isRunning()) {
-					socket1.close();
-					socket2.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if (running) {
+			pipe1.stop();
+			pipe2.stop();
 			logger.debug("Socket pipe stoped");
-
+			if(!pipe1.isRunning() && !pipe2.isRunning()) {
+				running = false;
+			}
 		}
-		return !pipe1.isRunning() && !pipe2.isRunning();
+		return running;
+	}
+
+	@Override
+	public boolean close() {
+		
+		pipe2.removePipeListener(listener);
+		pipe1.removePipeListener(listener);
+		
+		stop();
+		
+		try{
+			if (socket1 != null && !socket1.isClosed()) {
+				socket1.close();
+			}
+			if (socket2 != null && !socket2.isClosed()) {
+				socket2.close();
+			}
+			logger.debug("Socket pipe closed");
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	@Override
@@ -98,8 +146,7 @@ public class SocketPipe implements Pipe{
 
 	@Override
 	public boolean isRunning() {
-		// TODO Auto-generated method stub
-		return false;
+		return running;
 	}
 
 	@Override
@@ -113,13 +160,21 @@ public class SocketPipe implements Pipe{
 
 	}
 
+	/**
+	 * The class <code>PipeListnerImp</code> is a pipe listener.
+	 * 
+	 * @author Youchao Feng
+	 * @date Apr 15, 2015 9:05:45 PM
+	 * @version 1.0
+	 *
+	 */
 	private class PipeListnerImp implements PipeListener {
 
 		@Override
-		public void onClosed(Pipe pipe) {
+		public void onStoped(Pipe pipe) {
 			StreamPipe streamPipe = (StreamPipe)pipe;
-			logger.debug("Pipe[{}] closed",streamPipe.getName());
-			stop();
+			logger.debug("Pipe[{}] stoped",streamPipe.getName());
+			close();
 		}
 
 		@Override
@@ -135,7 +190,6 @@ public class SocketPipe implements Pipe{
 		}
 
 	}
-
 
 
 }

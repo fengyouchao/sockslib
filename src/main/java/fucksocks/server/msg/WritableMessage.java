@@ -16,24 +16,20 @@
 
 package fucksocks.server.msg;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import fucksocks.common.SocksException;
 import fucksocks.server.Session;
 
 /**
  * 
- * The interface <code>ReadableMessage</code> represents a message that can be read by 
- * {@link Session}.
+ * The WritableMessage <code>Message</code> represents a message that can be 
+ * written by {@link Session}.
  * 
  * @author Youchao Feng
- * @date Apr 5, 2015 10:35:12 AM
+ * @date Apr 5, 2015 10:25:45 AM
  * @version 1.0
  *
  */
-public interface ReadableMessage extends Message {
+public interface WritableMessage extends Message{
 	
-	public void read(InputStream inputStream) throws SocksException, IOException;
+	public byte[] getBytes();
 
 }

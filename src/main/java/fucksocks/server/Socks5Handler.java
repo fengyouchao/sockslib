@@ -19,12 +19,12 @@ package fucksocks.server;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fucksocks.common.NotImplementException;
+import fucksocks.common.ProtocolErrorException;
 import fucksocks.common.SocksException;
 import fucksocks.common.io.Pipe;
 import fucksocks.common.io.SocketPipe;
@@ -71,20 +71,21 @@ public class Socks5Handler implements SocksHandler{
 
 	private FilterChain filterChain;
 
+	private int bufferSize;
+
 	@Override
-	public void handle(Session session) throws Exception {
+	public void handle(Session session) throws SocksException, IOException {
 
 		MethodSelectionMessage msg = new MethodSelectionMessage();
 		session.read(msg);
 
 		if(msg.getVersion() != VERSION){
-			logger.debug("Portocol error, close connection from {}", session.getRemoteAddress());;
-			session.close();
-			return;
+			throw new ProtocolErrorException("Protocol! error");
 		}
 		logger.debug(LogMessage.bytesToHexString(msg.getBytes()));
 
 		SocksMethod selectedMethod = methodSelector.select(msg);
+
 		logger.debug("Server seleted:{}",selectedMethod.getMethodName());
 		//send select method.
 		session.write(new MethodSeleteionResponseMessage(VERSION, selectedMethod));
@@ -94,14 +95,24 @@ public class Socks5Handler implements SocksHandler{
 
 
 		CommandMessage commandMessage = new CommandMessage();
-		session.read(commandMessage);	//Read command request.
+
+
+		try {
+			session.read(commandMessage);	//Read command request.
+		} catch (SocksException e) {
+			session.write(new CommandResponseMessage(e.getServerReply()));
+			logger.debug(e.getMessage());
+			e.printStackTrace();
+			return;
+		}
+
 
 		logger.info("Session[{}] send Rquest:{}  {}:{}", 
 				session.getId(), commandMessage.getCommand(),
 				commandMessage.getInetAddress(), commandMessage.getPort());
 
 
-		/****************************************************************************/
+		/****************************DO COMMAND******************************************/
 
 		switch (commandMessage.getCommand()) {
 
@@ -121,7 +132,7 @@ public class Socks5Handler implements SocksHandler{
 
 	}
 
-	private void doConnect(Session session, CommandMessage commandMessage) throws Exception{
+	private void doConnect(Session session, CommandMessage commandMessage) throws SocksException, IOException{
 
 		ServerReply reply = null;
 		Socket socket = null;
@@ -133,11 +144,7 @@ public class Socks5Handler implements SocksHandler{
 		bindAddress = InetAddress.getByAddress(defaultAddress);
 		//DO connect
 		try {
-			if (!commandMessage.isDomain()) {
-				socket = new Socket(commandMessage.getInetAddress(), commandMessage.getPort());
-			}else{
-				socket = new Socket(commandMessage.getHost(), commandMessage.getPort());
-			}
+			socket = new Socket(commandMessage.getInetAddress(), commandMessage.getPort());
 			bindAddress = socket.getLocalAddress();
 			bindPort = socket.getLocalPort();
 			reply = ServerReply.SUCCESSED;
@@ -152,13 +159,9 @@ public class Socks5Handler implements SocksHandler{
 			else if (e.getMessage().equals("Network is unreachable")) {
 				reply = ServerReply.NETWORK_UNREACHABLE;
 			}
-			else if (e instanceof UnknownHostException) {
-				reply = ServerReply.NETWORK_UNREACHABLE;
-			}
-			logger.debug(e.getMessage());
+			logger.debug("connect exception:", e);
 		}
-
-
+		
 		session.write(new CommandResponseMessage(VERSION, reply,
 				bindAddress, bindPort));
 
@@ -168,11 +171,18 @@ public class Socks5Handler implements SocksHandler{
 		}
 
 		Pipe pipe = new SocketPipe(session.getSocket(), socket);
-		pipe.start();
-		
+		pipe.setBufferSize(bufferSize);
+		pipe.start(); // This method will create tow thread to run tow internal pipes.
+
 		//wait for pipe exit.
 		while(pipe.isRunning()){
-			Thread.sleep(1000);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				pipe.stop();
+				session.close();
+				logger.info("Session[{}] closed", session.getId());
+			}
 		}
 
 	}
@@ -187,12 +197,14 @@ public class Socks5Handler implements SocksHandler{
 	public void run() {
 		try {
 			handle(session);
-		} catch (Exception e) {
+		} catch (IOException e) {
+			logger.error("Session[{}]:{}", session.getId(), e.getMessage());
+		} finally {
+			/*
+			 * At last, close the session.
+			 */
 			session.close();
-			logger.error(e.getMessage());
-			e.printStackTrace();
 			logger.info("Session[{}] closed", session.getId());
-//			e.printStackTrace();
 		}
 	}
 
@@ -214,6 +226,16 @@ public class Socks5Handler implements SocksHandler{
 	@Override
 	public void setMethodSelector(MethodSelector methodSelector) {
 		this.methodSelector = methodSelector;
+	}
+
+	@Override
+	public int getBufferSize() {
+		return bufferSize;
+	}
+
+	@Override
+	public void setBufferSize(int bufferSize) {
+		this.bufferSize = bufferSize;
 	}
 
 }

@@ -19,8 +19,7 @@ package fucksocks.common.io;
 
 
 /**
- * The class <code>Pipe</code> represents pipe that can transfer byte from a input
- * stream to a output stream.
+ * The class <code>Pipe</code> represents pipe that can transfer byte.
  *
  * @author Youchao Feng
  * @date Apr 15, 2015 9:31:29 AM
@@ -36,20 +35,52 @@ public interface Pipe {
 	boolean start();
 
 	/**
-	 * Stop the pipe, the pipe will stop its work, but it don't close the 
-	 * input stream or output stream.
+	 * Stop the pipe, the pipe will stop transferring data.
+	 * 
 	 * @return TODO
 	 */
 	boolean stop();
+	
+	/**
+	 * Close pipe. if pipe is closed, it can't be started again.
+	 * 
+	 * @return	<code>true</code> if it closed.
+	 */
+	boolean close();
 
+	/**
+	 * GEts the buffer size.
+	 * 
+	 * @return Buffer size.
+	 */
 	int getBufferSize();
 
+	/**
+	 * Sets buffer size.
+	 * 
+	 * @param bufferSize Buffer size.
+	 */
 	void setBufferSize(int bufferSize);
 
+	/**
+	 * If the pipe is running.
+	 * 
+	 * @return <code>true</code> if the pipe is running.
+	 */
 	boolean isRunning();
 	
+	/**
+	 * Adds pipe listener.
+	 * 
+	 * @param pipeListener Pipe listener.
+	 */
 	void addPipeListener(PipeListener pipeListener);
 	
+	/**
+	 * Removes pipe listener.
+	 * 
+	 * @param pipeListener Pipe listener.
+	 */
 	void removePipeListener(PipeListener pipeListener);
 
 }

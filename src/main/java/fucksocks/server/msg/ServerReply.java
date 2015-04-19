@@ -18,7 +18,7 @@ package fucksocks.server.msg;
 
 public enum ServerReply {
 	
-	SUCCESSED((byte)0x00),
+	SUCCESSED(0x00),
 	GENERAL_SOCKS_SERVER_FAILURE(0x01),
 	CONNECTION_NOT_ALLOWED_BY_RELESET(0x02),
 	NETWORK_UNREACHABLE(0x03),

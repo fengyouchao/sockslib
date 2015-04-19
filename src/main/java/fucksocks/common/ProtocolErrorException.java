@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-package fucksocks.server.msg;
+package fucksocks.common;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import fucksocks.common.SocksException;
-import fucksocks.server.Session;
 
 /**
- * 
- * The interface <code>ReadableMessage</code> represents a message that can be read by 
- * {@link Session}.
+ * The class <code>ProtocolErrorException</code> will be threw 
+ * when there is a SOCKS protocol error.
  * 
  * @author Youchao Feng
- * @date Apr 5, 2015 10:35:12 AM
+ * @date Apr 18, 2015 11:19:50 PM
  * @version 1.0
  *
  */
-public interface ReadableMessage extends Message {
-	
-	public void read(InputStream inputStream) throws SocksException, IOException;
+public class ProtocolErrorException extends SocksException{
+
+	private static final long serialVersionUID = 1L;
+
+	public ProtocolErrorException(String msg) {
+		super(msg);
+	}
 
 }

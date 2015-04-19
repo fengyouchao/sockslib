@@ -33,24 +33,24 @@ import fucksocks.common.UsernamePasswordAuthentication;
  * @version 1.0
  *
  */
-public class UsernamePasswordMessage implements ReadableMessage{
-	
+public class UsernamePasswordMessage implements ReadableMessage, WritableMessage {
+
 	private UsernamePasswordAuthentication usernamePasswordAutencation;
-	
+
 	private int version  = 0x01;
-	
+
 	private int usernameLength;
-	
+
 	private int passwordLength;
-	
+
 	private String username;
-	
+
 	private String password;
-	
+
 	public UsernamePasswordMessage() {
-	
+
 	}
-	
+
 	public UsernamePasswordMessage(String username, String password){
 		this.username = username;
 		this.password = password;
@@ -60,58 +60,55 @@ public class UsernamePasswordMessage implements ReadableMessage{
 
 	@Override
 	public byte[] getBytes() {
-		
-		System.out.println("++"+username);
-		System.out.println("++"+password);
+
 		final int SIZE = 3 + usernameLength + passwordLength;
-		
-		System.out.println("Size:"+SIZE);
+
 		byte[] bytes = new byte[SIZE];
-		
-		bytes[1] = (byte) version;
-		bytes[2] = (byte) usernameLength;
+
+		bytes[0] = (byte) version;
+		bytes[1] = (byte) usernameLength;
 		for (int i = 0; i < usernameLength; i++) {
-			bytes[3 + i] = username.getBytes()[i];
+			bytes[2 + i] = username.getBytes()[i];
 		}
-		
-		bytes[3 + usernameLength] = (byte) passwordLength;
-		
+
+		bytes[2 + usernameLength] = (byte) passwordLength;
+
 		for (int i = 0; i < passwordLength; i++) {
-			bytes[ 4 + usernameLength + i] = password.getBytes()[i];
+			bytes[ 3 + usernameLength + i] = password.getBytes()[i];
 		}
-		
+
 		return bytes;
 	}
 
 	@Override
-	public void read(InputStream inputStream) {
-		try {
-			version = inputStream.read();
-			usernameLength = inputStream.read();
-			byte[] buffer = new byte[usernameLength];
-			int size = inputStream.read(buffer);
-			
-			if(size != usernameLength){
-				throw new SocksException("Protocol error");
-			}
-			username = new String(buffer);
-			passwordLength = inputStream.read();
-			buffer = new byte[passwordLength];
-			size = inputStream.read(buffer);
-			if(size != passwordLength){
-				throw new SocksException("Protocol error");
-			}
-			
-			password = new String(buffer);
-			
-			usernamePasswordAutencation = new UsernamePasswordAuthentication(username, password);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public int getLength() {
+		return getBytes().length;
 	}
-	
-	
+
+	@Override
+	public void read(InputStream inputStream)  throws SocksException, IOException{
+		version = inputStream.read();
+		usernameLength = inputStream.read();
+		byte[] buffer = new byte[usernameLength];
+		int size = inputStream.read(buffer);
+
+		if(size != usernameLength){
+			throw new SocksException("Protocol error");
+		}
+		username = new String(buffer);
+		passwordLength = inputStream.read();
+		buffer = new byte[passwordLength];
+		size = inputStream.read(buffer);
+		if(size != passwordLength){
+			throw new SocksException("Protocol error");
+		}
+
+		password = new String(buffer);
+
+		usernamePasswordAutencation = new UsernamePasswordAuthentication(username, password);
+	}
+
+
 
 	public int getVersion() {
 		return version;
@@ -136,5 +133,5 @@ public class UsernamePasswordMessage implements ReadableMessage{
 	public UsernamePasswordAuthentication getUsernamePasswordAutentication() {
 		return usernamePasswordAutencation;
 	}
-	
+
 }

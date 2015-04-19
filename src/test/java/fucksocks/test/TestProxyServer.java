@@ -18,32 +18,29 @@ package fucksocks.test;
 
 import java.io.IOException;
 
-import fucksocks.common.SocksException;
-import fucksocks.server.GenericSocksProxyServer;
-import fucksocks.server.Socks5Handler;
 import fucksocks.server.SocksProxyServer;
-import fucksocks.server.UsernamePasswordAuthenticator;
+import fucksocks.server.SocksProxyServerFactory;
 
+/**
+ * The class <code>TestProxyServer</code> a test class to 
+ * start a SOCKS5 proxy server.
+ * 
+ * @author Youchao Feng
+ * @date Apr 19, 2015 11:43:22 PM
+ * @version 1.0
+ *
+ */
 public class TestProxyServer {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		UsernamePasswordAuthenticator authenticator = new UsernamePasswordAuthenticator();
-		authenticator.addUser("socks", "1234");
-		
-		SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class);
-		proxyServer.setAuthenticator(authenticator);
+	
+		SocksProxyServer proxyServer = SocksProxyServerFactory.newNoAuthenticaionServer();
 		
 		try {
 			proxyServer.start();
-		} catch (SocksException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-//		proxyServer.shutdown();
 	}
 
 }

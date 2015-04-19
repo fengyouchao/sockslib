@@ -21,9 +21,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.HashMap;
 import java.util.Map;
 
-import fucksocks.server.msg.Message;
+import fucksocks.common.SocksException;
+import fucksocks.server.msg.WritableMessage;
 import fucksocks.server.msg.ReadableMessage;
 
 
@@ -44,11 +46,11 @@ public class SocksSession implements Session{
 	private InputStream inputStream;
 
 	private OutputStream outputStream;
-	
+
 	private Map<Long, Session> sessions;
-	
+
 	private SocketAddress remoteSocketAddress;
-	
+
 	private Map<Object, Object> attributes;
 
 	public SocksSession() {
@@ -69,6 +71,8 @@ public class SocksSession implements Session{
 		}
 		remoteSocketAddress = socket.getRemoteSocketAddress();
 
+		attributes = new HashMap<Object, Object>();
+
 	}
 
 	@Override
@@ -77,34 +81,25 @@ public class SocksSession implements Session{
 	}
 
 	@Override
-	public void write(byte[] bytes) {
-		try {
-			outputStream.write(bytes);
-			outputStream.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void write(byte[] bytes) throws SocksException, IOException{
+		outputStream.write(bytes);
+		outputStream.flush();
 	}
 
 	@Override
-	public void write(Message message) {
+	public void write(WritableMessage message) throws SocksException, IOException{
 		write(message.getBytes());
 	}
 
 	@Override
-	public int read(byte[] byetes) {
-		try {
-			return inputStream.read(byetes);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return -1;
+	public int read(byte[] byetes) throws SocksException, IOException{
+		return inputStream.read(byetes);
 	}
 
 	@Override
-	public int read(ReadableMessage message) {
+	public int read(ReadableMessage message) throws SocksException, IOException{
 		message.read(inputStream);
-		return message.getBytes().length;
+		return message.getLength();
 	}
 
 	@Override
@@ -142,20 +137,16 @@ public class SocksSession implements Session{
 	}
 
 	@Override
-	public void write(byte[] bytes, int offset, int length) {
-		try {
-			outputStream.write(bytes, offset, length);
-			outputStream.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void write(byte[] bytes, int offset, int length) throws SocksException, IOException{
+		outputStream.write(bytes, offset, length);
+		outputStream.flush();
 	}
 
 	@Override
 	public Map<Long, Session> getManagedSessions() {
 		return sessions;
 	}
-	
+
 	@Override
 	public SocketAddress getRemoteAddress(){
 		return remoteSocketAddress;

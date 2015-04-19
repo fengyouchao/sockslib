@@ -19,11 +19,12 @@ package fucksocks.server;
 import fucksocks.common.Authentication;
 import fucksocks.common.AuthenticationException;
 import fucksocks.common.UsernamePasswordAuthentication;
+import fucksocks.common.methods.UsernamePasswordMethod;
 
 /**
  * 
  * The class <code>UsernamePasswordAuthenticator</code> represents a username 
- * password authenticator.
+ * password authenticator. It will be used by {@link UsernamePasswordMethod}.
  *
  * @author Youchao Feng
  * @date Apr 16, 2015 11:30:46 AM
@@ -32,6 +33,9 @@ import fucksocks.common.UsernamePasswordAuthentication;
  */
 public class UsernamePasswordAuthenticator implements Authenticator{
 	
+	/**
+	 * {@link RamBasedUserManager} is default.
+	 */
 	private UserManager userManager = new RamBasedUserManager();
 	
 	public static final String USER_KEY = "USER";

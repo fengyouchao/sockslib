@@ -16,13 +16,15 @@
 
 package fucksocks.server;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.Map;
 
-import fucksocks.server.msg.Message;
+import fucksocks.common.SocksException;
+import fucksocks.server.msg.WritableMessage;
 import fucksocks.server.msg.ReadableMessage;
 
 /**
@@ -48,7 +50,7 @@ public interface Session {
 	 * 
 	 * @param bytes bytes
 	 */
-	public void write(byte[] bytes);
+	public void write(byte[] bytes) throws SocksException, IOException;
 	
 	/**
 	 * Writes bytes in output stream.
@@ -57,14 +59,14 @@ public interface Session {
 	 * @param offset	offset
 	 * @param length	bytes length.
 	 */
-	public void write(byte[] bytes, int offset, int length);
+	public void write(byte[] bytes, int offset, int length) throws SocksException, IOException;
 	
 	/**
 	 * Writes <code>Message</code> in output stream.
 	 * 
-	 * @param message {@link Message} instance.
+	 * @param message {@link WritableMessage} instance.
 	 */
-	public void write(Message message);
+	public void write(WritableMessage message) throws SocksException, IOException;
 	
 	/**
 	 * Read a buffer.
@@ -72,7 +74,7 @@ public interface Session {
 	 * @param byetes Buffer which read in.
 	 * @return	Read length
 	 */
-	public int read(byte[] byetes);
+	public int read(byte[] byetes) throws SocksException, IOException;
 	
 	/**
 	 * Reads a message.
@@ -80,7 +82,7 @@ public interface Session {
 	 * @param message	a readable message.
 	 * @return	Read bytes size.
 	 */
-	public int read(ReadableMessage message);
+	public int read(ReadableMessage message) throws SocksException, IOException;
 	
 	/**
 	 * Gets session ID.

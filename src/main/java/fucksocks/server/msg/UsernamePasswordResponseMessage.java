@@ -16,24 +16,45 @@
 
 package fucksocks.server.msg;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import fucksocks.common.SocksException;
-import fucksocks.server.Session;
-
-/**
- * 
- * The interface <code>ReadableMessage</code> represents a message that can be read by 
- * {@link Session}.
- * 
- * @author Youchao Feng
- * @date Apr 5, 2015 10:35:12 AM
- * @version 1.0
- *
- */
-public interface ReadableMessage extends Message {
+public class UsernamePasswordResponseMessage implements WritableMessage{
 	
-	public void read(InputStream inputStream) throws SocksException, IOException;
+	private final int version = 0x01;
+	
+	private int status;
+	
+	
+	public UsernamePasswordResponseMessage(boolean success) {
+		if (success) {
+			status = 0x00;
+		}
+		else {
+			status = 0x01;
+		}
+	}
+
+	@Override
+	public byte[] getBytes() {
+		byte[] bytes = new byte[2];
+		bytes[0] = (byte)version;
+		bytes[1] = (byte) status;
+		return bytes;
+	}
+
+	@Override
+	public int getLength() {
+		return getBytes().length;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public int getVersion() {
+		return version;
+	}
 
 }

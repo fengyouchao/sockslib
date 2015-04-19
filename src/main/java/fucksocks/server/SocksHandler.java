@@ -40,4 +40,8 @@ public interface SocksHandler extends Runnable{
 
 	public void setMethodSelector(MethodSelector methodSelector);
 
+	int getBufferSize();
+
+	void setBufferSize(int bufferSize);
+
 }

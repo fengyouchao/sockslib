@@ -21,7 +21,6 @@ import java.util.Set;
 
 import fucksocks.common.methods.NoAcceptableMethod;
 import fucksocks.common.methods.SocksMethod;
-import fucksocks.common.methods.SocksMethodRegistry;
 import fucksocks.server.msg.MethodSelectionMessage;
 
 
@@ -38,7 +37,7 @@ import fucksocks.server.msg.MethodSelectionMessage;
  */
 public class SocksMethodSelector implements MethodSelector{
 	
-	private Set<Integer> supportMethods;
+	private Set<SocksMethod> supportMethods;
 	
 	public SocksMethodSelector() {
 		supportMethods = new HashSet<>();
@@ -48,13 +47,9 @@ public class SocksMethodSelector implements MethodSelector{
 	public SocksMethod select(MethodSelectionMessage message) {
 		int[] methods = message.getMethods();
 		for (int i = 0; i < methods.length; i++) {
-			if (supportMethods.contains(methods[i])) {
-				try {
-					return SocksMethodRegistry.getByByte((byte)methods[i]).newInstance();
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
+			for (SocksMethod method : supportMethods) {
+				if (method.getByte() == methods[i]) {
+					return method;
 				}
 			}
 		}
@@ -62,23 +57,18 @@ public class SocksMethodSelector implements MethodSelector{
 	}
 
 	@Override
-	public Set<Integer> getSupportMethods() {
+	public Set<SocksMethod> getSupportMethods() {
 		return supportMethods;
 	}
 
 	@Override
-	public void setSupportMethods(Set<Integer> supportMethods) {
+	public void setSupportMethods(Set<SocksMethod> supportMethods) {
 		this.supportMethods = supportMethods;
 	}
 	
 	@Override
-	public void addSupportMethod(int method){
-		supportMethods.add(method);
-	}
-	
-	@Override
-	public void removeSupportMethod(int method){
-		supportMethods.remove(method);
+	public void removeSupportMethod(SocksMethod socksMethod){
+		supportMethods.remove(socksMethod);
 	}
 	
 	@Override
@@ -88,14 +78,14 @@ public class SocksMethodSelector implements MethodSelector{
 
 	@Override
 	public void addSupportMethod(SocksMethod socksMethod) {
-		supportMethods.add(socksMethod.getByte());
+		supportMethods.add(socksMethod);
 	}
 
 	@Override
 	public void setSupportMethod(SocksMethod... methods) {
 		supportMethods.clear();
 		for (int i = 0; i < methods.length; i++) {
-			supportMethods.add(methods[i].getByte());
+			supportMethods.add(methods[i]);
 		}
 		
 	}

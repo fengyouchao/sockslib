@@ -32,6 +32,7 @@ import fucksocks.common.UsernamePasswordAuthentication;
 import fucksocks.server.Session;
 import fucksocks.server.UsernamePasswordAuthenticator;
 import fucksocks.server.msg.UsernamePasswordMessage;
+import fucksocks.server.msg.UsernamePasswordResponseMessage;
 import fucksocks.utils.LogMessage;
 import fucksocks.utils.LogMessage.MsgType;
 
@@ -49,28 +50,34 @@ import fucksocks.utils.LogMessage.MsgType;
  * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
  */
 public class UsernamePasswordMethod extends AbstractSocksMethod{
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(UsernamePasswordMethod.class);
 
-	private static UsernamePasswordAuthenticator authenticator;
+	private UsernamePasswordAuthenticator authenticator;
 	
+	public UsernamePasswordMethod() {}
+	
+	public UsernamePasswordMethod(UsernamePasswordAuthenticator authenticator) {
+		this.authenticator = authenticator;
+	}
+
 	@Override
 	public final int getByte() {
 		return 0x02;
 	}
-	
+
 	/**
 	 * Do authentication.
 	 */
 	@Override
 	public void doMethod(SocksProxy socksProxy) throws SocksException, IOException {
-		
+
 		Authentication auth = socksProxy.getAuthentication();
 		if(auth == null || ! (auth instanceof UsernamePasswordAuthentication) ){
 			throw new SocksException("Need Username/Password authentication");
 		}
 		UsernamePasswordAuthentication authentication = (UsernamePasswordAuthentication) auth;
-		
+
 		String username = authentication.getUsername();
 		String password = authentication.getPassword();
 		InputStream inputStream = socksProxy.getInputStream();
@@ -80,15 +87,15 @@ public class UsernamePasswordMethod extends AbstractSocksMethod{
 		 * 
 		 * +----+------+----------+------+----------+
 		 * |VER | ULEN | UNAME    | PLEN | PASSWD | |
-         * +----+------+----------+------+----------+
-         * | 1  | 1    | 1 to 255 | 1    | 1 to 255 |
-         * +----+------+----------+------+----------+
-         * The VER field contains the current version of the subnegotiation,
-         * which is X’01’. The ULEN field contains the length of the UNAME field
+		 * +----+------+----------+------+----------+
+		 * | 1  | 1    | 1 to 255 | 1    | 1 to 255 |
+		 * +----+------+----------+------+----------+
+		 * The VER field contains the current version of the subnegotiation,
+		 * which is X’01’. The ULEN field contains the length of the UNAME field
 		 * that follows. The UNAME field contains the username as known to the
 		 * source operating system. The PLEN field contains the length of the
 		 * PASSWD field that follows. The PASSWD field contains the password
-         * association with the given UNAME.
+		 * association with the given UNAME.
 		 * 
 		 */
 		final int USERNAME_LENGTH = username.getBytes().length;
@@ -96,7 +103,7 @@ public class UsernamePasswordMethod extends AbstractSocksMethod{
 		final byte[] bytesOfUsername = username.getBytes();
 		final byte[] bytesOfPassword = password.getBytes();
 		final byte[] bufferSent = new byte[3 + USERNAME_LENGTH + PASSWORD_LENGTH];
-		
+
 		bufferSent[0] = 0x01;							//VER
 		bufferSent[1] = (byte)USERNAME_LENGTH;			//ULEN
 		System.arraycopy(bytesOfUsername, 0, bufferSent, 2, USERNAME_LENGTH);//UNAME
@@ -107,7 +114,7 @@ public class UsernamePasswordMethod extends AbstractSocksMethod{
 		outputStream.flush();
 		//logger send bytes
 		logger.debug("{}", LogMessage.create(bufferSent, MsgType.SEND));
-		
+
 		byte[] authencationResult = new byte[2];
 		inputStream.read(authencationResult);
 		//logger
@@ -124,24 +131,36 @@ public class UsernamePasswordMethod extends AbstractSocksMethod{
 
 	@Override
 	public void doMethod(Session session) throws SocksException, IOException {
+
 		UsernamePasswordMessage usernamePasswordMessage = new UsernamePasswordMessage();
 		session.read(usernamePasswordMessage);
-		System.out.println(usernamePasswordMessage.getUsername()+"==========");
-		System.out.println(usernamePasswordMessage.getPassword()+"==========");
-		authenticator.doAuthenticate(usernamePasswordMessage.getUsernamePasswordAutentication(), 
-				session);
+		logger.debug("client sent authentication: {}:{}",usernamePasswordMessage.getUsername(), 
+				usernamePasswordMessage.getPassword());
+		try {
+			authenticator.doAuthenticate(usernamePasswordMessage.getUsernamePasswordAutentication(), 
+					session);
+		} catch (AuthenticationException e){
+			session.write(new UsernamePasswordResponseMessage(false));
+			throw e;
+		}
+		session.write(new UsernamePasswordResponseMessage(true));
 	}
-
-	public static UsernamePasswordAuthenticator getAuthenticator() {
-		return authenticator;
-	}
-
-	public static void setAuthenticator(UsernamePasswordAuthenticator authenticator) {
-		UsernamePasswordMethod.authenticator = authenticator;
-	}
-
+	
 	@Override
 	public String getMethodName() {
 		return "USERNAME/PASSWORD authentication";
 	}
+
+	public UsernamePasswordAuthenticator getAuthenticator() {
+		return authenticator;
+	}
+
+	public void setAuthenticator(UsernamePasswordAuthenticator authenticator) {
+		this.authenticator = authenticator;
+	}
+
+	public static Logger getLogger() {
+		return logger;
+	}
+
 }

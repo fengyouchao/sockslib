@@ -27,17 +27,22 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fucksocks.common.AnonymousAuthentication;
-import fucksocks.common.SocksException;
-import fucksocks.common.methods.NoAuthencationRequiredMethod;
 import fucksocks.common.methods.SocksMethod;
-import fucksocks.common.methods.UsernamePasswordMethod;
 import fucksocks.server.filters.FilterChain;
 
-
+/**
+ * 
+ * The class <code>GenericSocksProxyServer</code> is a implementation of 
+ * {@link SocksProxyServer}.
+ * 
+ * @author Youchao Feng
+ * @date Apr 19, 2015 1:10:17 PM
+ * @version 1.0
+ *
+ */
 public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
 
-	protected static final Logger logger = LoggerFactory.getLogger( 
+	protected static final Logger logger = LoggerFactory.getLogger(
 			GenericSocksProxyServer.class);
 
 	/**
@@ -77,11 +82,13 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
 	 */
 	private Thread thread;
 	
-	private Authenticator authenticator;
+	private int timeout = 10000;
 	
 	private MethodSelector methodSelector = new SocksMethodSelector();
 	
 	private FilterChain filterChain;
+	
+	private int bufferSize = 1024 * 1024 * 5;
 
 
 	public GenericSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass) {
@@ -100,32 +107,20 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
 		while(!stop){
 			try {
 				Socket socket = serverSocket.accept();
-				
+				socket.setSoTimeout(timeout);
 				Session session =  new SocksSession(getNextSessionId(), socket, sessions);
 				sessions.put(session.getId(), session);
-				logger.info("Accept from:{}, allocate session ID[{}]",
+				logger.info("Accept from:{}, create session[{}]",
 						socket.getRemoteSocketAddress(), session.getId());
 				
-				SocksHandler socksHandler = socksHandlerClass.newInstance();
-				
-				/**临时实现方式，以后可能更改**/
-				if(authenticator != null){
-					UsernamePasswordMethod.setAuthenticator(
-							(UsernamePasswordAuthenticator)authenticator);
-					methodSelector.addSupportMethod(new UsernamePasswordMethod());
-				}
+				SocksHandler socksHandler =  createSocksHandler();
 				
 				/*initialize socks handler*/
-				socksHandler.setSession(session);
-				socksHandler.setMethodSelector(methodSelector);
-				socksHandler.setFilterChain(filterChain);
-				
+				socksHandler.setSession(session);				
+				initializeSocksHandler(socksHandler);
+
 				executorService.execute(socksHandler);
-//				thread.start();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
+				
 			} catch (IOException e) {
 				//Catches the exception that cause by shutdown method.
 				if(e.getMessage().equals("Socket closed") && stop){
@@ -159,23 +154,43 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
 	}
 	
 	@Override
-	public void start() throws SocksException, IOException {
+	public void start() throws IOException {
 		start(DEFAULT_SOCKS_PORT);
 	}
 
 	@Override
-	public void start(int bindPort) throws SocksException, IOException {
+	public void start(int bindPort) throws IOException {
 		serverSocket = new ServerSocket(bindPort);
 		thread = new Thread(this);
 		thread.start();
 
 		logger.info("Create proxy server at port:{}", bindPort);
 	}
+	
+	
+	@Override
+	public SocksHandler createSocksHandler() {
+		try {
+			return socksHandlerClass.newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Override
+	public void initializeSocksHandler(SocksHandler socksHandler) {
+		socksHandler.setMethodSelector(methodSelector);
+		socksHandler.setFilterChain(filterChain);
+		socksHandler.setBufferSize(bufferSize);
+	}
 
 	/**
 	 * Closes all sessions.
 	 */
-	private void closeAllSession() {
+	protected void closeAllSession() {
 		for(long key: sessions.keySet()){
 			sessions.get(key).close();
 		}
@@ -197,13 +212,28 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
 	}
 
 	@Override
-	public void setAuthenticator(Authenticator authenticator) {
-		this.authenticator = authenticator;
+	public void setSupportedMethod(SocksMethod... methods) {
+		methodSelector.setSupportMethod(methods);
 	}
 
 	@Override
-	public void setSupportedMethod(SocksMethod... methods) {
-		methodSelector.setSupportMethod(methods);
+	public int getTimeout() {
+		return timeout;
+	}
+
+	@Override
+	public void setTimeout(int timeout) {
+		this.timeout = timeout;
+	}
+
+	@Override
+	public int getBufferSize() {
+		return bufferSize;
+	}
+
+	@Override
+	public void setBufferSize(int bufferSize) {
+		this.bufferSize = bufferSize;
 	}
 
 }

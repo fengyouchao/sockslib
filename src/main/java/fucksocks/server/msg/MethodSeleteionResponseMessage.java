@@ -28,7 +28,7 @@ import fucksocks.common.methods.SocksMethod;
  * @version 1.0
  *
  */
-public class MethodSeleteionResponseMessage implements Message{
+public class MethodSeleteionResponseMessage implements WritableMessage{
 	
 	private int version;
 	
@@ -55,6 +55,11 @@ public class MethodSeleteionResponseMessage implements Message{
 		bytes[1] = (byte)method;
 		return bytes;
 	}
+	
+	@Override
+	public int getLength() {
+		return getBytes().length;
+	}
 
 	public int getVersion() {
 		return version;
@@ -71,4 +76,5 @@ public class MethodSeleteionResponseMessage implements Message{
 	public void setMethod(int method) {
 		this.method = method;
 	}
+
 }

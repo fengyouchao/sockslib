@@ -18,7 +18,7 @@ package fucksocks.common.io;
 
 public interface PipeListener {
 	
-	void onClosed(Pipe pipe);
+	void onStoped(Pipe pipe);
 	
 	void onStarted(Pipe pipe);
 	

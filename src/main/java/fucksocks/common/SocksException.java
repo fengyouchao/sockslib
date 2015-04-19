@@ -18,6 +18,8 @@ package fucksocks.common;
 
 import java.io.IOException;
 
+import fucksocks.server.msg.ServerReply;
+
 /**
  * The class <code>SocksException</code> represents an exception about
  * SOCKS protocol.
@@ -31,6 +33,8 @@ public class SocksException extends IOException{
 	private static final long serialVersionUID = 1L;
 
 	private static final String NO_ACCEPTABLE_METHODS = "NO ACCEPTABLE METHODS";
+	
+	private ServerReply serverReply;
 	
 	private static final String serverReplyMessage[] = { 
 		"General SOCKS server failure",
@@ -58,7 +62,13 @@ public class SocksException extends IOException{
 	public static final SocksException protocolNotSupported(){
 		return new SocksException("Protocol not suppoted");
 	}
-
+	
+	public static final SocksException serverReplyException(ServerReply reply) {
+		SocksException ex =  serverReplyException(reply.getValue());
+		ex.setServerReply(reply);
+		return ex;
+	}
+	
 	public static final SocksException serverReplyException(byte reply) {
 		int code = reply;
 		code = code & 0xff;
@@ -68,4 +78,13 @@ public class SocksException extends IOException{
 		code  = code -1;
 		return new SocksException(serverReplyMessage[code]);
 	}
+
+	public ServerReply getServerReply() {
+		return serverReply;
+	}
+
+	public void setServerReply(ServerReply serverReply) {
+		this.serverReply = serverReply;
+	}
+	
 }
