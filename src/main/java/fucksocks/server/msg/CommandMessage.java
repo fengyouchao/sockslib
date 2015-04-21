@@ -22,14 +22,15 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 
+import fucksocks.common.AddressType;
 import fucksocks.common.SocksCommand;
 import fucksocks.common.SocksException;
-import fucksocks.server.AddressType;
 import fucksocks.utils.SocksUtil;
 
 /**
  * 
- * The class <code>RequestCommandMessage</code> represents
+ * The class <code>RequestCommandMessage</code> represents a SOCKS5 command 
+ * message.
  * 
  * @author Youchao Feng
  * @date Apr 6, 2015 11:10:12 AM

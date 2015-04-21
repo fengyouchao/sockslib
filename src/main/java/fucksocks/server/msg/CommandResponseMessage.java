@@ -19,8 +19,8 @@ package fucksocks.server.msg;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import fucksocks.common.AddressType;
 import fucksocks.common.NotImplementException;
-import fucksocks.server.AddressType;
 import fucksocks.utils.SocksUtil;
 
 /**

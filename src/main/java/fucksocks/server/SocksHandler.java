@@ -16,7 +16,10 @@
 
 package fucksocks.server;
 
+import java.util.List;
+
 import fucksocks.server.filters.FilterChain;
+import fucksocks.server.filters.SocksListener;
 
 /**
  * The interface <code>SocksHandler</code> represents a 
@@ -43,5 +46,9 @@ public interface SocksHandler extends Runnable{
 	int getBufferSize();
 
 	void setBufferSize(int bufferSize);
+	
+	public List<SocksListener> getSocksListeners();
+	
+	public void setSocksListeners(List<SocksListener> socksListeners);
 
 }

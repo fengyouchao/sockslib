@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import fucksocks.common.methods.SocksMethod;
+import fucksocks.server.filters.SocksListener;
 
 
 /**
@@ -31,14 +32,14 @@ import fucksocks.common.methods.SocksMethod;
  * @version 1.0
  */
 public interface SocksProxyServer {
-	
+
 	/**
 	 * Starts a SOCKS server bind a default port. 
 	 * 
 	 * @throws IOException		If any I/O error occurs.
 	 */
 	public void start() throws IOException;
-	
+
 	/**
 	 * Starts a SOCKS server and binds a port.
 	 * 
@@ -46,35 +47,39 @@ public interface SocksProxyServer {
 	 * @throws IOException		If any I/O error occurs.
 	 */
 	public void start(int bindPort) throws IOException;
-	
+
 	/**
 	 * Shutdown a SOCKS server.
 	 */
 	public void shutdown();
-	
-	
+
+
 	public SocksHandler createSocksHandler();
-	
+
 	/**
 	 * Initializes {@link SocksHandler}. 
 	 * 
 	 * @param socksHandler The instance of {@link SocksHandler}.
 	 */
 	public void initializeSocksHandler(SocksHandler socksHandler);
-	
+
 	public void setSupportedMethod(SocksMethod... methods );
-	
+
 	public Map<Long, Session> getManagedSessions();
-	
+
 	public void setBufferSize(int bufferSize);
-	
+
 	public int getBufferSize();
-	
+
 	public int getTimeout();
 
 	public void setTimeout(int timeout);
 
-	
+	public void removeSocksListenner(SocksListener socksListener);
+
+	public void addSocksListenner(SocksListener socksListener);
+
+
 	public static final int DEFAULT_SOCKS_PORT = 1080;
 
 }

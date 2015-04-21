@@ -19,7 +19,9 @@ package fucksocks.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import fucksocks.common.methods.SocksMethod;
 import fucksocks.server.filters.FilterChain;
+import fucksocks.server.filters.SocksListener;
 
 /**
  * 
@@ -89,6 +92,8 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
 	private FilterChain filterChain;
 	
 	private int bufferSize = 1024 * 1024 * 5;
+	
+	private List<SocksListener> socksListeners;
 
 
 	public GenericSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass) {
@@ -185,6 +190,7 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
 		socksHandler.setMethodSelector(methodSelector);
 		socksHandler.setFilterChain(filterChain);
 		socksHandler.setBufferSize(bufferSize);
+		socksHandler.setSocksListeners(socksListeners);
 	}
 
 	/**
@@ -234,6 +240,22 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable{
 	@Override
 	public void setBufferSize(int bufferSize) {
 		this.bufferSize = bufferSize;
+	}
+
+	@Override
+	public void addSocksListenner(SocksListener socksListener) {
+		if (socksListener == null) {
+			socksListeners = new ArrayList<>();
+		}
+		socksListeners.add(socksListener);
+	}
+
+	@Override
+	public void removeSocksListenner(SocksListener socksListener) {
+		if (socksListener == null) {
+			return;
+		}
+		socksListeners.remove(socksListener);
 	}
 
 }

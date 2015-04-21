@@ -16,11 +16,13 @@
 
 package fucksocks.server.filters;
 
+import fucksocks.common.SocksException;
+
 public interface FilterChain {
 	
 	public void addFilter(String name, Filter filter);
 	
-	public void nextFilter();
+	public void nextFilter() throws SocksException;
 	
 	public void removeFilter(Filter filter);
 

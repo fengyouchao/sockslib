@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package fucksocks.server.filters;
+package fucksocks.common;
 
-import fucksocks.common.SocksException;
-import fucksocks.server.Session;
-import fucksocks.server.msg.CommandMessage;
-
-public interface Filter {
+public class AddressType {
 	
-	void doFilter(Session session, CommandMessage message, FilterChain filterChain) throws SocksException;
+	public static final int IPV4 = 0x01;
+	public static final int DOMAINNAME = 0x03;
+	public static final int IPV6 = 0x04;
+	
+	public static boolean isSupport(int type) {
+		return type == IPV4 || type == DOMAINNAME || type == IPV6;
+	}
 
 }

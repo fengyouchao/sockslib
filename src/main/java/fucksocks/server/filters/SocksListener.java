@@ -14,16 +14,25 @@
  * limitations under the License.
  */
 
-package fucksocks.server;
+package fucksocks.server.filters;
 
-public class AddressType {
+import fucksocks.server.Session;
+import fucksocks.server.msg.CommandMessage;
+
+/**
+ * 
+ * The class <code>SocksListener</code> represents a listener that can listen 
+ * some event of SOCKS server.
+ * 
+ * @author Youchao Feng
+ * @date Apr 22, 2015 12:19:19 AM
+ * @version 1.0
+ *
+ */
+public interface SocksListener {
 	
-	public static final int IPV4 = 0x01;
-	public static final int DOMAINNAME = 0x03;
-	public static final int IPV6 = 0x04;
+	public void onSessionCreated(Session session);
 	
-	public static boolean isSupport(int type) {
-		return type == IPV4 || type == DOMAINNAME || type == IPV6;
-	}
+	public void onCommandReceived(Session session, CommandMessage message);
 
 }

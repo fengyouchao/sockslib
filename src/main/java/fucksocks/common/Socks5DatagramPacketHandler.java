@@ -24,7 +24,6 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fucksocks.client.Socks5;
 import fucksocks.utils.SocksUtil;
 
 /**
@@ -69,7 +68,7 @@ DatagramPacketDecapsulation{
 
 		buffer[0] = buffer[1] = 0;	//reserved byte
 		buffer[2] = 0;				//fragment byte
-		buffer[3] = ADDRESS_LENGTH == 4?Socks5.ATYPE_IPV4 : Socks5.ATYPE_IPV6;
+		buffer[3] = (byte) (ADDRESS_LENGTH == 4?AddressType.IPV4 : AddressType.IPV6);
 		System.arraycopy(addressBytes,
 				0, buffer, 4, ADDRESS_LENGTH);
 		buffer[4+ADDRESS_LENGTH] = (byte) ((remoteServerPort&0xff00)>>8);
@@ -96,7 +95,7 @@ DatagramPacketDecapsulation{
 		byte[] originalData = null;
 
 		switch (data[3]) {
-		case Socks5.ATYPE_IPV4:
+		case AddressType.IPV4:
 			try {
 				remoteServerAddress = InetAddress.getByAddress(Arrays.copyOfRange(data, 4, 8));
 			} catch (UnknownHostException e) {
@@ -105,7 +104,7 @@ DatagramPacketDecapsulation{
 			remoteServerPort = SocksUtil.bytesToPort(data[8], data[9]);
 			originalData = Arrays.copyOfRange(data, 10, packet.getLength());
 			break;
-		case Socks5.ATYPE_IPV6:
+		case AddressType.IPV6:
 			try {
 				remoteServerAddress = InetAddress.getByAddress(Arrays.copyOfRange(data, 4, 20));
 			} catch (UnknownHostException e) {
@@ -114,7 +113,7 @@ DatagramPacketDecapsulation{
 			remoteServerPort = SocksUtil.bytesToPort(data[20], data[21]);
 			originalData = Arrays.copyOfRange(data, 22, packet.getLength());
 			break;
-		case Socks5.ATYPE_DOMAINNAME:
+		case AddressType.DOMAINNAME:
 			//TODO implements later
 			break;
 

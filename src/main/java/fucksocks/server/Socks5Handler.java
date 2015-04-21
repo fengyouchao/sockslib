@@ -19,6 +19,7 @@ package fucksocks.server;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import fucksocks.common.io.Pipe;
 import fucksocks.common.io.SocketPipe;
 import fucksocks.common.methods.SocksMethod;
 import fucksocks.server.filters.FilterChain;
+import fucksocks.server.filters.SocksListener;
 import fucksocks.server.msg.CommandMessage;
 import fucksocks.server.msg.CommandResponseMessage;
 import fucksocks.server.msg.MethodSelectionMessage;
@@ -72,9 +74,13 @@ public class Socks5Handler implements SocksHandler{
 	private FilterChain filterChain;
 
 	private int bufferSize;
+	
+	private List<SocksListener> socksListeners;
 
 	@Override
 	public void handle(Session session) throws SocksException, IOException {
+		
+		sessionCreated(session);
 
 		MethodSelectionMessage msg = new MethodSelectionMessage();
 		session.read(msg);
@@ -99,6 +105,11 @@ public class Socks5Handler implements SocksHandler{
 
 		try {
 			session.read(commandMessage);	//Read command request.
+
+			logger.info("Session[{}] send Rquest:{}  {}:{}", 
+					session.getId(), commandMessage.getCommand(),
+					commandMessage.getInetAddress(), commandMessage.getPort());
+			
 		} catch (SocksException e) {
 			session.write(new CommandResponseMessage(e.getServerReply()));
 			logger.debug(e.getMessage());
@@ -107,9 +118,7 @@ public class Socks5Handler implements SocksHandler{
 		}
 
 
-		logger.info("Session[{}] send Rquest:{}  {}:{}", 
-				session.getId(), commandMessage.getCommand(),
-				commandMessage.getInetAddress(), commandMessage.getPort());
+		commandReceived(session, commandMessage);
 
 
 		/****************************DO COMMAND******************************************/
@@ -161,7 +170,7 @@ public class Socks5Handler implements SocksHandler{
 			}
 			logger.debug("connect exception:", e);
 		}
-		
+
 		session.write(new CommandResponseMessage(VERSION, reply,
 				bindAddress, bindPort));
 
@@ -185,6 +194,24 @@ public class Socks5Handler implements SocksHandler{
 			}
 		}
 
+	}
+	
+	protected void sessionCreated(Session session) {
+		if (socksListeners == null) {
+			return;
+		}
+		for (int i = 0; i < socksListeners.size(); i++) {
+			socksListeners.get(i).onSessionCreated(session);
+		}
+	}
+	
+	protected void commandReceived(Session session, CommandMessage message) {
+		if (socksListeners == null) {
+			return;
+		}
+		for (int i = 0; i < socksListeners.size(); i++) {
+			socksListeners.get(i).onCommandReceived(session, message);;
+		}
 	}
 
 	@Override
@@ -236,6 +263,16 @@ public class Socks5Handler implements SocksHandler{
 	@Override
 	public void setBufferSize(int bufferSize) {
 		this.bufferSize = bufferSize;
+	}
+
+	@Override
+	public List<SocksListener> getSocksListeners() {
+		return socksListeners;
+	}
+
+	@Override
+	public void setSocksListeners(List<SocksListener> socksListeners) {
+		this.socksListeners = socksListeners;
 	}
 
 }
