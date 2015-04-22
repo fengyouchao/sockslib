@@ -28,7 +28,7 @@ public class UDPTestClient {
 		DatagramSocket clientSocket = new DatagramSocket();
 		String message = "Hello, UDP server";
 		DatagramPacket buffer = new DatagramPacket(message.getBytes(), message.length(),
-				new InetSocketAddress("localhost", 5050));
+				new InetSocketAddress("0.0.0.0", 5050));
 		clientSocket.send(buffer);
 	}
 

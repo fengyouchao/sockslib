@@ -19,6 +19,7 @@ package fucksocks.server;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
@@ -27,7 +28,7 @@ import fucksocks.common.Socks5DatagramPacketHandler;
 
 /**
  * 
- * The class <code>UDPRelyServer</code> represents a UDP rely 
+ * The class <code>UDPRelayServer</code> represents a UDP relay 
  * server.
  * 
  * @author Youchao Feng
@@ -35,7 +36,7 @@ import fucksocks.common.Socks5DatagramPacketHandler;
  * @version 1.0
  *
  */
-public class UDPRelyServer implements Runnable{
+public class UDPRelayServer implements Runnable{
 
 	private Socks5DatagramPacketHandler datagramPacketHandler = new Socks5DatagramPacketHandler();
 
@@ -45,20 +46,47 @@ public class UDPRelyServer implements Runnable{
 
 	private Thread thread;
 
-	private boolean running = true;
-	
-	private SocketAddress clientAddresss;
-	
-	public UDPRelyServer(SocketAddress clientAddresss){
-		this.clientAddresss = clientAddresss;
+	private boolean running = false;
+
+	private InetAddress clientAddresss;
+
+	private int clientPort;
+
+
+	public UDPRelayServer(){
+
 	}
 
+	public static void main(String[] args) throws IOException{
+		UDPRelayServer server = new UDPRelayServer();
+		System.out.println(server.start());
+	}
+
+	public UDPRelayServer(InetAddress clientInetAddress, int clientPort) {
+		this(new InetSocketAddress(clientInetAddress, clientPort));
+	}
+
+	public UDPRelayServer(SocketAddress clientSocketAddresss){
+		if (clientSocketAddresss instanceof InetSocketAddress) {
+			clientAddresss = ((InetSocketAddress) clientSocketAddresss).getAddress();
+			clientPort = ((InetSocketAddress) clientSocketAddresss).getPort();
+		}
+	}
+
+	/**
+	 * Start a UDP relay server.
+	 * 
+	 * @return	Server bind socket address.
+	 * @throws SocketException	If a SOCKS protocol error occurred.
+	 */
 	public SocketAddress start() throws SocketException{
-		@SuppressWarnings("resource")
-		DatagramSocket server = new DatagramSocket();
-		SocketAddress socketAddress = new InetSocketAddress(server.getLocalPort());
+		running = true;
+		server = new DatagramSocket();
+		SocketAddress socketAddress = server.getLocalSocketAddress();
 		thread = new Thread(this);
 		thread.start();
+		datagramPacketHandler.setRelayServerInetAddress(clientAddresss);
+		datagramPacketHandler.setRelayServerPort(clientPort);
 		return socketAddress;
 	}
 
@@ -100,7 +128,39 @@ public class UDPRelyServer implements Runnable{
 		this.bufferSize = bufferSize;
 	}
 
+	public Socks5DatagramPacketHandler getDatagramPacketHandler() {
+		return datagramPacketHandler;
+	}
+
+	public void setDatagramPacketHandler(
+			Socks5DatagramPacketHandler datagramPacketHandler) {
+		this.datagramPacketHandler = datagramPacketHandler;
+	}
+
+	public InetAddress getClientAddresss() {
+		return clientAddresss;
+	}
+
+	public void setClientAddresss(InetAddress clientAddresss) {
+		this.clientAddresss = clientAddresss;
+	}
+
+	public int getClientPort() {
+		return clientPort;
+	}
+
+	public void setClientPort(int clientPort) {
+		this.clientPort = clientPort;
+	}
+
+	public boolean isRunning() {
+		return running;
+	}
+
 	protected boolean isFromClient(DatagramPacket packet) {
+		if(packet.getPort() == clientPort) {
+			return true;
+		}
 		return false;
 	}
 

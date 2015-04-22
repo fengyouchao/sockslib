@@ -63,18 +63,16 @@ DatagramPacketDecapsulation{
 		final byte[] addressBytes = remoteServerAddress.getAddress();
 		final int ADDRESS_LENGTH = remoteServerAddress.getAddress().length;
 		final int remoteServerPort  = packet.getPort();
-		byte[] buffer = new byte[6+ data.length + 
-		                         ADDRESS_LENGTH];
+		byte[] buffer = new byte[6+ data.length + ADDRESS_LENGTH];
 
 		buffer[0] = buffer[1] = 0;	//reserved byte
 		buffer[2] = 0;				//fragment byte
-		buffer[3] = (byte) (ADDRESS_LENGTH == 4?AddressType.IPV4 : AddressType.IPV6);
+		buffer[3] = (byte) (ADDRESS_LENGTH == 4? AddressType.IPV4 : AddressType.IPV6);
 		System.arraycopy(addressBytes,
 				0, buffer, 4, ADDRESS_LENGTH);
-		buffer[4+ADDRESS_LENGTH] = (byte) ((remoteServerPort&0xff00)>>8);
-		buffer[5+ADDRESS_LENGTH] = (byte)(remoteServerPort&0xff);
-		System.arraycopy(data, 0, buffer, 6+ADDRESS_LENGTH, data.length);
-
+		buffer[4+ADDRESS_LENGTH] = SocksUtil.getFisrtByteFromPort(remoteServerPort);
+		buffer[5+ADDRESS_LENGTH] = SocksUtil.getSecondByteFromPort(remoteServerPort);
+		System.arraycopy(data, 0, buffer, 6 + ADDRESS_LENGTH, data.length);
 		return new DatagramPacket(buffer, buffer.length,
 				this.relayServerInetAddress, this.relayServerPort);
 	}

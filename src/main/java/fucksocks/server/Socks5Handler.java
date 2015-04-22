@@ -18,6 +18,7 @@ package fucksocks.server;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.List;
 
@@ -126,12 +127,14 @@ public class Socks5Handler implements SocksHandler{
 		switch (commandMessage.getCommand()) {
 
 		case BIND:
-			throw new NotImplementException("Not implement BIND command");
+			doBind(session, commandMessage);
+			break;
 		case CONNECT:
 			doConnect(session, commandMessage);
 			break;
 		case UDP_ASSOCIATE:
-			throw new NotImplementException("Not implement UDP ASSOCIATE command");
+			doUDPAssociate(session, commandMessage);
+			break;
 		default:
 			throw new NotImplementException("Not support command");
 
@@ -141,7 +144,9 @@ public class Socks5Handler implements SocksHandler{
 
 	}
 
-	private void doConnect(Session session, CommandMessage commandMessage) throws SocksException, IOException{
+	@Override
+	public void doConnect(Session session, CommandMessage commandMessage)
+			throws SocksException, IOException {
 
 		ServerReply reply = null;
 		Socket socket = null;
@@ -194,6 +199,26 @@ public class Socks5Handler implements SocksHandler{
 			}
 		}
 
+	}
+	
+	@Override
+	public void doBind(Session session, CommandMessage commandMessage)
+			throws SocksException, IOException {
+		throw new NotImplementException("Not implement BIND command");
+	}
+	
+	@Override
+	public void doUDPAssociate(Session session, CommandMessage commandMessage)
+		throws SocksException, IOException {	
+		UDPRelayServer udpRelayServer = new UDPRelayServer(
+				commandMessage.getInetAddress(), commandMessage.getPort());
+		InetSocketAddress socketAddress = (InetSocketAddress) udpRelayServer.start();
+		logger.info("Create UDP relay server at[{}] for [{}]", socketAddress, commandMessage.getSocketAddress());
+		session.write(new CommandResponseMessage(
+				VERSION, ServerReply.SUCCESSED, InetAddress.getLocalHost(), socketAddress.getPort()));
+		while(udpRelayServer.isRunning()) {
+			
+		}
 	}
 	
 	protected void sessionCreated(Session session) {

@@ -16,10 +16,13 @@
 
 package fucksocks.server;
 
+import java.io.IOException;
 import java.util.List;
 
+import fucksocks.common.SocksException;
 import fucksocks.server.filters.FilterChain;
 import fucksocks.server.filters.SocksListener;
+import fucksocks.server.msg.CommandMessage;
 
 /**
  * The interface <code>SocksHandler</code> represents a 
@@ -50,5 +53,15 @@ public interface SocksHandler extends Runnable{
 	public List<SocksListener> getSocksListeners();
 	
 	public void setSocksListeners(List<SocksListener> socksListeners);
+	
+	public void doConnect(Session session, CommandMessage commandMessage)
+			throws SocksException, IOException;
+	
+	public void doBind(Session session, CommandMessage commandMessage)
+			throws SocksException, IOException;
+	
+	public void doUDPAssociate(Session session, CommandMessage commandMessage)
+			throws SocksException, IOException;
+
 
 }

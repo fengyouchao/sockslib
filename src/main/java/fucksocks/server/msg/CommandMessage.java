@@ -19,6 +19,8 @@ package fucksocks.server.msg;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 
@@ -225,6 +227,10 @@ public class CommandMessage implements ReadableMessage, WritableMessage{
 
 	public void setAddressType(int addressType) {
 		this.addressType = addressType;
+	}
+	
+	public SocketAddress getSocketAddress(){
+		return new InetSocketAddress(inetAddress, port);
 	}
 
 }
