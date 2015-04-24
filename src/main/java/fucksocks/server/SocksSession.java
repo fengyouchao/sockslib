@@ -1,17 +1,15 @@
-/* 
+/*
  * Copyright 2015-2025 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package fucksocks.server;
@@ -28,7 +26,6 @@ import fucksocks.common.SocksException;
 import fucksocks.server.msg.WritableMessage;
 import fucksocks.server.msg.ReadableMessage;
 
-
 /**
  * The class <code>SocksSession</code> represents
  * 
@@ -37,144 +34,158 @@ import fucksocks.server.msg.ReadableMessage;
  * @version 1.0
  *
  */
-public class SocksSession implements Session{
+public class SocksSession implements Session {
 
-	private Socket socket;
+  private Socket socket;
 
-	private long id;
+  private long id;
 
-	private InputStream inputStream;
+  private InputStream inputStream;
 
-	private OutputStream outputStream;
+  private OutputStream outputStream;
 
-	private Map<Long, Session> sessions;
+  private Map<Long, Session> sessions;
 
-	private SocketAddress remoteSocketAddress;
+  private SocketAddress remoteSocketAddress;
 
-	private Map<Object, Object> attributes;
+  private Map<Object, Object> attributes;
 
-	public SocksSession() {
-	}
+  public SocksSession() {}
 
-	public SocksSession(long id, Socket socket, Map<Long, Session> sessions){
-		if(!socket.isConnected()){
-			throw new IllegalArgumentException("Socket should be a connected socket");
-		}
-		this.id = id;
-		this.socket = socket;
-		this.sessions = sessions;
-		try {
-			this.inputStream = socket.getInputStream();
-			this.outputStream = socket.getOutputStream();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		remoteSocketAddress = socket.getRemoteSocketAddress();
+  public SocksSession(long id, Socket socket, Map<Long, Session> sessions) {
+    if (!socket.isConnected()) {
+      throw new IllegalArgumentException("Socket should be a connected socket");
+    }
+    this.id = id;
+    this.socket = socket;
+    this.sessions = sessions;
+    try {
+      this.inputStream = socket.getInputStream();
+      this.outputStream = socket.getOutputStream();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    remoteSocketAddress = socket.getRemoteSocketAddress();
 
-		attributes = new HashMap<Object, Object>();
+    attributes = new HashMap<Object, Object>();
 
-	}
+  }
 
-	@Override
-	public Socket getSocket() {
-		return socket;
-	}
+  @Override
+  public Socket getSocket() {
+    return socket;
+  }
 
-	@Override
-	public void write(byte[] bytes) throws SocksException, IOException{
-		outputStream.write(bytes);
-		outputStream.flush();
-	}
+  @Override
+  public void write(byte[] bytes) throws SocksException, IOException {
+    outputStream.write(bytes);
+    outputStream.flush();
+  }
 
-	@Override
-	public void write(WritableMessage message) throws SocksException, IOException{
-		write(message.getBytes());
-	}
+  @Override
+  public void write(WritableMessage message) throws SocksException, IOException {
+    write(message.getBytes());
+  }
 
-	@Override
-	public int read(byte[] byetes) throws SocksException, IOException{
-		return inputStream.read(byetes);
-	}
+  @Override
+  public int read(byte[] byetes) throws SocksException, IOException {
+    return inputStream.read(byetes);
+  }
 
-	@Override
-	public int read(ReadableMessage message) throws SocksException, IOException{
-		message.read(inputStream);
-		return message.getLength();
-	}
+  @Override
+  public int read(ReadableMessage message) throws SocksException, IOException {
+    message.read(inputStream);
+    return message.getLength();
+  }
 
-	@Override
-	public long getId() {
-		return id;
-	}
+  @Override
+  public long getId() {
+    return id;
+  }
 
-	@Override
-	public void close() {
-		try {
-			if(inputStream != null){
-				inputStream.close();
-			}
-			if(outputStream != null){
-				outputStream.close();
-			}
-			if (socket !=null && !socket.isClosed()) {
-				socket.close();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally{
-			sessions.remove(id);
-		}
-	}
+  @Override
+  public void close() {
+    try {
+      if (inputStream != null) {
+        inputStream.close();
+      }
+      if (outputStream != null) {
+        outputStream.close();
+      }
+      if (socket != null && !socket.isClosed()) {
+        socket.close();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      sessions.remove(id);
+    }
+  }
 
-	@Override
-	public InputStream getInputStream() {
-		return inputStream;
-	}
+  @Override
+  public InputStream getInputStream() {
+    return inputStream;
+  }
 
-	@Override
-	public OutputStream getOutputStream() {
-		return outputStream;
-	}
+  @Override
+  public OutputStream getOutputStream() {
+    return outputStream;
+  }
 
-	@Override
-	public void write(byte[] bytes, int offset, int length) throws SocksException, IOException{
-		outputStream.write(bytes, offset, length);
-		outputStream.flush();
-	}
+  @Override
+  public void write(byte[] bytes, int offset, int length) throws SocksException, IOException {
+    outputStream.write(bytes, offset, length);
+    outputStream.flush();
+  }
 
-	@Override
-	public Map<Long, Session> getManagedSessions() {
-		return sessions;
-	}
+  @Override
+  public Map<Long, Session> getManagedSessions() {
+    return sessions;
+  }
 
-	@Override
-	public SocketAddress getRemoteAddress(){
-		return remoteSocketAddress;
-	}
+  @Override
+  public SocketAddress getRemoteAddress() {
+    return remoteSocketAddress;
+  }
 
-	@Override
-	public void setAttribute(Object key, Object value) {
-		attributes.put(key, value);
-	}
+  @Override
+  public void setAttribute(Object key, Object value) {
+    attributes.put(key, value);
+  }
 
-	@Override
-	public Object getAttribute(Object key) {
-		return attributes.get(key);
-	}
+  @Override
+  public Object getAttribute(Object key) {
+    return attributes.get(key);
+  }
 
-	@Override
-	public Map<Object, Object> getAttributes() {
-		return attributes;
-	}
+  @Override
+  public Map<Object, Object> getAttributes() {
+    return attributes;
+  }
 
-	@Override
-	public void clearAllAttributes() {
-		attributes.clear();
-	}
+  @Override
+  public void clearAllAttributes() {
+    attributes.clear();
+  }
 
-	@Override
-	public boolean isClose() {
-		return socket.isClosed();
-	}
+  @Override
+  public boolean isClose() {
+    try {
+      socket.sendUrgentData(0);
+      return false;
+    } catch (IOException expected) {
+      return true;
+    }
+  }
+
+  @Override
+  public boolean isConnected() {
+    return socket.isConnected();
+  }
+
+  @Override
+  public String toString() {
+    return "SESSION["+id+"]"+"@"+remoteSocketAddress;
+  }
 
 }
