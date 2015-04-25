@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fucksocks.common.io;
+package fucksocks.server.io;
 
 import java.io.IOException;
 import java.net.Socket;
