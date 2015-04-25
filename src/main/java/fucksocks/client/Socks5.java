@@ -220,7 +220,7 @@ public class Socks5 implements SocksProxy {
   @Override
   public Socket accept() throws SocksException, IOException {
     CommandReplyMesasge messge = socksCmdSender.checkServerReply(proxySocket.getInputStream());
-    logger.debug("accept a connection from:{}:{}" + messge.getIp() + ":" + messge.getPort());
+    logger.debug("accept a connection from:{}",messge.getSocketAddress());
     return this.proxySocket;
   }
 

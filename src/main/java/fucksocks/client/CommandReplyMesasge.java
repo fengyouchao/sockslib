@@ -15,6 +15,8 @@
 package fucksocks.client;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
 
 import fucksocks.utils.SocksUtil;
@@ -78,6 +80,15 @@ public class CommandReplyMesasge implements SocksMessage {
 
   public void setReplyBytes(byte[] replyBytes) {
     this.replyBytes = replyBytes;
+  }
+  
+  public SocketAddress getSocketAddress(){
+    try {
+      return new InetSocketAddress(getIp(), getPort());
+    } catch (UnknownHostException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
 }

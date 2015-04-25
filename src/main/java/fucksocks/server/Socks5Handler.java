@@ -17,6 +17,7 @@ package fucksocks.server;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 
@@ -88,7 +89,7 @@ public class Socks5Handler implements SocksHandler {
     }
     SocksMethod selectedMethod = methodSelector.select(msg);
 
-    logger.debug("[{}]SOKCS5 Server seleted:{}", session,selectedMethod.getMethodName());
+    logger.debug("[{}]SOKCS5 Server seleted:{}", session, selectedMethod.getMethodName());
     // send select method.
     session.write(new MethodSeleteionResponseMessage(VERSION, selectedMethod));
 
@@ -195,7 +196,35 @@ public class Socks5Handler implements SocksHandler {
   @Override
   public void doBind(Session session, CommandMessage commandMessage) throws SocksException,
       IOException {
-    throw new NotImplementException("Not implement BIND command");
+
+    ServerSocket serverSocket = new ServerSocket(commandMessage.getPort());
+    int bindPort = serverSocket.getLocalPort();
+    Socket socket = null;
+    logger.info("Create TCP server bind at {} for session[{}]",
+        serverSocket.getLocalSocketAddress(), session.getId());
+    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCESSED, serverSocket
+        .getInetAddress(), bindPort));
+
+    socket = serverSocket.accept();
+    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCESSED, socket
+        .getLocalAddress(), socket.getLocalPort()));
+
+    Pipe pipe = new SocketPipe(session.getSocket(), socket);
+    pipe.setBufferSize(bufferSize);
+    pipe.start();
+
+    // wait for pipe exit.
+    while (pipe.isRunning()) {
+      try {
+        Thread.sleep(idleTime);
+      } catch (InterruptedException e) {
+        pipe.stop();
+        session.close();
+        logger.info("Session[{}] closed", session.getId());
+      }
+    }
+    serverSocket.close();
+    // throw new NotImplementException("Not implement BIND command");
   }
 
   @Override
