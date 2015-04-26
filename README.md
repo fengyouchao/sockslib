@@ -28,9 +28,9 @@
    DatagramSocket socket = new Socks5DatagramSocket(proxy);
 ```
 
-### SCOKS5 Server(Only support CONNECT method now)
+### SCOKS5 Server
 
 ```java
-    SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class);
-    proxyServer.start(1080);// Creat a SOCKS5 server bind at port 1080
+     SocksProxyServer proxyServer = SocksProxyServerFactory.newNoAuthenticaionServer();
+     proxyServer.start();// Creat a SOCKS5 server bind at port 1080
 ```
