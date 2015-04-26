@@ -62,12 +62,22 @@ public interface MethodSelector {
   /**
    * Removes the method from the sets.
    * 
-   * @param method The method which will be removed.
+   * @param socksMethod The method which will be removed.
    */
   public void removeSupportMethod(SocksMethod socksMethod);
 
+  /**
+   * Adds a method into a support method list.
+   * 
+   * @param socksMethod The method which will be supported.
+   */
   public void addSupportMethod(SocksMethod socksMethod);
 
+  /**
+   * Sets support methods.
+   * 
+   * @param methods Methods supported. 
+   */
   public void setSupportMethod(SocksMethod... methods);
 
 

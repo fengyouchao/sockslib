@@ -39,11 +39,11 @@ import fucksocks.server.Session;
  * @date Mar 17, 2015 11:12:16 AM
  * @version 1.0
  * 
- * @see fucksocks.client.AbstractSocksMethod
- * @see fucksocks.client.GssApiMethod
- * @see fucksocks.client.NoAcceptableMethods
- * @see fucksocks.client.NoAuthencationRequiredMethod
- * @see fucksocks.client.UsernamePasswordMethod
+ * @see fucksocks.common.methods.AbstractSocksMethod
+ * @see fucksocks.common.methods.GssApiMethod
+ * @see fucksocks.common.methods.NoAcceptableMethod
+ * @see fucksocks.common.methods.NoAuthencationRequiredMethod
+ * @see fucksocks.common.methods.UsernamePasswordMethod
  * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
  */
 public interface SocksMethod {

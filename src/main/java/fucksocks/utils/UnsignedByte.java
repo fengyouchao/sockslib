@@ -78,7 +78,7 @@ public final class UnsignedByte {
    * Gets hex string of a byte.
    * 
    * @param b byte
-   * @return
+   * @return Byte as Hex string.
    */
   public static String toHexString(byte b) {
     return Integer.toHexString(toInt(b));

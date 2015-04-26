@@ -22,7 +22,7 @@ package fucksocks.common;
  * @date Mar 19, 2015 2:17:51 PM
  * @version 1.0
  * 
- * @see fucksocks.common.UsernamePasswordAuthencation
+ * @see fucksocks.common.UsernamePasswordAuthentication
  * @see fucksocks.common.AnonymousAuthentication
  */
 public interface Authentication {

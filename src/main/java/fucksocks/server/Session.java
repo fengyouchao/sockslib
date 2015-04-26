@@ -45,16 +45,20 @@ public interface Session {
   /**
    * Writes bytes in output stream.
    * 
-   * @param bytes bytes
+   * @param bytes Bytes
+   * @throws SocksException If a SOCKS protocol error occurred.
+   * @throws IOException If an I/O error occurred.
    */
   public void write(byte[] bytes) throws SocksException, IOException;
 
   /**
    * Writes bytes in output stream.
    * 
-   * @param bytes bytes
-   * @param offset offset
-   * @param length bytes length.
+   * @param bytes Bytes
+   * @param offset Offset
+   * @param length Bytes length.
+   * @throws SocksException If a SOCKS protocol error occurred.
+   * @throws IOException If an I/O error occurred.
    */
   public void write(byte[] bytes, int offset, int length) throws SocksException, IOException;
 
@@ -62,6 +66,8 @@ public interface Session {
    * Writes <code>Message</code> in output stream.
    * 
    * @param message {@link WritableMessage} instance.
+   * @throws SocksException If a SOCKS protocol error occurred.
+   * @throws IOException If an I/O error occurred.
    */
   public void write(WritableMessage message) throws SocksException, IOException;
 
@@ -70,6 +76,8 @@ public interface Session {
    * 
    * @param byetes Buffer which read in.
    * @return Read length
+   * @throws SocksException If a SOCKS protocol error occurred.
+   * @throws IOException If an I/O error occurred.
    */
   public int read(byte[] byetes) throws SocksException, IOException;
 
@@ -78,6 +86,8 @@ public interface Session {
    * 
    * @param message a readable message.
    * @return Read bytes size.
+   * @throws SocksException If a SOCKS protocol error occurred.
+   * @throws IOException If an I/O error occurred.
    */
   public int read(ReadableMessage message) throws SocksException, IOException;
 

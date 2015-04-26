@@ -219,7 +219,7 @@ public interface SocksProxy {
    * @param authentication {@link Authentication} instance.
    * @return instance of SocksProxy.
    * 
-   * @see fucksocks.common.UsernamePasswordAuthencation
+   * @see fucksocks.common.UsernamePasswordAuthentication
    * @see fucksocks.common.AnonymousAuthentication
    */
   SocksProxy setAuthentication(Authentication authentication);
