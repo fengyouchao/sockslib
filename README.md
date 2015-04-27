@@ -1,6 +1,6 @@
 # Fucksocks
 
-**Fucksocks** a Java implementation of **SOCKS5** protocol. This project is under developing.
+**Fucksocks** a Java library of **SOCKS5** protocol. This project is under developing.
 
 ## Quick start
 
@@ -36,7 +36,7 @@ You should put following libraries in your project's *CLASSPATH*:
    DatagramSocket socket = new Socks5DatagramSocket(proxy);
 ```
 
-### SCOKS5 Server
+### SOCKS5 Server
 
 ```java
      SocksProxyServer proxyServer = SocksProxyServerFactory.newNoAuthenticaionServer();
