@@ -4,6 +4,14 @@
 
 ## Quick start
 
+#### Dependency
+
+You should put following libraries in your project's *CLASSPATH*:
+
+* log4j-1.2.17.jar
+* slf4j-log4j12-1.7.5.jar
+* slf4j-api-1.7.5.jar
+
 ### SCOKS5 Client
 
 #### CONNECT
@@ -28,9 +36,9 @@
    DatagramSocket socket = new Socks5DatagramSocket(proxy);
 ```
 
-### SCOKS5 Server(Only support CONNECT method now)
+### SCOKS5 Server
 
 ```java
-    SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class);
-    proxyServer.start(1080);// Creat a SOCKS5 server bind at port 1080
+     SocksProxyServer proxyServer = SocksProxyServerFactory.newNoAuthenticaionServer();
+     proxyServer.start();// Creat a SOCKS5 server bind at port 1080
 ```
