@@ -114,6 +114,7 @@ public class SocksSocket extends Socket {
     this.remoteServerPort = address.getPort();
     proxy.buildConnection();
     proxySocket = proxy.getProxySocket();
+    initProxyChain();
     proxy.requestConnect(address.getAddress(), address.getPort());
 
   }
@@ -128,7 +129,13 @@ public class SocksSocket extends Socket {
     proxy.setProxySocket(proxySocket);
     this.proxy = proxy;
   }
-  
+
+  /**
+   * Initialize proxy chain.
+   * 
+   * @throws SocketException If a SOCKS protocol error occurred.
+   * @throws IOException If an I/O error occurred.
+   */
   private void initProxyChain() throws SocketException, IOException {
     List<SocksProxy> proxyChain = new ArrayList<SocksProxy>();
     SocksProxy temp = proxy;
