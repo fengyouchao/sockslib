@@ -24,6 +24,8 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,8 +82,10 @@ public class SocksSocket extends Socket {
     this.proxy = proxy;
 
     proxy.buildConnection();
-    proxy.reqeustConnect(remoteServerHost, remoteServerPort);
     proxySocket = proxy.getProxySocket();
+    initProxyChain();
+    proxy.requestConnect(remoteServerHost, remoteServerPort);
+
   }
 
   /**
@@ -109,7 +113,9 @@ public class SocksSocket extends Socket {
     this.remoteServerHost = address.getHostString();
     this.remoteServerPort = address.getPort();
     proxy.buildConnection();
-    proxy.reqeustConnect(address.getAddress(), address.getPort());
+    proxySocket = proxy.getProxySocket();
+    proxy.requestConnect(address.getAddress(), address.getPort());
+
   }
 
   /**
@@ -121,6 +127,27 @@ public class SocksSocket extends Socket {
     proxySocket = new Socket();
     proxy.setProxySocket(proxySocket);
     this.proxy = proxy;
+  }
+  
+  private void initProxyChain() throws SocketException, IOException {
+    List<SocksProxy> proxyChain = new ArrayList<SocksProxy>();
+    SocksProxy temp = proxy;
+    while (temp.getChainProxy() != null) {
+      temp.getChainProxy().setProxySocket(proxySocket);
+      proxyChain.add(temp.getChainProxy());
+      temp = temp.getChainProxy();
+    }
+    logger.debug("Proxy chain has:{} proxy", proxyChain.size());
+    if (proxyChain.size() > 0) {
+      SocksProxy pre = proxy;
+      for (int i = 0; i < proxyChain.size(); i++) {
+        SocksProxy chain = proxyChain.get(i);
+        pre.requestConnect(chain.getInetAddress(), chain.getPort());
+        proxy.getChainProxy().buildConnection();
+        pre = chain;
+      }
+    }
+
   }
 
   /**
@@ -135,7 +162,8 @@ public class SocksSocket extends Socket {
     this.remoteServerHost = host;
     this.remoteServerPort = port;
     proxy.buildConnection();
-    proxy.reqeustConnect(remoteServerHost, remoteServerPort);
+    initProxyChain();
+    proxy.requestConnect(remoteServerHost, remoteServerPort);
   }
 
 
@@ -157,7 +185,8 @@ public class SocksSocket extends Socket {
 
     proxy.getProxySocket().setSoTimeout(timeout);
     proxy.buildConnection();
-    proxy.reqeustConnect(endpoint);
+    initProxyChain();
+    proxy.requestConnect(endpoint);
 
   }
 
@@ -358,7 +387,5 @@ public class SocksSocket extends Socket {
   public Socket getProxySocket() {
     return proxy.getProxySocket();
   }
-
-
 
 }

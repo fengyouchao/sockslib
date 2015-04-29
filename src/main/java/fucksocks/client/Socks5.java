@@ -54,6 +54,8 @@ public class Socks5 implements SocksProxy {
    */
   protected static final Logger logger = LoggerFactory.getLogger(Socks5.class);
 
+  private SocksProxy chainProxy;
+
   /**
    * Authentication.
    */
@@ -105,17 +107,6 @@ public class Socks5 implements SocksProxy {
   }
 
   /**
-   * Constructs a Socks5 instance with a java.net.SocketAddress instance.
-   * 
-   * @param socketAddress SOCKS5 server's address.
-   */
-  public Socks5(SocketAddress socketAddress) {
-    this();
-    inetAddress = ((InetSocketAddress) socketAddress).getAddress();
-    port = ((InetSocketAddress) socketAddress).getPort();
-  }
-
-  /**
    * Constructs a Socks5 instance.
    * 
    * @param socketAddress SOCKS5 server's address.
@@ -130,6 +121,17 @@ public class Socks5 implements SocksProxy {
   /**
    * Constructs a Socks5 instance.
    * 
+   * @param host SOCKS5's server host.
+   * @param port SOCKS5's server port.
+   * @throws UnknownHostException If the host can't be resolved.
+   */
+  public Socks5(String host, int port) throws UnknownHostException {
+    this(InetAddress.getByName(host), port);
+  }
+
+  /**
+   * Constructs a Socks5 instance.
+   * 
    * @param inetAddress SOCKS5 server's address.
    * @param port SOCKS5 server's port.
    */
@@ -138,14 +140,23 @@ public class Socks5 implements SocksProxy {
   }
 
   /**
-   * Constructs a Socks5 instance.
+   * Constructs a Socks5 instance with a java.net.SocketAddress instance.
    * 
-   * @param host SOCKS5's server host.
-   * @param port SOCKS5's server port.
-   * @throws UnknownHostException If the host can't be resolved.
+   * @param socketAddress SOCKS5 server's address.
    */
-  public Socks5(String host, int port) throws UnknownHostException {
-    this(InetAddress.getByName(host), port);
+  public Socks5(SocketAddress socketAddress) {
+    this(null, socketAddress);
+  }
+
+  public Socks5(SocksProxy chainProxy, SocketAddress socketAddress) {
+    this();
+    if (socketAddress instanceof InetSocketAddress) {
+      inetAddress = ((InetSocketAddress) socketAddress).getAddress();
+      port = ((InetSocketAddress) socketAddress).getPort();
+      this.setChainProxy(chainProxy);
+    } else {
+      throw new IllegalArgumentException("Only supports java.net.InetSocketAddress");
+    }
   }
 
   /**
@@ -172,7 +183,7 @@ public class Socks5 implements SocksProxy {
     }
     if (proxySocket == null) {
       proxySocket = new Socket(inetAddress, port);
-    } else {
+    } else if (!proxySocket.isConnected()) {
       proxySocket.connect(new InetSocketAddress(inetAddress, port));
     }
 
@@ -182,11 +193,12 @@ public class Socks5 implements SocksProxy {
   }
 
   @Override
-  public CommandReplyMesasge reqeustConnect(String host, int port) throws SocksException,
+  public CommandReplyMesasge requestConnect(String host, int port) throws SocksException,
       IOException {
     if (!alwaysResolveAddressLocally) {
       // resolve address in SOCKS server
       return socksCmdSender.send(proxySocket, SocksCommand.CONNECT, host, port, SOCKS_VERSION);
+
     } else {
       // resolve address in local.
       InetAddress address = InetAddress.getByName(host);
@@ -195,13 +207,13 @@ public class Socks5 implements SocksProxy {
   }
 
   @Override
-  public CommandReplyMesasge reqeustConnect(InetAddress address, int port) throws SocksException,
+  public CommandReplyMesasge requestConnect(InetAddress address, int port) throws SocksException,
       IOException {
     return socksCmdSender.send(proxySocket, SocksCommand.CONNECT, address, port, SOCKS_VERSION);
   }
 
   @Override
-  public CommandReplyMesasge reqeustConnect(SocketAddress address) throws SocksException,
+  public CommandReplyMesasge requestConnect(SocketAddress address) throws SocksException,
       IOException {
     return socksCmdSender.send(proxySocket, SocksCommand.CONNECT, address, SOCKS_VERSION);
   }
@@ -220,7 +232,7 @@ public class Socks5 implements SocksProxy {
   @Override
   public Socket accept() throws SocksException, IOException {
     CommandReplyMesasge messge = socksCmdSender.checkServerReply(proxySocket.getInputStream());
-    logger.debug("accept a connection from:{}",messge.getSocketAddress());
+    logger.debug("accept a connection from:{}", messge.getSocketAddress());
     return this.proxySocket;
   }
 
@@ -319,6 +331,17 @@ public class Socks5 implements SocksProxy {
     return SOCKS_VERSION;
   }
 
+  @Override
+  public SocksProxy getChainProxy() {
+    return chainProxy;
+  }
+
+  @Override
+  public SocksProxy setChainProxy(SocksProxy chainProxy) {
+    this.chainProxy = chainProxy;
+    return this;
+  }
+
   public Socks5 setHost(String host) throws UnknownHostException {
     inetAddress = InetAddress.getByName(host);
     return this;
@@ -342,8 +365,6 @@ public class Socks5 implements SocksProxy {
     return this;
   }
 
-
-
   public static final byte SOCKS_VERSION = 0x05;
   public static final byte RESERVED = 0x00;
 
@@ -361,4 +382,5 @@ public class Socks5 implements SocksProxy {
    * Authentication succeeded code.
    */
   public static final byte AUTHENTICATION_SUCCEEDED = 0x00;
+
 }

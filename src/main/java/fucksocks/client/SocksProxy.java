@@ -110,7 +110,7 @@ public interface SocksProxy {
    * @throws SocksException If any error about SOCKS protocol occurs.
    * @throws IOException if any I/O error occurs.
    */
-  CommandReplyMesasge reqeustConnect(String host, int port) throws SocksException, IOException;
+  CommandReplyMesasge requestConnect(String host, int port) throws SocksException, IOException;
 
   /**
    * This method will send a CONNECT command to SOCKS server and ask SOCKS server to connect remote
@@ -122,7 +122,7 @@ public interface SocksProxy {
    * @throws SocksException If any error about SOCKS protocol occurs.
    * @throws IOException If any I/O error occurs.
    */
-  CommandReplyMesasge reqeustConnect(InetAddress address, int port) throws SocksException,
+  CommandReplyMesasge requestConnect(InetAddress address, int port) throws SocksException,
       IOException;
 
   /**
@@ -134,7 +134,7 @@ public interface SocksProxy {
    * @throws SocksException If any error about SOCKS protocol occurs.
    * @throws IOException If any I/O error occurs.
    */
-  CommandReplyMesasge reqeustConnect(SocketAddress address) throws SocksException, IOException;
+  CommandReplyMesasge requestConnect(SocketAddress address) throws SocksException, IOException;
 
   /**
    * This method will send a BIND command to SOKCS server.
@@ -196,7 +196,7 @@ public interface SocksProxy {
    */
   CommandReplyMesasge requestUdpAssociat(InetAddress address, int port) throws SocksException,
       IOException;
-
+  
   /**
    * Gets InputStream from the socket that connected SOCKS server.
    * 
@@ -280,6 +280,21 @@ public interface SocksProxy {
    * @return The copy of this SocksProxy.
    */
   SocksProxy copy();
+  
+  /**
+   * Returns the chain proxy.
+   * 
+   * @return the chain proxy.
+   */
+  public SocksProxy getChainProxy();
+  
+  /**
+   * Returns the instance of <code>SocksProxy</code>.
+   * 
+   * @param chainProxy chain proxy.
+   * @return the instance of <code>SocksProxy</code>.
+   */
+  public SocksProxy setChainProxy(SocksProxy chainProxy);
 
   /**
    * Default SOCKS server port.
