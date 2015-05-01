@@ -1,6 +1,25 @@
 # Fucksocks
 
-**Fucksocks** a Java library of **SOCKS5** protocol. This project is under developing.
+**Fucksocks** a Java library of **SOCKS5** protocol.
+
+## Featrues
+
+### Client
+
+* TCP proxy
+* UDP proxy
+* Bind
+* Anonymouse authenticaion
+* USERNAME/PASSWORD authencation
+* Proxy chain.
+
+### Server
+
+* TCP proxy
+* UDP proxy
+* Bind
+* Anonymouse authenticaion
+* USERNAME/PASSWORD authencation
 
 ## Quick start
 
