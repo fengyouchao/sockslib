@@ -20,6 +20,7 @@
 * Bind
 * Anonymouse authenticaion
 * USERNAME/PASSWORD authencation
+* Black or white IP lists for clients.
 
 ## Quick start
 
@@ -30,6 +31,7 @@ You should put following libraries in your project's *CLASSPATH*:
 * log4j-1.2.17.jar
 * slf4j-log4j12-1.7.5.jar
 * slf4j-api-1.7.5.jar
+* guava-18.0-rc2.jar
 
 ### SCOKS5 Client
 
