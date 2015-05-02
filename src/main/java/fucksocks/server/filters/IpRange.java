@@ -181,4 +181,14 @@ public class IpRange implements Iterable<Ip>, Serializable {
     return toString().hashCode();
   }
 
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof IpRange) {
+      IpRange range = (IpRange) obj;
+      return range.getStartIp().equals(startIp) && range.getEndIp().equals(endIp);
+    } else {
+      return false;
+    }
+  }
+
 }
