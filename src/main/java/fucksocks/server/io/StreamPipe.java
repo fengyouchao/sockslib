@@ -34,6 +34,9 @@ import org.slf4j.LoggerFactory;
  */
 public class StreamPipe implements Runnable, Pipe {
 
+  /**
+   * Logger that subclasses also can use.
+   */
   protected static final Logger logger = LoggerFactory.getLogger(StreamPipe.class);
 
   /**
@@ -180,7 +183,7 @@ public class StreamPipe implements Runnable, Pipe {
       to.close();
       return true;
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     }
     return false;
   }

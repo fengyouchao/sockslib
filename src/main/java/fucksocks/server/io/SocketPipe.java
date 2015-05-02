@@ -126,7 +126,7 @@ public class SocketPipe implements Pipe {
       logger.debug("Socket pipe closed");
       return true;
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     }
     return false;
   }

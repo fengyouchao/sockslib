@@ -22,6 +22,9 @@ import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import fucksocks.common.SocksException;
 import fucksocks.server.msg.WritableMessage;
 import fucksocks.server.msg.ReadableMessage;
@@ -35,6 +38,8 @@ import fucksocks.server.msg.ReadableMessage;
  *
  */
 public class SocksSession implements Session {
+
+  private static final Logger logger = LoggerFactory.getLogger(SocksSession.class);
 
   private Socket socket;
 
@@ -63,7 +68,7 @@ public class SocksSession implements Session {
       this.inputStream = socket.getInputStream();
       this.outputStream = socket.getOutputStream();
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     }
     remoteSocketAddress = socket.getRemoteSocketAddress();
 
@@ -116,7 +121,7 @@ public class SocksSession implements Session {
         socket.close();
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     } finally {
       sessions.remove(id);
     }
@@ -185,7 +190,7 @@ public class SocksSession implements Session {
 
   @Override
   public String toString() {
-    return "SESSION["+id+"]"+"@"+remoteSocketAddress;
+    return "SESSION[" + id + "]" + "@" + remoteSocketAddress;
   }
 
 }

@@ -49,9 +49,9 @@ import fucksocks.server.msg.ServerReply;
 public class Socks5Handler implements SocksHandler {
 
   /**
-   * Logger
+   * Logger that subclasses also can use.
    */
-  private static final Logger logger = LoggerFactory.getLogger(Socks5Handler.class);
+  protected static final Logger logger = LoggerFactory.getLogger(Socks5Handler.class);
 
   /**
    * Protocol version.
@@ -109,7 +109,6 @@ public class Socks5Handler implements SocksHandler {
     } catch (SocksException e) {
       session.write(new CommandResponseMessage(e.getServerReply()));
       logger.debug(e.getMessage());
-      e.printStackTrace();
       return;
     }
 
