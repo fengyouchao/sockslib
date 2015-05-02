@@ -29,6 +29,8 @@ import org.slf4j.LoggerFactory;
 
 import fucksocks.common.methods.SocksMethod;
 import fucksocks.server.filters.FilterChain;
+import fucksocks.server.filters.SessionFilter;
+import fucksocks.server.filters.SessionFilterChain;
 import fucksocks.server.filters.SocksListener;
 
 /**
@@ -79,6 +81,11 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
    * Thread that start the server.
    */
   private Thread thread;
+  
+  /**
+   * Session filter chain. 
+   */
+  private SessionFilterChain sessionFilterChain = new SessionFilterChain();
 
   private int timeout = 10000;
 
@@ -111,6 +118,14 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
         Session session = new SocksSession(getNextSessionId(), socket, sessions);
         sessions.put(session.getId(), session);
         logger.info("Create {}", session);
+        
+        try {
+          sessionFilterChain.doFilterWork(session);
+        } catch (InterruptedException e) {
+          session.close();
+          logger.info(e.getMessage());
+          continue;
+        }
 
         SocksHandler socksHandler = createSocksHandler();
 
@@ -250,6 +265,24 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
       return;
     }
     socksListeners.remove(socksListener);
+  }
+
+  @Override
+  public void addSessionFilter(SessionFilter sessionFilter) {
+    sessionFilterChain.addFilter(sessionFilter);
+  }
+
+  @Override
+  public void removeSessionFilter(SessionFilter sessionFilter) {
+     sessionFilterChain.remoteFilter(sessionFilter);
+  }
+
+  public SessionFilterChain getSessionFilterChain() {
+    return sessionFilterChain;
+  }
+
+  public void setSessionFilterChain(SessionFilterChain sessionFilterChain) {
+    this.sessionFilterChain = sessionFilterChain;
   }
 
 }

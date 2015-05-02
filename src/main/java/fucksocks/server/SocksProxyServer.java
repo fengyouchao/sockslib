@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import fucksocks.common.methods.SocksMethod;
+import fucksocks.server.filters.SessionFilter;
 import fucksocks.server.filters.SocksListener;
 
 /**
@@ -74,6 +75,10 @@ public interface SocksProxyServer {
   public void removeSocksListenner(SocksListener socksListener);
 
   public void addSocksListenner(SocksListener socksListener);
+  
+  public void addSessionFilter(SessionFilter sessionFilter);
+  
+  public void removeSessionFilter(SessionFilter sessionFilter);
 
 
   public static final int DEFAULT_SOCKS_PORT = 1080;
