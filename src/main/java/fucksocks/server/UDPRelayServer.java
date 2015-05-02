@@ -29,6 +29,12 @@ import fucksocks.common.Socks5DatagramPacketHandler;
 
 /**
  * The class <code>UDPRelayServer</code> represents a UDP relay server.
+ * <p>
+ * The UDP relay server will receive datagram packets from a client and transmit them to the
+ * specified server. It will also receive datagram packets from other UDP servers and send them to
+ * client. UDP relay server must need to know the client's IP address and port to find out where the
+ * datagram packet from, because UDP is not long connection protocol.
+ * </p>
  * 
  * @author Youchao Feng
  * @date Apr 22, 2015 12:54:50 AM
@@ -38,7 +44,7 @@ import fucksocks.common.Socks5DatagramPacketHandler;
 public class UDPRelayServer implements Runnable {
 
   /**
-   * Logger.
+   * Logger that subclasses also can use.
    */
   protected static final Logger logger = LoggerFactory.getLogger(UDPRelayServer.class);
 
@@ -68,18 +74,27 @@ public class UDPRelayServer implements Runnable {
   private boolean running = false;
 
   /**
-   * Client address.
+   * Client's IP address.
    */
   private InetAddress clientAddresss;
 
   /**
-   * Client port.
+   * Client's port.
    */
   private int clientPort;
 
-
+  /**
+   * Constructs a {@link UDPRelayServer} instance.
+   */
   public UDPRelayServer() {}
 
+  /**
+   * Constructs a {@link UDPRelayServer} instance with client's IP address and port. The UDP relay
+   * server will use client's IP and port to find out where the datagram packet from.
+   * 
+   * @param clientInetAddress Client's IP address.
+   * @param clientPort Client's port.
+   */
   public UDPRelayServer(InetAddress clientInetAddress, int clientPort) {
     this(new InetSocketAddress(clientInetAddress, clientPort));
   }
@@ -108,6 +123,9 @@ public class UDPRelayServer implements Runnable {
     return socketAddress;
   }
 
+  /**
+   * Stop the UDP relay server.
+   */
   public void stop() {
     if (running) {
       running = false;
@@ -140,55 +158,17 @@ public class UDPRelayServer implements Runnable {
       if (e.getMessage().equals("Socket closed") && !running) {
         logger.debug("UDP relay server stoped");
       } else {
-        e.printStackTrace();
+        logger.error(e.getMessage(), e);
       }
     }
   }
 
-  public DatagramSocket getServer() {
-    return server;
-  }
-
-  public void setServer(DatagramSocket server) {
-    this.server = server;
-  }
-
-  public int getBufferSize() {
-    return bufferSize;
-  }
-
-  public void setBufferSize(int bufferSize) {
-    this.bufferSize = bufferSize;
-  }
-
-  public Socks5DatagramPacketHandler getDatagramPacketHandler() {
-    return datagramPacketHandler;
-  }
-
-  public void setDatagramPacketHandler(Socks5DatagramPacketHandler datagramPacketHandler) {
-    this.datagramPacketHandler = datagramPacketHandler;
-  }
-
-  public InetAddress getClientAddresss() {
-    return clientAddresss;
-  }
-
-  public void setClientAddresss(InetAddress clientAddresss) {
-    this.clientAddresss = clientAddresss;
-  }
-
-  public int getClientPort() {
-    return clientPort;
-  }
-
-  public void setClientPort(int clientPort) {
-    this.clientPort = clientPort;
-  }
-
-  public boolean isRunning() {
-    return running;
-  }
-
+  /**
+   * Returns <code>true</code> if the the datagram packet from client.
+   * 
+   * @param packet Datagram packet the UDP server received.
+   * @return If the datagram packet is sent from client, it will return <code>true</code>.
+   */
   protected boolean isFromClient(DatagramPacket packet) {
 
     if (packet.getPort() == clientPort && clientAddresss.equals(packet.getAddress())) {
@@ -199,6 +179,105 @@ public class UDPRelayServer implements Runnable {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Return UDP server.
+   * 
+   * @return UDP server.
+   */
+  public DatagramSocket getServer() {
+    return server;
+  }
+
+  /**
+   * Sets UDP server.
+   * 
+   * @param server UDP server.
+   */
+  public void setServer(DatagramSocket server) {
+    this.server = server;
+  }
+
+  /**
+   * Returns buffer size.
+   * 
+   * @return Buffer size.
+   */
+  public int getBufferSize() {
+    return bufferSize;
+  }
+
+  /**
+   * Sets buffer size.
+   * 
+   * @param bufferSize Buffer size.
+   */
+  public void setBufferSize(int bufferSize) {
+    this.bufferSize = bufferSize;
+  }
+
+  /**
+   * Returns datagram packet handler.
+   * 
+   * @return the instance of {@link Socks5DatagramPacketHandler}.
+   */
+  public Socks5DatagramPacketHandler getDatagramPacketHandler() {
+    return datagramPacketHandler;
+  }
+
+  /**
+   * Sets datagram packet handler.
+   * 
+   * @param datagramPacketHandler Datagram packet handler.
+   */
+  public void setDatagramPacketHandler(Socks5DatagramPacketHandler datagramPacketHandler) {
+    this.datagramPacketHandler = datagramPacketHandler;
+  }
+
+  /**
+   * Returns client's IP address.
+   * 
+   * @return clinet's IP address.
+   */
+  public InetAddress getClientAddresss() {
+    return clientAddresss;
+  }
+
+  /**
+   * Sets client's IP address.
+   * 
+   * @param clientAddresss client's IP address.
+   */
+  public void setClientAddresss(InetAddress clientAddresss) {
+    this.clientAddresss = clientAddresss;
+  }
+
+  /**
+   * Returns client's port.
+   * 
+   * @return client's port.
+   */
+  public int getClientPort() {
+    return clientPort;
+  }
+
+  /**
+   * Sets client's port.
+   * 
+   * @param clientPort client's port.
+   */
+  public void setClientPort(int clientPort) {
+    this.clientPort = clientPort;
+  }
+
+  /**
+   * Return <code>true</code> if the UDP relay server is running.
+   * 
+   * @return If the UDP relay server is running, it will return <code>true</code>.
+   */
+  public boolean isRunning() {
+    return running;
   }
 
 }

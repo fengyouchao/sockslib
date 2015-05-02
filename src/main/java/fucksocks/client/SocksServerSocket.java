@@ -28,8 +28,23 @@ import fucksocks.common.SocksException;
 
 /**
  * The class <code>SocksServerSocket</code> is server socket that can bind a port at SOCKS server
- * and accept a connection with SOCKS4 or SOCKS5. This server socket can only accept one connection
- * from specified IP address and port. protocol.
+ * and accept a connection. This server socket can only accept one connection from specified IP
+ * address and port.<br>
+ * <p>
+ * You can create a TCP server in SOCKS server easily by using following codes:
+ * </p>
+ * 
+ * <pre>
+ * SocksProxy proxy = new Socks5(new InetSocketAddress("foo.com", 1080));
+ * //Create SOCKS5 proxy.
+ * 
+ * ServerSocket serverSocket = new SocksServerSocket(proxy, inetAddress, 8080);
+ * // Get bind address in SOCKS server.
+ * InetAddress bindAddress = ((SocksServerSocket) serverSocket).getBindAddress();
+ * // Get bind port in SOKCS server.
+ * int bindPort = ((SocksServerSocket) serverSocket).getBindPort();
+ * Socket socket = serverSocket.accept();
+ * </pre>
  * 
  * @author Youchao Feng
  * @date Mar 25, 2015 11:40:36 AM

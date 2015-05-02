@@ -17,6 +17,9 @@ package fucksocks.server.msg;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import fucksocks.common.AddressType;
 import fucksocks.common.NotImplementException;
 import fucksocks.utils.SocksUtil;
@@ -31,18 +34,43 @@ import fucksocks.utils.SocksUtil;
  */
 public class CommandResponseMessage implements WritableMessage {
 
+  /**
+   * Logger that subclasses also can use.
+   */
+  protected static final Logger logger = LoggerFactory.getLogger(CommandResponseMessage.class);
+
   private int version = 5;
 
+  /**
+   * The reserved field.
+   */
   private int reserved = 0x00;
 
+  /**
+   * Address type.
+   */
   private int addressType = AddressType.IPV4;
 
+  /**
+   * Bind address.
+   */
   private InetAddress bindAddress;
 
+  /**
+   * Bind port.
+   */
   private int bindPort;
 
+  /**
+   * Rely from SOCKS server.
+   */
   private ServerReply reply;
 
+  /**
+   * Constructs a {@link CommandResponseMessage} by {@link ServerReply}.
+   * 
+   * @param reply Reply from server.
+   */
   public CommandResponseMessage(ServerReply reply) {
     byte[] defaultAddress = {0, 0, 0, 0};
     this.reply = reply;
@@ -50,10 +78,18 @@ public class CommandResponseMessage implements WritableMessage {
       bindAddress = InetAddress.getByAddress(defaultAddress);
       addressType = 0x01;
     } catch (UnknownHostException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     }
   }
 
+  /**
+   * Constructs a {@link CommandResponseMessage}.
+   * 
+   * @param version Version
+   * @param reply Sever reply.
+   * @param bindAddress Bind IP address.
+   * @param bindPort Bind port.
+   */
   public CommandResponseMessage(int version, ServerReply reply, InetAddress bindAddress,
       int bindPort) {
     this.version = version;

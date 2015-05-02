@@ -24,10 +24,23 @@ package fucksocks.common;
  */
 public class AddressType {
 
+  /**
+   * IP version 4 address.
+   */
   public static final int IPV4 = 0x01;
+  /**
+   * Domain name.
+   */
   public static final int DOMAINNAME = 0x03;
+  
+  /**
+   * IP version 6 address.
+   */
   public static final int IPV6 = 0x04;
 
+  /**
+   * A private constructor.
+   */
   private AddressType() {}
 
   public static boolean isSupport(int type) {

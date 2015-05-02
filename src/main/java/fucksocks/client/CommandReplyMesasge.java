@@ -19,10 +19,14 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import fucksocks.common.AddressType;
 import fucksocks.utils.SocksUtil;
 
 /**
- * The class <code>RequestCmdReplyMesasge</code> represents the reply message from SOCKS server when
+ * The class <code>RequestCmdReplyMesasge</code> represents the message that sent by SOCKS server when
  * client sends a command request.
  * 
  * @author Youchao Feng
@@ -32,12 +36,18 @@ import fucksocks.utils.SocksUtil;
 public class CommandReplyMesasge implements SocksMessage {
 
   /**
+   * Logger that subclasses also can use.
+   */
+  protected Logger logger = LoggerFactory.getLogger(CommandReplyMesasge.class);
+
+  /**
    * The bytes that received from SOCKS server.
    */
   private byte[] replyBytes;
 
   /**
-   * Constructs CommandReplyMesasge instance by bytes that received from SOCKS server.
+   * Constructs an instance of {@link CommandReplyMesasge} with an array of bytes that received from
+   * SOCKS server.
    * 
    * @param replyBytes The bytes that received from SOCKS server.
    */
@@ -46,6 +56,10 @@ public class CommandReplyMesasge implements SocksMessage {
   }
 
 
+  /**
+   * Returns <code>true</code> if the command request is success.
+   * @return
+   */
   public boolean isSuccess() {
     if (replyBytes.length < 10) {
       return false;
@@ -53,14 +67,20 @@ public class CommandReplyMesasge implements SocksMessage {
     return replyBytes[1] == 0;
   }
 
+  /**
+   * Gets IP address from the bytes that sent by SOCKS server.
+   * 
+   * @return IP address.
+   * @throws UnknownHostException If the host is unknown.
+   */
   public InetAddress getIp() throws UnknownHostException {
     byte[] addressBytes = null;
 
-    if (replyBytes[3] == Socks5.ATYPE_IPV4) {
+    if (replyBytes[3] == AddressType.IPV4) {
       addressBytes = new byte[4];
     }
 
-    else if (replyBytes[3] == Socks5.ATYPE_IPV6) {
+    else if (replyBytes[3] == AddressType.IPV6) {
       addressBytes = new byte[16];
     }
 
@@ -68,25 +88,45 @@ public class CommandReplyMesasge implements SocksMessage {
     return InetAddress.getByAddress(addressBytes);
   }
 
+  /**
+   * Gets port from bytes that sent by SOCKS server.
+   * 
+   * @return port.
+   */
   public int getPort() {
 
     return SocksUtil.bytesToPort(replyBytes[replyBytes.length - 2],
         replyBytes[replyBytes.length - 1]);
   }
 
+  /**
+   * Returns the bytes that sent by SOCKS server.
+   * 
+   * @return The bytes that sent by SOCKS server.
+   */
   public byte[] getReplyBytes() {
     return replyBytes;
   }
 
+  /**
+   * Sets reply bytes.
+   * 
+   * @param replyBytes The bytes that sent by SOCKS server.
+   */
   public void setReplyBytes(byte[] replyBytes) {
     this.replyBytes = replyBytes;
   }
-  
-  public SocketAddress getSocketAddress(){
+
+  /**
+   * Gets the socket address.
+   * 
+   * @return Socket address.
+   */
+  public SocketAddress getSocketAddress() {
     try {
       return new InetSocketAddress(getIp(), getPort());
     } catch (UnknownHostException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     }
     return null;
   }

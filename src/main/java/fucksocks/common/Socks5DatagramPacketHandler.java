@@ -24,10 +24,16 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fucksocks.client.Socks5DatagramSocket;
+import fucksocks.server.Socks5Handler;
 import fucksocks.utils.SocksUtil;
 
 /**
  * The class <code>Socks5DatagramPacketHandler</code> represents a datagram packet handler.
+ * <p>
+ * This class can encapsulate a datagram packet or decapsulate a datagram packet to help
+ * {@link Socks5DatagramSocket} and {@link Socks5Handler} to implement UDP ASSOCIATE.
+ * </p>
  * 
  * @author Youchao Feng
  * @date Mar 24, 2015 9:09:39 PM
@@ -37,6 +43,9 @@ import fucksocks.utils.SocksUtil;
 public class Socks5DatagramPacketHandler implements DatagramPacketEncapsulation,
     DatagramPacketDecapsulation {
 
+  /**
+   * Logger that subclasses also can use.
+   */
   protected static final Logger logger = LoggerFactory.getLogger(Socks5DatagramPacketHandler.class);
 
   public Socks5DatagramPacketHandler() {
@@ -85,26 +94,37 @@ public class Socks5DatagramPacketHandler implements DatagramPacketEncapsulation,
     byte[] originalData = null;
 
     switch (data[3]) {
+
       case AddressType.IPV4:
         try {
           remoteServerAddress = InetAddress.getByAddress(Arrays.copyOfRange(data, 4, 8));
         } catch (UnknownHostException e) {
-          e.printStackTrace();
+          logger.error(e.getMessage(), e);
         }
         remoteServerPort = SocksUtil.bytesToPort(data[8], data[9]);
         originalData = Arrays.copyOfRange(data, 10, packet.getLength());
         break;
+
       case AddressType.IPV6:
         try {
           remoteServerAddress = InetAddress.getByAddress(Arrays.copyOfRange(data, 4, 20));
         } catch (UnknownHostException e) {
-          e.printStackTrace();
+          throw new SocksException("Unknown host");
         }
         remoteServerPort = SocksUtil.bytesToPort(data[20], data[21]);
         originalData = Arrays.copyOfRange(data, 22, packet.getLength());
         break;
+
       case AddressType.DOMAINNAME:
-        // TODO implements later
+        final int DOMAIN_LENGTH = data[4];
+        String domainName = new String(data, 5, DOMAIN_LENGTH);
+        try {
+          remoteServerAddress = InetAddress.getByName(domainName);
+        } catch (UnknownHostException e) {
+          logger.error(e.getMessage(), e);
+        }
+        remoteServerPort = SocksUtil.bytesToPort(data[5 + DOMAIN_LENGTH], data[6 + DOMAIN_LENGTH]);
+        originalData = Arrays.copyOfRange(data, 7 + DOMAIN_LENGTH, packet.getLength());
         break;
 
       default:
@@ -115,5 +135,4 @@ public class Socks5DatagramPacketHandler implements DatagramPacketEncapsulation,
     packet.setPort(remoteServerPort);
     packet.setData(originalData);
   }
-
 }

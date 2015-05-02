@@ -16,7 +16,7 @@ package fucksocks.server;
 
 
 /**
- * The class <code>User</code> represents a user
+ * The class <code>User</code> represents a user in SOCKS5 server.
  *
  * @author Youchao Feng
  * @date Apr 16, 2015 11:29:44 AM
@@ -25,29 +25,63 @@ package fucksocks.server;
  */
 public class User {
 
+  /**
+   * Username.
+   */
   private String username;
 
+  /**
+   * Password.
+   */
   private String password;
 
+  /**
+   * Constructs a instance of {@link User}.
+   */
   public User() {}
 
+  /**
+   * Constructs a instance of {@link User} with username and password.
+   * 
+   * @param username Username.
+   * @param password Password.
+   */
   public User(String username, String password) {
     this.username = username;
     this.password = password;
   }
 
+  /**
+   * Returns username.
+   * 
+   * @return Username.
+   */
   public String getUsername() {
     return username;
   }
 
+  /**
+   * Sets username.
+   * 
+   * @param username Username.
+   */
   public void setUsername(String username) {
     this.username = username;
   }
 
+  /**
+   * Returns password.
+   * 
+   * @return Password.
+   */
   public String getPassword() {
     return password;
   }
 
+  /**
+   * Sets password.
+   * @param password Password.
+   */
   public void setPassword(String password) {
     this.password = password;
   }

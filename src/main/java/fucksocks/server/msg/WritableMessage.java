@@ -27,6 +27,11 @@ import fucksocks.server.Session;
  */
 public interface WritableMessage extends Message {
 
+  /**
+   * Return the byte array of the message.
+   * 
+   * @return The byte array of the message.
+   */
   public byte[] getBytes();
 
 }

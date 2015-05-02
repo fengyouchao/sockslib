@@ -49,12 +49,24 @@ import fucksocks.utils.LogMessage.MsgType;
  */
 public class UsernamePasswordMethod extends AbstractSocksMethod {
 
+  /**
+   * Logger.
+   */
   private static final Logger logger = LoggerFactory.getLogger(UsernamePasswordMethod.class);
 
+  /**
+   * USERNAME/PASSWORD authenticator.
+   */
   private UsernamePasswordAuthenticator authenticator;
 
+  /**
+   * Constructs an instance of {@link UsernamePasswordMethod}.
+   */
   public UsernamePasswordMethod() {}
 
+  /**
+   * Constructs an instance of {@link UsernamePasswordMethod} with {@link UsernamePasswordAuthenticator}.
+   */
   public UsernamePasswordMethod(UsernamePasswordAuthenticator authenticator) {
     this.authenticator = authenticator;
   }
@@ -153,10 +165,6 @@ public class UsernamePasswordMethod extends AbstractSocksMethod {
 
   public void setAuthenticator(UsernamePasswordAuthenticator authenticator) {
     this.authenticator = authenticator;
-  }
-
-  public static Logger getLogger() {
-    return logger;
   }
 
 }

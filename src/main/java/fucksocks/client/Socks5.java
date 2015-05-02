@@ -342,15 +342,23 @@ public class Socks5 implements SocksProxy {
     return this;
   }
 
+  @Override
   public Socks5 setHost(String host) throws UnknownHostException {
     inetAddress = InetAddress.getByName(host);
     return this;
   }
 
+  @Override
   public InetAddress getInetAddress() {
     return inetAddress;
   }
 
+  /**
+   * Sets SOCKS5 proxy server's IP address.
+   * 
+   * @param inetAddress IP address of SOCKS5 proxy server.
+   * @return The instance of {@link Socks5}.
+   */
   public Socks5 setInetAddress(InetAddress inetAddress) {
     this.inetAddress = inetAddress;
     return this;
@@ -365,7 +373,13 @@ public class Socks5 implements SocksProxy {
     return this;
   }
 
+  /**
+   * Version of SOCKS protocol.
+   */
   public static final byte SOCKS_VERSION = 0x05;
+  /**
+   * Reserved field.
+   */
   public static final byte RESERVED = 0x00;
 
   public static final int REP_SUCCEEDED = 0x00;

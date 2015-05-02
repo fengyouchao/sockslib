@@ -24,7 +24,7 @@ import fucksocks.server.Session;
  * The class <code>NoAcceptableMethod</code> represents a method which indicates none of the methods
  * listed by the client are acceptable.
  * <p>
- * When server replies this method, the client will disconnect SOCKS server and throw
+ * When server replies this method, the client should disconnect SOCKS server and throw
  * {@link SocksException}.
  * </p>
  * 
@@ -53,7 +53,7 @@ public class NoAcceptableMethod extends AbstractSocksMethod {
 
   @Override
   public void doMethod(Session session) throws SocksException, IOException {
-    session.close();
+    session.close(); // close session
     throw SocksException.noAcceptableMethods();
   }
 

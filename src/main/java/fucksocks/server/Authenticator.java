@@ -27,6 +27,13 @@ import fucksocks.common.AuthenticationException;
  */
 public interface Authenticator {
 
+  /**
+   * This method will do authentication work.
+   * 
+   * @param authentication Authentication.
+   * @param session Session.
+   * @throws AuthenticationException If authentication is failed.
+   */
   void doAuthenticate(Authentication authentication, Session session)
       throws AuthenticationException;
 

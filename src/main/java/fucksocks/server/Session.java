@@ -26,7 +26,8 @@ import fucksocks.server.msg.WritableMessage;
 import fucksocks.server.msg.ReadableMessage;
 
 /**
- * The class <code>Session</code> is a encapsulation of socket.
+ * The class <code>Session</code> represents a session between client with SOCKS server.
+ * This class is simple encapsulation of java.net.Socket.
  * 
  * @author Youchao Feng
  * @date Apr 5, 2015 10:21:28 AM
@@ -137,12 +138,30 @@ public interface Session {
 
   public Object getAttribute(Object key);
 
+  /**
+   * Returns all attributes.
+   * 
+   * @return All attributes.
+   */
   public Map<Object, Object> getAttributes();
 
+  /**
+   * Clear all attributes in session.
+   */
   public void clearAllAttributes();
 
+  /**
+   * Returns <code>true</code> if the session is closed.
+   * 
+   * @return If the session is closed, it returns <code>true</code>.
+   */
   public boolean isClose();
 
+  /**
+   * Returns <code>true<code> if the session is connected.
+   * 
+   * @return If the session is connected returns <code>true</code>.
+   */
   public boolean isConnected();
 
 }

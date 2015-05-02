@@ -33,8 +33,14 @@ import fucksocks.server.msg.MethodSelectionMessage;
  */
 public class SocksMethodSelector implements MethodSelector {
 
+  /**
+   * Methods that SOCKS server supports.
+   */
   private Set<SocksMethod> supportMethods;
 
+  /**
+   * Constructs an instance of {@link SocksMethodSelector}.
+   */
   public SocksMethodSelector() {
     supportMethods = new HashSet<>();
   }

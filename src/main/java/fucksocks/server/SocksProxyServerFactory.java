@@ -37,14 +37,25 @@ public class SocksProxyServerFactory {
    */
   private static final int BUFFER_SIZE = 1024 * 1024 * 5;
 
+  /**
+   * Creates a no authentication  SOCKS5 server.
+   * 
+   * @return The instance of {@link SocksProxyServer} that supports SOCKS5 protocol.
+   */
   public static SocksProxyServer newNoAuthenticaionServer() {
     SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class);
     proxyServer.setBufferSize(BUFFER_SIZE);
     proxyServer.setTimeout(TIMEOUT);
-    proxyServer.setSupportedMethod(new NoAuthencationRequiredMethod());
+    proxyServer.setSupportMethods(new NoAuthencationRequiredMethod());
     return proxyServer;
   }
 
+  /**
+   * Create a USERNAME/PASSWROD authentication SOCKS5 server.
+   * 
+   * @param users Users.
+   * @return The instance of {@link SocksProxyServer} that supports SOCKS5 protocol.
+   */
   public static SocksProxyServer newUsernamePasswordAutenticationServer(User... users) {
     SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class);
     proxyServer.setBufferSize(BUFFER_SIZE);
@@ -53,7 +64,7 @@ public class SocksProxyServerFactory {
     for (User user : users) {
       authenticator.addUser(user.getUsername(), user.getPassword());
     }
-    proxyServer.setSupportedMethod(new UsernamePasswordMethod(authenticator));
+    proxyServer.setSupportMethods(new UsernamePasswordMethod(authenticator));
     return proxyServer;
   }
 

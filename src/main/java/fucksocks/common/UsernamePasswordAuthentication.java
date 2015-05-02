@@ -25,37 +25,66 @@ package fucksocks.common;
 public class UsernamePasswordAuthentication implements Authentication {
 
   /**
-   * username.
+   * Username.
    */
   private String username;
 
   /**
-   * password.
+   * Password.
    */
   private String password;
 
+  /**
+   * Constructs an instance of {@link UsernamePasswordAuthentication}.
+   */
   public UsernamePasswordAuthentication() {
     this(null, null);
   }
 
+  /**
+   * Constructs an instance of {@link UsernamePasswordAuthentication} with a username and a password.
+   * 
+   * @param username Username.
+   * @param password Password.
+   */
   public UsernamePasswordAuthentication(String username, String password) {
     this.username = username;
     this.password = password;
   }
 
 
+  /**
+   * Returns username.
+   * 
+   * @return username.
+   */
   public String getUsername() {
     return username;
   }
 
+  /**
+   * Sets username.
+   * 
+   * @param username Username.
+   */
   public void setUsername(String username) {
     this.username = username;
   }
 
+  /**
+   * Returns password.
+   * 
+   * @return Password.
+   */
   public String getPassword() {
     return password;
   }
 
+  /**
+   * Sets password.
+   * 
+   * @param password Password.
+   */
   public void setPassword(String password) {
     this.password = password;
   }

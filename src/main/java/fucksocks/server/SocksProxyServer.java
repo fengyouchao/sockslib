@@ -51,6 +51,11 @@ public interface SocksProxyServer {
   public void shutdown();
 
 
+  /**
+   * Create an instance {@link SocksHandler}.
+   * 
+   * @return Instance of {@link SocksHandler}.
+   */
   public SocksHandler createSocksHandler();
 
   /**
@@ -60,27 +65,80 @@ public interface SocksProxyServer {
    */
   public void initializeSocksHandler(SocksHandler socksHandler);
 
-  public void setSupportedMethod(SocksMethod... methods);
+  /**
+   * Sets the methods that socks server supports.
+   * 
+   * @param methods The methods that SOCKS server sports.
+   */
+  public void setSupportMethods(SocksMethod... methods);
 
+  /**
+   * Gets all sessions that SOKCS server managed.
+   * 
+   * @return All sessions that SOCKS server managed.
+   */
   public Map<Long, Session> getManagedSessions();
 
+  /**
+   * Sets buffer size.
+   * 
+   * @param bufferSize Buffer size.
+   */
   public void setBufferSize(int bufferSize);
 
+  /**
+   * Returns buffer size.
+   * 
+   * @return Buffer size.
+   */
   public int getBufferSize();
 
+  /**
+   * Returns timeout.
+   * 
+   * @return Timeout.
+   */
   public int getTimeout();
 
+  /**
+   * Sets timeout.
+   * 
+   * @param timeout timeout.
+   */
   public void setTimeout(int timeout);
 
+  /**
+   * Adds a {@link SocksListener}.
+   * 
+   * @param socksListener socksListener Instance of {@link SocksListener}.
+   */
+  public void addSocksListenner(SocksListener socksListener);
+
+  /**
+   * Removes a {@link SocksListener}.
+   * 
+   * @param socksListener Instance of {@link SocksListener}.
+   */
   public void removeSocksListenner(SocksListener socksListener);
 
-  public void addSocksListenner(SocksListener socksListener);
-  
+  /**
+   * Adds {@link SessionFilter}.
+   * 
+   * @param sessionFilter Instance of {@link SessionFilter}.
+   */
   public void addSessionFilter(SessionFilter sessionFilter);
-  
+
+  /**
+   * Removes {@link SessionFilter}.
+   * 
+   * @param sessionFilter Instance of {@link SessionFilter}.
+   */
   public void removeSessionFilter(SessionFilter sessionFilter);
 
 
+  /**
+   * SOCKS server default port.
+   */
   public static final int DEFAULT_SOCKS_PORT = 1080;
 
 }

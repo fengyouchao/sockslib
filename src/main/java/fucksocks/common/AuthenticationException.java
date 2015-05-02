@@ -23,11 +23,20 @@ package fucksocks.common;
  *
  */
 public class AuthenticationException extends SocksException {
+  
+  /**
+   * Serial version UID.
+   */
+  private static final long serialVersionUID = 1L;
 
+
+  /**
+   * Constructs an instance of {@link AuthenticationException} with a message.
+   * 
+   * @param msg Message.
+   */
   public AuthenticationException(String msg) {
     super(msg);
   }
-
-  private static final long serialVersionUID = 1L;
 
 }

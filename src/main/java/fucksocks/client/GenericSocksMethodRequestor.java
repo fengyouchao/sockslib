@@ -42,7 +42,7 @@ import fucksocks.common.methods.SocksMethodRegistry;
 public class GenericSocksMethodRequestor implements SocksMethodRequestor {
 
   /**
-   * Logger.
+   * Logger that subclasses also can use.
    */
   protected static final Logger logger = LoggerFactory.getLogger(GenericSocksMethodRequestor.class);
 
@@ -77,9 +77,9 @@ public class GenericSocksMethodRequestor implements SocksMethodRequestor {
     try {
       socksMethod = SocksMethodRegistry.getByByte(bufferReceived[1]).newInstance();
     } catch (InstantiationException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     } catch (IllegalAccessException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     }
     return socksMethod;
   }

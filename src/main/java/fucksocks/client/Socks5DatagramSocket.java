@@ -44,7 +44,7 @@ import fucksocks.common.SocksException;
 public class Socks5DatagramSocket extends DatagramSocket {
 
   /**
-   * logger which subclass also can use.
+   * logger that subclasses also can use.
    */
   protected static final Logger logger = LoggerFactory.getLogger(Socks5DatagramSocket.class);
 
@@ -80,6 +80,9 @@ public class Socks5DatagramSocket extends DatagramSocket {
   public Socks5DatagramSocket(SocksProxy proxy) throws SocksException, IOException {
     super();
     this.proxy = proxy;
+    if (proxy.getChainProxy() != null) {
+      throw new SocksException("Proxy chain not support UDP ASSOCIATE");
+    }
     if (!(proxy instanceof Socks5)) {
       throw new SocksException("Only SOCKS5 protocol support UDP ASSOCIATE");
     }
@@ -116,7 +119,7 @@ public class Socks5DatagramSocket extends DatagramSocket {
         proxy.getProxySocket().close();
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     }
   }
 

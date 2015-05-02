@@ -28,6 +28,9 @@ import java.util.Map;
  */
 public class RamBasedUserManager implements UserManager {
 
+  /**
+   * All users.
+   */
   private Map<String, User> users = new HashMap<>();
 
   @Override

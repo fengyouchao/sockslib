@@ -26,12 +26,36 @@ import java.util.List;
  */
 public interface UserManager {
 
+  /**
+   * Adds a user to the {@link UserManager}.
+   * 
+   * @param username Username.
+   * @param password Password.
+   */
   void addUser(String username, String password);
 
+  /**
+   * finds a user by username and password.
+   * 
+   * @param username Username.
+   * @param password Password.
+   * @return User.
+   */
   User findUser(String username, String password);
 
+  /**
+   * Deletes a user from {@link UserManager} by username.
+   * 
+   * @param username Username.
+   * @return Deleted user.
+   */
   User deleteUser(String username);
 
+  /**
+   * Find all users.
+   * 
+   * @return All uusers.
+   */
   List<User> findAll();
 
 }

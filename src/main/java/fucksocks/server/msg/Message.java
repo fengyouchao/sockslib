@@ -25,6 +25,11 @@ package fucksocks.server.msg;
  */
 public interface Message {
 
+  /**
+   * Returns the length of message.
+   * 
+   * @return The length of message.
+   */
   int getLength();
 
 }

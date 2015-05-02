@@ -23,7 +23,8 @@ import fucksocks.server.Session;
 
 /**
  * The class <code>NoAuthencationRequiredMethod</code> represents method which mean NO
- * AUTHENTICATION REQUIRED.
+ * AUTHENTICATION REQUIRED. This indicates that the server does not require the client to provide
+ * authentication information.
  * 
  * @author Youchao Feng
  * @date Mar 17, 2015 11:34:01 AM

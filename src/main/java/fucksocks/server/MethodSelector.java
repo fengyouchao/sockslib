@@ -76,7 +76,7 @@ public interface MethodSelector {
   /**
    * Sets support methods.
    * 
-   * @param methods Methods supported. 
+   * @param methods Methods supported.
    */
   public void setSupportMethod(SocksMethod... methods);
 

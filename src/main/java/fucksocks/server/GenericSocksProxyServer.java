@@ -34,7 +34,20 @@ import fucksocks.server.filters.SessionFilterChain;
 import fucksocks.server.filters.SocksListener;
 
 /**
- * The class <code>GenericSocksProxyServer</code> is a implementation of {@link SocksProxyServer}.
+ * The class <code>GenericSocksProxyServer</code> is a implementation of {@link SocksProxyServer}.<br>
+ * You can create a SOKCS5 server easily by following codes:<br>
+ * 
+ * <pre>
+ * ProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class);
+ * proxyServer.start(); // Create a SOCKS5 server bind at 1080.
+ * </pre>
+ * 
+ * If you want change the port, you can using following codes:
+ * 
+ * <pre>
+ * proxyServer.start(9999);
+ * </pre>
+ * 
  * 
  * @author Youchao Feng
  * @date Apr 19, 2015 1:10:17 PM
@@ -55,6 +68,9 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
    */
   private ExecutorService executorService;
 
+  /**
+   * The next session's ID.
+   */
   private long nextSessionId = 0;
 
   /**
@@ -81,27 +97,54 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
    * Thread that start the server.
    */
   private Thread thread;
-  
+
   /**
-   * Session filter chain. 
+   * Session filter chain.
    */
   private SessionFilterChain sessionFilterChain = new SessionFilterChain();
 
+  /**
+   * Timeout for a session.
+   */
   private int timeout = 10000;
 
+  /**
+   * Method selector.
+   */
   private MethodSelector methodSelector = new SocksMethodSelector();
 
+  /**
+   * Filter chain.
+   */
   private FilterChain filterChain;
 
+  /**
+   * Buffer size.
+   */
   private int bufferSize = 1024 * 1024 * 5;
 
+  /**
+   * SOCKS listeners.
+   */
   private List<SocksListener> socksListeners;
 
 
+  /**
+   * Constructs a {@link GenericSocksProxyServer} by a {@link SocksHandler} class.
+   * 
+   * @param socketHandlerClass {@link SocksHandler} class.
+   */
   public GenericSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass) {
     this(socketHandlerClass, Executors.newFixedThreadPool(THREAD_NUMBER));
   }
 
+  /**
+   * Constructs a {@link GenericSocksProxyServer} by a {@link SocksHandler} class and a
+   * ExecutorService.
+   * 
+   * @param socketHandlerClass {@link SocksHandler} class.
+   * @param executorService Thread pool.
+   */
   public GenericSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass,
       ExecutorService executorService) {
     this.socksHandlerClass = socketHandlerClass;
@@ -118,7 +161,7 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
         Session session = new SocksSession(getNextSessionId(), socket, sessions);
         sessions.put(session.getId(), session);
         logger.info("Create {}", session);
-        
+
         try {
           sessionFilterChain.doFilterWork(session);
         } catch (InterruptedException e) {
@@ -141,7 +184,7 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
           logger.debug("Server shutdown");
           return;
         }
-        e.printStackTrace();
+        logger.debug(e.getMessage(), e);
       }
     }
   }
@@ -162,7 +205,7 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
         serverSocket.close();
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     }
 
   }
@@ -187,9 +230,9 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
     try {
       return socksHandlerClass.newInstance();
     } catch (InstantiationException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     } catch (IllegalAccessException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     }
     return null;
   }
@@ -227,7 +270,7 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
   }
 
   @Override
-  public void setSupportedMethod(SocksMethod... methods) {
+  public void setSupportMethods(SocksMethod... methods) {
     methodSelector.setSupportMethod(methods);
   }
 
@@ -274,7 +317,7 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
 
   @Override
   public void removeSessionFilter(SessionFilter sessionFilter) {
-     sessionFilterChain.remoteFilter(sessionFilter);
+    sessionFilterChain.remoteFilter(sessionFilter);
   }
 
   public SessionFilterChain getSessionFilterChain() {

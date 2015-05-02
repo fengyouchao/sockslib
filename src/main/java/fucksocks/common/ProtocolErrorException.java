@@ -25,8 +25,16 @@ package fucksocks.common;
  */
 public class ProtocolErrorException extends SocksException {
 
+  /**
+   * Serial version UID.
+   */
   private static final long serialVersionUID = 1L;
 
+  /**
+   * Constructs an instance of {@link ProtocolErrorException} with a message.
+   * 
+   * @param msg Message.
+   */
   public ProtocolErrorException(String msg) {
     super(msg);
   }

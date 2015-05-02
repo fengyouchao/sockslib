@@ -17,6 +17,7 @@ package fucksocks.common.methods;
 import java.io.IOException;
 
 import fucksocks.client.SocksProxy;
+import fucksocks.common.NotImplementException;
 import fucksocks.common.SocksException;
 import fucksocks.server.Session;
 
@@ -37,12 +38,13 @@ public class GssApiMethod extends AbstractSocksMethod {
   @Override
   public void doMethod(SocksProxy socksProxy) throws SocksException {
     // TODO implements later.
+    throw new NotImplementException();
   }
 
   @Override
   public void doMethod(Session session) throws SocksException, IOException {
     // TODO implements later.
-
+    throw new NotImplementException();
   }
 
   @Override

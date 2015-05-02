@@ -91,4 +91,10 @@ public final class UnsignedByte {
     }
     return false;
   }
+
+  @Override
+  public int hashCode() {
+    return new Integer(num).hashCode();
+  }
+  
 }

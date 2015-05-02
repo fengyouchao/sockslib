@@ -27,20 +27,38 @@ import fucksocks.server.msg.ServerReply;
  */
 public class SocksException extends IOException {
 
+  /**
+   * Serial version UID.
+   */
   private static final long serialVersionUID = 1L;
 
   private static final String NO_ACCEPTABLE_METHODS = "NO ACCEPTABLE METHODS";
 
+  /**
+   * Reply from SOCKS server.
+   */
   private ServerReply serverReply;
 
+  /**
+   * Messages that server will reply.
+   */
   private static final String serverReplyMessage[] = {"General SOCKS server failure",
       "Connection not allowed by ruleset", "Network unreachable", "Host unreachable",
       "Connection refused", "TTL expired", "Command not supported", "Address type not supported"};
 
+  /**
+   * Constructs an instance of {@link SocksException} with a message.
+   * 
+   * @param msg Message.
+   */
   public SocksException(String msg) {
     super(msg);
   }
 
+  /**
+   * Constructs an instance of {@link SocksException} with a code.
+   * @param replyCode
+   */
   public SocksException(int replyCode) {
 
   }
