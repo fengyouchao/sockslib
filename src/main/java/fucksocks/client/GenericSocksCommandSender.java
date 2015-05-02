@@ -25,6 +25,7 @@ import java.net.SocketAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fucksocks.common.AddressType;
 import fucksocks.common.SocksCommand;
 import fucksocks.common.SocksException;
 import fucksocks.utils.LogMessage;
@@ -137,7 +138,7 @@ public class GenericSocksCommandSender implements SocksCommandSender {
     byte[] addressBytes = null;
     byte[] portBytes = new byte[2];
 
-    if (bufferReceived[3] == Socks5.ATYPE_IPV4) {
+    if (bufferReceived[3] == AddressType.IPV4) {
       addressBytes = new byte[4];
       for (int i = 0; i < addressBytes.length; i++) {
         addressBytes[i] = bufferReceived[4 + i];
@@ -152,7 +153,7 @@ public class GenericSocksCommandSender implements SocksCommandSender {
       logger.debug("Server replied:Address as IPv4:{}.{}.{}.{}, port:{}", a, b, c, d,
           (UnsignedByte.toInt(portBytes[0]) << 8) | (UnsignedByte.toInt(portBytes[1])));
 
-    } else if (bufferReceived[3] == Socks5.ATYPE_DOMAINNAME) {
+    } else if (bufferReceived[3] == AddressType.DOMAINNAME) {
       int size = bufferReceived[4];
       size = size & 0xFF;
       addressBytes = new byte[size];
@@ -165,7 +166,7 @@ public class GenericSocksCommandSender implements SocksCommandSender {
           (UnsignedByte.toInt(portBytes[0]) << 8) | (UnsignedByte.toInt(portBytes[1])));
     }
 
-    else if (bufferReceived[3] == Socks5.ATYPE_IPV6) {
+    else if (bufferReceived[3] == AddressType.IPV6) {
       int size = bufferReceived[4];
       size = size & 0xFF;
       addressBytes = new byte[16];

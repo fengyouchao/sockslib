@@ -301,8 +301,4 @@ public interface SocksProxy {
    */
   public static final int SOCKS_DEFAULT_PORT = 1080;
 
-  public static final byte ATYPE_IPV4 = 0x01;
-  public static final byte ATYPE_DOMAINNAME = 0x03;
-  public static final byte ATYPE_IPV6 = 0x04;
-
 }
