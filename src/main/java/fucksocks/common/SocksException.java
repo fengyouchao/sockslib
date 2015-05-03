@@ -63,20 +63,42 @@ public class SocksException extends IOException {
 
   }
 
+  /**
+   * Returns a {@link SocksException} instance with a message "NO ACCEPTABLE METHODS".
+   * 
+   * @return An instance of {@link SocksException}.
+   */
   public static final SocksException noAcceptableMethods() {
     return new SocksException(NO_ACCEPTABLE_METHODS);
   }
 
+  /**
+   * Returns a {@link SocksException} instance with a message "Protocol not supported".
+   * 
+   * @return An instance of {@link SocksException}.
+   */
   public static final SocksException protocolNotSupported() {
-    return new SocksException("Protocol not suppoted");
+    return new SocksException("Protocol not supported");
   }
 
+  /**
+   * Returns a {@link SocksException} instance with a message of reply.
+   * 
+   * @param reply Server's reply.
+   * @return An instance of {@link SocksException}.
+   */
   public static final SocksException serverReplyException(ServerReply reply) {
     SocksException ex = serverReplyException(reply.getValue());
     ex.setServerReply(reply);
     return ex;
   }
 
+  /**
+   * Returns a {@link SocksException} instance with a message of reply.
+   * 
+   * @param reply Code of server's reply.
+   * @return An instance of {@link SocksException}.
+   */
   public static final SocksException serverReplyException(byte reply) {
     int code = reply;
     code = code & 0xff;
@@ -87,10 +109,20 @@ public class SocksException extends IOException {
     return new SocksException(serverReplyMessage[code]);
   }
 
+  /**
+   * Returns server's reply.
+   * 
+   * @return Server's reply.
+   */
   public ServerReply getServerReply() {
     return serverReply;
   }
 
+  /**
+   * Sets server's reply.
+   * 
+   * @param serverReply Reply of the server.
+   */
   public void setServerReply(ServerReply serverReply) {
     this.serverReply = serverReply;
   }

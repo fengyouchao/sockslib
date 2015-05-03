@@ -36,25 +36,60 @@ import fucksocks.utils.SocksUtil;
  *
  */
 public class CommandMessage implements ReadableMessage, WritableMessage {
-
+  
+  /**
+   * Value of CONNECTE command.
+   */
   protected static final int CMD_CONNECT = 0x01;
+  
+  /**
+   * Value of BIND command.
+   */
   protected static final int CMD_BIND = 0x02;
+  
+  /**
+   * Value of UDP ASSOCIATE command.
+   */
   protected static final int CMD_UDP_ASSOCIATE = 0x03;
 
+  /**
+   * Value of RESERVED field.
+   */
   private static final int RESERVED = 0x00;
 
+  /**
+   * Version.
+   */
   private int version;
 
+  /**
+   * IP address of destination.
+   */
   private InetAddress inetAddress;
 
+  /**
+   * Port of destination.
+   */
   private int port;
 
+  /**
+   * Host of destination.
+   */
   private String host;
 
+  /**
+   * SOCKS command.
+   */
   private SocksCommand command;
 
+  /**
+   * Reserved field.
+   */
   private int reserved;
 
+  /**
+   * Address type.
+   */
   private int addressType;
 
   @Override
@@ -169,10 +204,20 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
 
   }
 
+  /**
+   * Returns version.
+   * 
+   * @return Version.
+   */
   public int getVersion() {
     return version;
   }
 
+  /**
+   * Sets version.
+   * 
+   * @param version Version.
+   */
   public void setVersion(int version) {
     this.version = version;
   }

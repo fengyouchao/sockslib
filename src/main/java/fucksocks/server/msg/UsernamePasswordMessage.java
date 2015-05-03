@@ -32,18 +32,39 @@ import fucksocks.common.UsernamePasswordAuthentication;
  */
 public class UsernamePasswordMessage implements ReadableMessage, WritableMessage {
 
+  /**
+   * Username password authentication.
+   */
   private UsernamePasswordAuthentication usernamePasswordAutencation;
 
+  /**
+   * Version.
+   */
   private int version = 0x01;
 
+  /**
+   * Length of username.
+   */
   private int usernameLength;
 
+  /**
+   * Length of password.
+   */
   private int passwordLength;
 
+  /**
+   * Username.
+   */
   private String username;
 
+  /**
+   * Password.
+   */
   private String password;
 
+  /**
+   * Constructs an instance of {@link UsernamePasswordMessage}.
+   */
   public UsernamePasswordMessage() {
 
   }
@@ -105,28 +126,56 @@ public class UsernamePasswordMessage implements ReadableMessage, WritableMessage
     usernamePasswordAutencation = new UsernamePasswordAuthentication(username, password);
   }
 
-
-
+  /**
+   * Returns version.
+   * 
+   * @return Version.
+   */
   public int getVersion() {
     return version;
   }
 
+  /**
+   * Returns username.
+   * 
+   * @return username.
+   */
   public String getUsername() {
     return username;
   }
 
+  /**
+   * Sets username.
+   * 
+   * @param username Username.
+   */
   public void setUsername(String username) {
     this.username = username;
   }
 
+  /**
+   * Returns password.
+   * 
+   * @return Password.
+   */
   public String getPassword() {
     return password;
   }
 
+  /**
+   * Sets password.
+   * 
+   * @param password Password.
+   */
   public void setPassword(String password) {
     this.password = password;
   }
 
+  /**
+   * Returns an instance of {@link UsernamePasswordAuthentication}.
+   * 
+   * @return An instance of {@link UsernamePasswordAuthentication} .
+   */
   public UsernamePasswordAuthentication getUsernamePasswordAutentication() {
     return usernamePasswordAutencation;
   }

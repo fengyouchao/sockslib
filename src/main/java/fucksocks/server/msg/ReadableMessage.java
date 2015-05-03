@@ -31,6 +31,13 @@ import fucksocks.server.Session;
  */
 public interface ReadableMessage extends Message {
 
+  /**
+   * Read message from a input stream.
+   * 
+   * @param inputStream Input stream.
+   * @throws SocksException If a SOCKS protocol error occurred.
+   * @throws IOException If an I/O error occurred.
+   */
   public void read(InputStream inputStream) throws SocksException, IOException;
 
 }

@@ -32,7 +32,7 @@ public class AddressType {
    * Domain name.
    */
   public static final int DOMAINNAME = 0x03;
-  
+
   /**
    * IP version 6 address.
    */
@@ -43,6 +43,12 @@ public class AddressType {
    */
   private AddressType() {}
 
+  /**
+   * Return <code>true</code> if type is supported.
+   * 
+   * @param type Type of address.
+   * @return If type is supported, it will return <code>true</code>.
+   */
   public static boolean isSupport(int type) {
     return type == IPV4 || type == DOMAINNAME || type == IPV6;
   }

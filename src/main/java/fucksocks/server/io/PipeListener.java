@@ -14,12 +14,40 @@
 
 package fucksocks.server.io;
 
+/**
+ * The class <code>PipeListener</code> represents a pipe listener.
+ * <p>
+ * You can add a {@link PipeListener} to a {@link Pipe} to monitor the {@link Pipe}.
+ * </p>
+ * 
+ * @author Youchao Feng
+ * @date May 3, 2015 1:37:10 AM
+ * @version 1.0
+ *
+ */
 public interface PipeListener {
 
-  void onStoped(Pipe pipe);
+  /**
+   * This method will be called when the {@link Pipe} started.
+   * 
+   * @param pipe The started {@link Pipe} instance.
+   */
+  public void onStarted(Pipe pipe);
 
-  void onStarted(Pipe pipe);
+  /**
+   * This method will be called when the {@link Pipe} stopped.
+   * 
+   * @param pipe The stopped {@link Pipe} instance.
+   */
+  public void onStoped(Pipe pipe);
 
-  void onTransfered(Pipe pipe, byte[] buffer, int bufferLength);
+  /**
+   * This method will be called when the {@link Pipe} transfered data.
+   * 
+   * @param pipe {@link Pipe} instance.
+   * @param buffer Data which is transfered.
+   * @param bufferLength length of data.
+   */
+  public void onTransfered(Pipe pipe, byte[] buffer, int bufferLength);
 
 }

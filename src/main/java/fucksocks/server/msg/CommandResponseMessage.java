@@ -143,4 +143,94 @@ public class CommandResponseMessage implements WritableMessage {
     return getBytes().length;
   }
 
+  /**
+   * Returns version.
+   * 
+   * @return Version.
+   */
+  public int getVersion() {
+    return version;
+  }
+
+  /**
+   * Sets version.
+   * 
+   * @param version Version.
+   */
+  public void setVersion(int version) {
+    this.version = version;
+  }
+
+  /**
+   * Returns address type.
+   * 
+   * @return Address type.
+   */
+  public int getAddressType() {
+    return addressType;
+  }
+
+  /**
+   * Sets address type.
+   * 
+   * @param addressType Address type.
+   */
+  public void setAddressType(int addressType) {
+    this.addressType = addressType;
+  }
+
+  /**
+   * Returns bind address.
+   * 
+   * @return Bind address.
+   */
+  public InetAddress getBindAddress() {
+    return bindAddress;
+  }
+
+  /**
+   * Sets bind address.
+   * 
+   * @param bindAddress Bind address.
+   */
+  public void setBindAddress(InetAddress bindAddress) {
+    this.bindAddress = bindAddress;
+  }
+
+  /**
+   * Returns bind port.
+   * 
+   * @return Bind port.
+   */
+  public int getBindPort() {
+    return bindPort;
+  }
+
+  /**
+   * Sets bind port.
+   * 
+   * @param bindPort Bind port.
+   */
+  public void setBindPort(int bindPort) {
+    this.bindPort = bindPort;
+  }
+
+  /**
+   * Returns the reply of SOCKS server.
+   * 
+   * @return SOCKS server's reply.
+   */
+  public ServerReply getReply() {
+    return reply;
+  }
+
+  /**
+   * Sets SOCKS server's reply.
+   * 
+   * @param reply Reply of the SOKS server.
+   */
+  public void setReply(ServerReply reply) {
+    this.reply = reply;
+  }
+
 }

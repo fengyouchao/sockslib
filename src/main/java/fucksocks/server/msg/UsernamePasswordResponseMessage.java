@@ -25,6 +25,9 @@ package fucksocks.server.msg;
  */
 public class UsernamePasswordResponseMessage implements WritableMessage {
 
+  /**
+   * Version. it should be 0x01 in SOCKS5 protocol.
+   */
   private final int VERSION = 0x01;
 
   /**
@@ -32,7 +35,11 @@ public class UsernamePasswordResponseMessage implements WritableMessage {
    */
   private int status;
 
-
+  /**
+   * Constructs an instance of {@link UsernamePasswordResponseMessage}.
+   * 
+   * @param success If username and password is matched, it will return <code>true</code>.
+   */
   public UsernamePasswordResponseMessage(boolean success) {
     if (success) {
       status = 0x00;
@@ -54,14 +61,29 @@ public class UsernamePasswordResponseMessage implements WritableMessage {
     return getBytes().length;
   }
 
+  /**
+   * Returns status.
+   * 
+   * @return Status.
+   */
   public int getStatus() {
     return status;
   }
 
+  /**
+   * Sets status.
+   * 
+   * @param status Status.
+   */
   public void setStatus(int status) {
     this.status = status;
   }
 
+  /**
+   * Returns version.
+   * 
+   * @return version.
+   */
   public int getVersion() {
     return VERSION;
   }

@@ -23,6 +23,12 @@ package fucksocks.utils;
  */
 public class SocksUtil {
 
+  /**
+   * Get bytes from a port.
+   * 
+   * @param port Port.
+   * @return Bytes of the port.
+   */
   public static byte[] portTobytes(int port) {
     byte[] array = new byte[2];
     array[0] = (byte) ((port & 0xff00) >> 8);
@@ -30,14 +36,32 @@ public class SocksUtil {
     return array;
   }
 
+  /**
+   * Returns the first byte of the port.
+   * 
+   * @param port Port.
+   * @return The first byte of the port.
+   */
   public static byte getFisrtByteFromPort(int port) {
     return (byte) ((port & 0xff00) >> 8);
   }
 
+  /**
+   * Returns the second byte of the port.
+   * 
+   * @param port Port.
+   * @return The second byte of the port.
+   */
   public static byte getSecondByteFromPort(int port) {
     return (byte) (port & 0xff);
   }
 
+  /**
+   * Get port from a byte array.
+   * 
+   * @param bytes A byte array.
+   * @return a Port.
+   */
   public static int bytesToPort(byte[] bytes) {
     if (bytes.length != 2) {
       throw new IllegalArgumentException("byte array size must be 2");
@@ -45,6 +69,13 @@ public class SocksUtil {
     return bytesToPort(bytes[0], bytes[1]);
   }
 
+  /**
+   * Returns a port.
+   * 
+   * @param b1 First byte.
+   * @param b2 Second byte.
+   * @return A port.
+   */
   public static int bytesToPort(byte b1, byte b2) {
     return (UnsignedByte.toInt(b1) << 8) | UnsignedByte.toInt(b2);
   }

@@ -17,7 +17,7 @@ package fucksocks.server.msg;
 import fucksocks.server.Session;
 
 /**
- * The WritableMessage <code>Message</code> represents a message that can be written by
+ * The interface <code>WritableMessage</code> represents a message that can be written by
  * {@link Session}.
  * 
  * @author Youchao Feng
@@ -28,7 +28,7 @@ import fucksocks.server.Session;
 public interface WritableMessage extends Message {
 
   /**
-   * Return the byte array of the message.
+   * Returns the byte array of the message.
    * 
    * @return The byte array of the message.
    */

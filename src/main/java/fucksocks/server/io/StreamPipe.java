@@ -93,6 +93,13 @@ public class StreamPipe implements Runnable, Pipe {
     pipeListeners = new ArrayList<>();
   }
 
+  /**
+   * Constructs an instance of {@link StreamPipe}.
+   * 
+   * @param from stream where it comes from.
+   * @param to stream where it will be transfered to.
+   * @param name Name of {@link StreamPipe}.
+   */
   public StreamPipe(InputStream from, OutputStream to, String name) {
     this.from = from;
     this.to = to;
@@ -144,7 +151,7 @@ public class StreamPipe implements Runnable, Pipe {
   }
 
   /**
-   * transfer a buffer.
+   * Transfer a buffer.
    * 
    * @param buffer Buffer that transfer once.
    * @return number of byte that transfered.
@@ -213,18 +220,38 @@ public class StreamPipe implements Runnable, Pipe {
     pipeListeners.remove(pipeListener);
   }
 
+  /**
+   * Returns all {@link PipeListener}.
+   * 
+   * @return All {@link PipeListener}.
+   */
   public List<PipeListener> getPipeListeners() {
     return pipeListeners;
   }
 
+  /**
+   * Sets {@link PipeListener}.
+   * 
+   * @param pipeListeners a List of {@link PipeListener}.
+   */
   public void setPipeListeners(List<PipeListener> pipeListeners) {
     this.pipeListeners = pipeListeners;
   }
 
+  /**
+   * Returns name of {@link StreamPipe}.
+   * 
+   * @return Name of {@link StreamPipe}.
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Sets a name.
+   * 
+   * @param name Name of {@link StreamPipe}.
+   */
   public void setName(String name) {
     this.name = name;
   }

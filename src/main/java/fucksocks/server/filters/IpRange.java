@@ -32,13 +32,18 @@ import com.google.common.base.Preconditions;
  */
 public class IpRange implements Iterable<Ip>, Serializable {
 
+  /**
+   * Serial version UID.
+   */
   private static final long serialVersionUID = 1L;
 
-
+  /**
+   * Starting IP address of the IP address range.
+   */
   private final Ip startIp;
 
   /**
-   * 最大IP。
+   * End IP address of the IP address range。
    */
   private final Ip endIp;
 
@@ -149,14 +154,30 @@ public class IpRange implements Iterable<Ip>, Serializable {
     return (endIp.getValue() - startIp.getValue() + 1L);
   }
 
+  /**
+   * Returns starting IP address.
+   * 
+   * @return Starting IP address.
+   */
   public Ip getStartIp() {
     return startIp;
   }
 
+  /**
+   * Returns end IP address.
+   * 
+   * @return End ip address.
+   */
   public Ip getEndIp() {
     return endIp;
   }
 
+  /**
+   * Split IP address range by a IP address.
+   * 
+   * @param ip IP address. IP address range should contains the IP address.
+   * @return List of IP address ranges.
+   */
   public List<IpRange> split(Ip ip) {
     List<IpRange> ranges = new ArrayList<IpRange>();
     if (this.contains(ip)) {

@@ -27,17 +27,38 @@ import java.util.Iterator;
  */
 public class IpIterator implements Iterator<Ip> {
 
+  /**
+   * IP address range.
+   */
   private IpRange range;
 
+  /**
+   * Current IP address.
+   */
   private Ip currentIP;
 
+  /**
+   * A flag. It's always <code>true</code> in the beginning but it will become <code>false</code> if
+   * {{@link #next()} is invoked.
+   */
   private boolean start = true;
 
+  /**
+   * Constructs an instance of {@link IpIterator} with a {@link IpRange}.
+   * 
+   * @param range
+   */
   public IpIterator(IpRange range) {
     this.range = range;
     currentIP = range.getStartIp();
   }
 
+  /**
+   * Constructs an instance of {@link IpIterator} with tow IP address.
+   * 
+   * @param startIP Starting IP address.
+   * @param endIP End IP address.
+   */
   public IpIterator(Ip startIP, Ip endIP) {
     range = new IpRange(startIP, endIP);
     currentIP = startIP;
@@ -65,8 +86,6 @@ public class IpIterator implements Iterator<Ip> {
   }
 
   @Override
-  public void remove() {
-
-  }
+  public void remove() {}
 
 }

@@ -9,10 +9,25 @@ package fucksocks.utils;
  */
 public class LogMessage {
 
+  /**
+   * Returns a log message.
+   * 
+   * @param buffer Bytes array.
+   * @param type Message type.
+   * @return Log message.
+   */
   public static String create(byte[] buffer, MsgType type) {
     return create(buffer, buffer.length, type);
   }
 
+  /**
+   * Returns a log message.
+   * 
+   * @param buffer Bytes array.
+   * @param size data length in bytes array.
+   * @param type Message type.
+   * @return Log message.
+   */
   public static String create(byte[] buffer, final int size, MsgType type) {
     StringBuffer debugMsg = new StringBuffer();
 
@@ -35,6 +50,12 @@ public class LogMessage {
     return debugMsg.toString();
   }
 
+  /**
+   * Returns a hex string.
+   * 
+   * @param bytes Bytes array.
+   * @return Bytes in hex.
+   */
   public static String bytesToHexString(byte[] bytes) {
     StringBuffer buffer = new StringBuffer();
 
