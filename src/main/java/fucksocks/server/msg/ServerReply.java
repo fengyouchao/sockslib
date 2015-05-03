@@ -14,24 +14,82 @@
 
 package fucksocks.server.msg;
 
+/**
+ * 
+ * The enumeration <code>ServerReply</code> represents reply of servers will SOCKS client send a
+ * command request to the SOCKS server.
+ * 
+ * @author Youchao Feng
+ * @date May 4, 2015 4:01:14 AM
+ * @version 1.0
+ *
+ */
 public enum ServerReply {
 
-  SUCCESSED(0x00),
+  /**
+   * Succeeded.
+   */
+  SUCCEEDED(0x00),
+
+  /**
+   * General SOCKS server failure.
+   */
   GENERAL_SOCKS_SERVER_FAILURE(0x01),
-  CONNECTION_NOT_ALLOWED_BY_RELESET(0x02),
+
+  /**
+   * Connection not allowed by ruleset.
+   */
+  CONNECTION_NOT_ALLOWED_BY_RULESET(0x02),
+
+  /**
+   * Network unreachable.
+   */
   NETWORK_UNREACHABLE(0x03),
+
+  /**
+   * Host unreachable.
+   */
   HOST_UNREACHABLE(0x04),
+
+  /**
+   * Connection refused.
+   */
   CONNECTION_REFUSED(0x05),
+
+  /**
+   * TTL expired.
+   */
   TTL_EXPIRED(0x06),
+
+  /**
+   * Command not supported.
+   */
   COMMAND_NOT_SUPPORTED(0x07),
+
+  /**
+   * Address type not supported.
+   */
   ADDRESS_TYPE_NOT_SUPPORTED(0x08);
 
+  /**
+   * Code of the reply.
+   */
   private byte value;
 
+  /**
+   * A private constructor.
+   * 
+   * @param value Reply code.
+   */
   private ServerReply(int value) {
     this.value = (byte) value;
   }
 
+  /**
+   * Returns reply code in byte.
+   * 
+   * @return Reply code in byte.
+   */
   public byte getValue() {
     return value;
   }
