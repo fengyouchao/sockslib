@@ -35,7 +35,7 @@ import fucksocks.server.io.SocketPipe;
 import fucksocks.server.msg.CommandMessage;
 import fucksocks.server.msg.CommandResponseMessage;
 import fucksocks.server.msg.MethodSelectionMessage;
-import fucksocks.server.msg.MethodSeleteionResponseMessage;
+import fucksocks.server.msg.MethodSelecionResponseMessage;
 import fucksocks.server.msg.ServerReply;
 
 /**
@@ -91,7 +91,7 @@ public class Socks5Handler implements SocksHandler {
 
     logger.debug("[{}]SOKCS5 Server seleted:{}", session, selectedMethod.getMethodName());
     // send select method.
-    session.write(new MethodSeleteionResponseMessage(VERSION, selectedMethod));
+    session.write(new MethodSelecionResponseMessage(VERSION, selectedMethod));
 
     // do method.
     selectedMethod.doMethod(session);
@@ -155,7 +155,7 @@ public class Socks5Handler implements SocksHandler {
       socket = new Socket(commandMessage.getInetAddress(), commandMessage.getPort());
       bindAddress = socket.getLocalAddress();
       bindPort = socket.getLocalPort();
-      reply = ServerReply.SUCCESSED;
+      reply = ServerReply.SUCCEEDED;
 
     } catch (IOException e) {
       if (e.getMessage().equals("Connection refused")) {
@@ -170,7 +170,7 @@ public class Socks5Handler implements SocksHandler {
 
     session.write(new CommandResponseMessage(VERSION, reply, bindAddress, bindPort));
 
-    if (reply != ServerReply.SUCCESSED) { // 如果返回失败信息，则退出该方法。
+    if (reply != ServerReply.SUCCEEDED) { // 如果返回失败信息，则退出该方法。
       session.close();
       return;
     }
@@ -201,11 +201,11 @@ public class Socks5Handler implements SocksHandler {
     Socket socket = null;
     logger.info("Create TCP server bind at {} for session[{}]",
         serverSocket.getLocalSocketAddress(), session.getId());
-    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCESSED, serverSocket
+    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, serverSocket
         .getInetAddress(), bindPort));
 
     socket = serverSocket.accept();
-    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCESSED, socket
+    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, socket
         .getLocalAddress(), socket.getLocalPort()));
 
     Pipe pipe = new SocketPipe(session.getSocket(), socket);
@@ -235,7 +235,7 @@ public class Socks5Handler implements SocksHandler {
     InetSocketAddress socketAddress = (InetSocketAddress) udpRelayServer.start();
     logger.info("Create UDP relay server at[{}] for {}", socketAddress,
         commandMessage.getSocketAddress());
-    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCESSED, InetAddress
+    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, InetAddress
         .getLocalHost(), socketAddress.getPort()));
     while (udpRelayServer.isRunning()) {
       try {
