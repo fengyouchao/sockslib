@@ -2,6 +2,13 @@
 
 **Fucksocks** a Java library of **SOCKS5** protocol.
 
+See [Javadoc](http://fengyouchao.github.io/fucksocks/apidocs/index.html)
+
+#### References
+
+* [SOCKS Protocol Version 5](http://www.ietf.org/rfc/rfc1928.txt)
+* [Username/Password Authentication for SOCKS V5](http://www.ietf.org/rfc/rfc1929.txt)
+
 ## Featrues
 
 ### Client
