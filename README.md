@@ -1,6 +1,6 @@
 # Fucksocks
 
-**Fucksocks** a Java library of **SOCKS5** protocol.
+**Fucksocks** is a Java library of **SOCKS5** protocol.
 
 See [Javadoc](http://fengyouchao.github.io/fucksocks/apidocs/index.html)
 
