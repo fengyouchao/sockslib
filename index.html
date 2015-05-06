@@ -22,12 +22,59 @@
       <h1>
 <a id="fucksocks" class="anchor" href="#fucksocks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fucksocks</h1>
 
-<p><strong>Fucksocks</strong> a Java implementation of <strong>SOCKS5</strong> protocol. This project is under developing.</p>
+<p><strong>Fucksocks</strong> is a Java library of <strong>SOCKS5</strong> protocol.</p>
 
-<p>View <a href="https://github.com/fengyouchao/fucksocks/releases">Releases Page</a></p>
+<p>See <a href="http://fengyouchao.github.io/fucksocks/apidocs/index.html">Javadoc</a></p>
+
+<h4>
+<a id="references" class="anchor" href="#references" aria-hidden="true"><span class="octicon octicon-link"></span></a>References</h4>
+
+<ul>
+<li><a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a></li>
+<li><a href="http://www.ietf.org/rfc/rfc1929.txt">Username/Password Authentication for SOCKS V5</a></li>
+</ul>
+
+<h2>
+<a id="featrues" class="anchor" href="#featrues" aria-hidden="true"><span class="octicon octicon-link"></span></a>Featrues</h2>
+
+<h3>
+<a id="client" class="anchor" href="#client" aria-hidden="true"><span class="octicon octicon-link"></span></a>Client</h3>
+
+<ul>
+<li>TCP proxy</li>
+<li>UDP proxy</li>
+<li>Bind</li>
+<li>Anonymouse authenticaion</li>
+<li>USERNAME/PASSWORD authencation</li>
+<li>Proxy chain.</li>
+</ul>
+
+<h3>
+<a id="server" class="anchor" href="#server" aria-hidden="true"><span class="octicon octicon-link"></span></a>Server</h3>
+
+<ul>
+<li>TCP proxy</li>
+<li>UDP proxy</li>
+<li>Bind</li>
+<li>Anonymouse authenticaion</li>
+<li>USERNAME/PASSWORD authencation</li>
+<li>Black or white IP lists for clients.</li>
+</ul>
 
 <h2>
 <a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick start</h2>
+
+<h4>
+<a id="dependency" class="anchor" href="#dependency" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependency</h4>
+
+<p>You should put following libraries in your project's <em>CLASSPATH</em>:</p>
+
+<ul>
+<li>log4j-1.2.17.jar</li>
+<li>slf4j-log4j12-1.7.5.jar</li>
+<li>slf4j-api-1.7.5.jar</li>
+<li>guava-18.0-rc2.jar</li>
+</ul>
 
 <h3>
 <a id="scoks5-client" class="anchor" href="#scoks5-client" aria-hidden="true"><span class="octicon octicon-link"></span></a>SCOKS5 Client</h3>
@@ -52,7 +99,7 @@
 <div class="highlight highlight-java"><pre>   <span class="pl-smi">DatagramSocket</span> socket <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">Socks5DatagramSocket</span>(proxy);</pre></div>
 
 <h3>
-<a id="scoks5-server" class="anchor" href="#scoks5-server" aria-hidden="true"><span class="octicon octicon-link"></span></a>SCOKS5 Server</h3>
+<a id="socks5-server" class="anchor" href="#socks5-server" aria-hidden="true"><span class="octicon octicon-link"></span></a>SOCKS5 Server</h3>
 
 <div class="highlight highlight-java"><pre>     <span class="pl-smi">SocksProxyServer</span> proxyServer <span class="pl-k">=</span> <span class="pl-smi">SocksProxyServerFactory</span><span class="pl-k">.</span>newNoAuthenticaionServer();
      proxyServer<span class="pl-k">.</span>start();<span class="pl-c">// Creat a SOCKS5 server bind at port 1080</span></pre></div>
