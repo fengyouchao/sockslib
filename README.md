@@ -2,7 +2,7 @@
 
 **Fucksocks** is a Java library of **SOCKS5** protocol.
 
-See [Javadoc](http://fengyouchao.github.io/fucksocks/apidocs/index.html)
+See [Java API Documentation](http://fengyouchao.github.io/projects/fucksocks/apidocs/index.html)
 
 #### References
 
