@@ -32,7 +32,7 @@ public interface SessionFilter {
    * SessionFilter. It will break the process if return false.
    * 
    * @param session Session between client and server.
-   * @return <code>false</code> to break the process or <code>true<code> to continue.
+   * @return <code>false</code> to break the process or <code>true</code> to continue.
    */
   public boolean doFilter(Session session);
 

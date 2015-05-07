@@ -81,7 +81,7 @@ public class IpSessionFilter implements SessionFilter {
   /**
    * Sets IP address ranges.
    * 
-   * @param ipRanges
+   * @param ipRanges IP address range.
    */
   public void setIpRanges(List<IpRange> ipRanges) {
     this.ipRanges = ipRanges;

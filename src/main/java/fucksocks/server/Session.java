@@ -158,7 +158,7 @@ public interface Session {
   public boolean isClose();
 
   /**
-   * Returns <code>true<code> if the session is connected.
+   * Returns <code>true</code> if the session is connected.
    * 
    * @return If the session is connected returns <code>true</code>.
    */

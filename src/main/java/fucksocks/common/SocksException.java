@@ -57,7 +57,7 @@ public class SocksException extends IOException {
 
   /**
    * Constructs an instance of {@link SocksException} with a code.
-   * @param replyCode
+   * @param replyCode The code that server Replied.
    */
   public SocksException(int replyCode) {
 

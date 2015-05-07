@@ -53,6 +53,7 @@ public interface SocksHandler extends Runnable {
   /**
    * Do BIND command.
    * 
+   * @param session Session.
    * @param commandMessage {@link CommandMessage} read from SOCKS client.
    * @throws SocksException If a SOCKS protocol error occurred.
    * @throws IOException If a I/O error occurred.
@@ -63,6 +64,7 @@ public interface SocksHandler extends Runnable {
   /**
    * Do UDP ASSOCIATE command.
    * 
+   * @param session Session.
    * @param commandMessage {@link CommandMessage} read from SOCKS client.
    * @throws SocksException If a SOCKS protocol error occurred.
    * @throws IOException If a I/O error occurred.
@@ -73,7 +75,7 @@ public interface SocksHandler extends Runnable {
   /**
    * Sets session.
    * 
-   * @param session session.
+   * @param session Session.
    */
   void setSession(Session session);
 

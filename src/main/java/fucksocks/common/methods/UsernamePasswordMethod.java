@@ -66,6 +66,8 @@ public class UsernamePasswordMethod extends AbstractSocksMethod {
 
   /**
    * Constructs an instance of {@link UsernamePasswordMethod} with {@link UsernamePasswordAuthenticator}.
+   * 
+   * @param authenticator Authenticator.
    */
   public UsernamePasswordMethod(UsernamePasswordAuthenticator authenticator) {
     this.authenticator = authenticator;

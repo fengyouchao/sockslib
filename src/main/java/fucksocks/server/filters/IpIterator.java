@@ -46,7 +46,7 @@ public class IpIterator implements Iterator<Ip> {
   /**
    * Constructs an instance of {@link IpIterator} with a {@link IpRange}.
    * 
-   * @param range
+   * @param range IP address range.
    */
   public IpIterator(IpRange range) {
     this.range = range;
