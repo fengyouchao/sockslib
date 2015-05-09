@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.util.List;
 
 import fucksocks.common.SocksException;
-import fucksocks.server.filters.FilterChain;
 import fucksocks.server.filters.SocksListener;
 import fucksocks.server.msg.CommandMessage;
 
@@ -78,20 +77,6 @@ public interface SocksHandler extends Runnable {
    * @param session Session.
    */
   void setSession(Session session);
-
-  /**
-   * Returns filter chain.
-   * 
-   * @return Filter chain.
-   */
-  public FilterChain getFilterChain();
-
-  /**
-   * Sets filter chain.
-   * 
-   * @param filterChain Filter chain.
-   */
-  public void setFilterChain(FilterChain filterChain);
 
   /**
    * Returns method selector.

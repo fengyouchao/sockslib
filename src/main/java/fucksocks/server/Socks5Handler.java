@@ -28,14 +28,13 @@ import fucksocks.common.NotImplementException;
 import fucksocks.common.ProtocolErrorException;
 import fucksocks.common.SocksException;
 import fucksocks.common.methods.SocksMethod;
-import fucksocks.server.filters.FilterChain;
 import fucksocks.server.filters.SocksListener;
 import fucksocks.server.io.Pipe;
 import fucksocks.server.io.SocketPipe;
 import fucksocks.server.msg.CommandMessage;
 import fucksocks.server.msg.CommandResponseMessage;
-import fucksocks.server.msg.MethodSelectionMessage;
 import fucksocks.server.msg.MethodSelecionResponseMessage;
+import fucksocks.server.msg.MethodSelectionMessage;
 import fucksocks.server.msg.ServerReply;
 
 /**
@@ -67,8 +66,6 @@ public class Socks5Handler implements SocksHandler {
    * Method selector.
    */
   private MethodSelector methodSelector;
-
-  private FilterChain filterChain;
 
   private int bufferSize;
 
@@ -290,16 +287,6 @@ public class Socks5Handler implements SocksHandler {
       session.close();
       logger.info("Session[{}] closed", session.getId());
     }
-  }
-
-  @Override
-  public FilterChain getFilterChain() {
-    return filterChain;
-  }
-
-  @Override
-  public void setFilterChain(FilterChain filterChain) {
-    this.filterChain = filterChain;
   }
 
   @Override

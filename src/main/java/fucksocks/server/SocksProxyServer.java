@@ -135,7 +135,6 @@ public interface SocksProxyServer {
    */
   public void removeSessionFilter(SessionFilter sessionFilter);
 
-
   /**
    * SOCKS server default port.
    */

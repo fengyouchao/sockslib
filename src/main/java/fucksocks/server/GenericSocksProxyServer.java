@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fucksocks.common.methods.SocksMethod;
-import fucksocks.server.filters.FilterChain;
 import fucksocks.server.filters.SessionFilter;
 import fucksocks.server.filters.SessionFilterChain;
 import fucksocks.server.filters.SocksListener;
@@ -112,11 +111,6 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
    * Method selector.
    */
   private MethodSelector methodSelector = new SocksMethodSelector();
-
-  /**
-   * Filter chain.
-   */
-  private FilterChain filterChain;
 
   /**
    * Buffer size.
@@ -240,7 +234,6 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
   @Override
   public void initializeSocksHandler(SocksHandler socksHandler) {
     socksHandler.setMethodSelector(methodSelector);
-    socksHandler.setFilterChain(filterChain);
     socksHandler.setBufferSize(bufferSize);
     socksHandler.setSocksListeners(socksListeners);
   }
