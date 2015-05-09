@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>fucksocks</groupId>
+	<groupId>io.github.fengyouchao</groupId>
 	<artifactId>fucksocks</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
@@ -11,16 +11,12 @@
 	<description>A Java library for SOCKS5 client and SOCKS5 server</description>
 	<url>http://fengyouchao.github.io/fucksocks/</url>
 
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<log4j.version>1.2.17</log4j.version>
 		<slf4j-log4j.version>1.7.5</slf4j-log4j.version>
+		<guava.version>18.0-rc2</guava.version>
+		<junit.version>4.9</junit.version>
 	</properties>
 
 	<dependencies>
@@ -40,13 +36,13 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>18.0-rc2</version>
+			<version>${guava.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.9</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -54,7 +50,7 @@
 
 	<build>
 
-		<finalName>fucksocks</finalName>
+		<finalName>${project.artifactId}-${project.version}</finalName>
 
 		<plugins>
 
@@ -80,7 +76,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>
@@ -95,7 +90,6 @@
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
-						<phase>install</phase>
 						<goals>
 							<goal>jar</goal>
 						</goals>
@@ -128,6 +122,78 @@
 			<timezone>UTC+8</timezone>
 		</developer>
 	</developers>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>oss</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+				</snapshotRepository>
+				<repository>
+					<id>oss</id>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+			</distributionManagement>
+			<build>
+				<plugins>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.4</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.10.2</version>
+						<configuration>
+							<tags>
+								<tag>
+									<name>date</name>
+									<placement>a</placement>
+									<head>date</head>
+								</tag>
+							</tags>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 
 </project>
