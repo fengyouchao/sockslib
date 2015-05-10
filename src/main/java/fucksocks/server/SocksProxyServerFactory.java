@@ -36,14 +36,26 @@ public class SocksProxyServerFactory {
    * Default buffer size;
    */
   private static final int BUFFER_SIZE = 1024 * 1024 * 5;
+  
+  private static final int DEFAULT_PORT = 1080;
 
   /**
-   * Creates a no authentication  SOCKS5 server.
+   * Creates a no authentication SOCKS5 server. The server will listen at port 1080.
    * 
    * @return The instance of {@link SocksProxyServer} that supports SOCKS5 protocol.
    */
   public static SocksProxyServer newNoAuthenticaionServer() {
-    SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class);
+    return newNoAuthenticaionServer(DEFAULT_PORT);
+  }
+
+  /**
+   * Creates a no authentication SOCKS5 server.
+   * 
+   * @param port The port that SOCKS5 Server will listen.
+   * @return The instance of {@link SocksProxyServer} that supports SOCKS5 protocol.
+   */
+  public static SocksProxyServer newNoAuthenticaionServer(int port) {
+    SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class, port);
     proxyServer.setBufferSize(BUFFER_SIZE);
     proxyServer.setTimeout(TIMEOUT);
     proxyServer.setSupportMethods(new NoAuthencationRequiredMethod());
@@ -57,7 +69,11 @@ public class SocksProxyServerFactory {
    * @return The instance of {@link SocksProxyServer} that supports SOCKS5 protocol.
    */
   public static SocksProxyServer newUsernamePasswordAutenticationServer(User... users) {
-    SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class);
+    return newUsernamePasswordAutenticationServer(DEFAULT_PORT, users);
+  }
+
+  public static SocksProxyServer newUsernamePasswordAutenticationServer(int port, User... users) {
+    SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class, port);
     proxyServer.setBufferSize(BUFFER_SIZE);
     proxyServer.setTimeout(TIMEOUT);
     UsernamePasswordAuthenticator authenticator = new UsernamePasswordAuthenticator();

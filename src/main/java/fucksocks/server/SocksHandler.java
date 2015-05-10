@@ -17,8 +17,9 @@ package fucksocks.server;
 import java.io.IOException;
 import java.util.List;
 
+import fucksocks.client.SocksProxy;
 import fucksocks.common.SocksException;
-import fucksocks.server.filters.SocksListener;
+import fucksocks.server.filters.SocksCommandFilter;
 import fucksocks.server.msg.CommandMessage;
 
 /**
@@ -111,14 +112,14 @@ public interface SocksHandler extends Runnable {
    * 
    * @return All socks listeners.
    */
-  public List<SocksListener> getSocksListeners();
+  public List<SocksCommandFilter> getSocksCommandFilters();
 
   /**
    * Sets socks listeners.
    * 
-   * @param socksListeners List of {@link SocksListener}.
+   * @param socksListeners List of {@link SocksCommandFilter}.
    */
-  public void setSocksListeners(List<SocksListener> socksListeners);
+  public void setSocksCommandFilters(List<SocksCommandFilter> socksListeners);
 
   /**
    * Returns idle time.
@@ -133,5 +134,7 @@ public interface SocksHandler extends Runnable {
    * @param idleTime Idle time.
    */
   public void setIdleTime(int idleTime);
+  
+  public void setProxy(SocksProxy socksProxy);
 
 }

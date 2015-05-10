@@ -24,11 +24,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fucksocks.client.SocksProxy;
+import fucksocks.client.SocksSocket;
 import fucksocks.common.NotImplementException;
 import fucksocks.common.ProtocolErrorException;
 import fucksocks.common.SocksException;
 import fucksocks.common.methods.SocksMethod;
-import fucksocks.server.filters.SocksListener;
+import fucksocks.server.filters.SocksCommandFilter;
 import fucksocks.server.io.Pipe;
 import fucksocks.server.io.SocketPipe;
 import fucksocks.server.msg.CommandMessage;
@@ -71,12 +73,12 @@ public class Socks5Handler implements SocksHandler {
 
   private int idleTime = 2000;
 
-  private List<SocksListener> socksListeners;
+  private SocksProxy proxy;
+
+  private List<SocksCommandFilter> socksCommandFilter;
 
   @Override
-  public void handle(Session session) throws SocksException, IOException {
-
-    sessionCreated(session);
+  public void handle(Session session) throws Exception {
 
     MethodSelectionMessage msg = new MethodSelectionMessage();
     session.read(msg);
@@ -108,11 +110,8 @@ public class Socks5Handler implements SocksHandler {
       logger.debug(e.getMessage());
       return;
     }
-
-
-    commandReceived(session, commandMessage);
-
-
+    
+    doSocksCommandFilter(session, commandMessage); 
     /**************************** DO COMMAND ******************************************/
 
     switch (commandMessage.getCommand()) {
@@ -143,13 +142,20 @@ public class Socks5Handler implements SocksHandler {
     Socket socket = null;
     InetAddress bindAddress = null;
     int bindPort = 0;
+    InetAddress remotServerInetAddress = commandMessage.getInetAddress();
+    int remoteServerPort = commandMessage.getPort();
 
     // set default bind address.
     byte[] defaultAddress = {0, 0, 0, 0};
     bindAddress = InetAddress.getByAddress(defaultAddress);
     // DO connect
     try {
-      socket = new Socket(commandMessage.getInetAddress(), commandMessage.getPort());
+      // Connect directly.
+      if (proxy == null) {
+        socket = new Socket(remotServerInetAddress, remoteServerPort);
+      } else {
+        socket = new SocksSocket(proxy, remotServerInetAddress, remoteServerPort);
+      }
       bindAddress = socket.getLocalAddress();
       bindPort = socket.getLocalPort();
       reply = ServerReply.SUCCEEDED;
@@ -250,24 +256,6 @@ public class Socks5Handler implements SocksHandler {
 
   }
 
-  protected void sessionCreated(Session session) {
-    if (socksListeners == null) {
-      return;
-    }
-    for (int i = 0; i < socksListeners.size(); i++) {
-      socksListeners.get(i).onSessionCreated(session);
-    }
-  }
-
-  protected void commandReceived(Session session, CommandMessage message) {
-    if (socksListeners == null) {
-      return;
-    }
-    for (int i = 0; i < socksListeners.size(); i++) {
-      socksListeners.get(i).onCommandReceived(session, message);;
-    }
-  }
-
   @Override
   public void setSession(Session session) {
     this.session = session;
@@ -280,6 +268,7 @@ public class Socks5Handler implements SocksHandler {
       handle(session);
     } catch (Exception e) {
       logger.error("Session[{}]:{}", session.getId(), e.getMessage());
+      logger.error(e.getMessage(), e);
     } finally {
       /*
        * At last, close the session.
@@ -310,13 +299,13 @@ public class Socks5Handler implements SocksHandler {
   }
 
   @Override
-  public List<SocksListener> getSocksListeners() {
-    return socksListeners;
+  public List<SocksCommandFilter> getSocksCommandFilters() {
+    return socksCommandFilter;
   }
 
   @Override
-  public void setSocksListeners(List<SocksListener> socksListeners) {
-    this.socksListeners = socksListeners;
+  public void setSocksCommandFilters(List<SocksCommandFilter> socksCommandFilter) {
+    this.socksCommandFilter = socksCommandFilter;
   }
 
   @Override
@@ -327,6 +316,41 @@ public class Socks5Handler implements SocksHandler {
   @Override
   public void setIdleTime(int idleTime) {
     this.idleTime = idleTime;
+  }
+
+  @Override
+  public void setProxy(SocksProxy proxy) {
+    this.proxy = proxy;
+  }
+
+  public SocksProxy getProxy() {
+    return proxy;
+  }
+
+
+
+  protected void doSocksCommandFilter(Session session, CommandMessage message)
+      throws Exception {
+
+    if (socksCommandFilter != null && socksCommandFilter.size() > 0) {
+
+      boolean isInterrupted = false;
+      SocksCommandFilter socksFilter = null;
+      
+      for (int i = 0; i < socksCommandFilter.size(); i++) {
+        socksFilter = socksCommandFilter.get(i);
+        boolean bl = socksFilter.doFilter(session, message);
+        if (!bl) {
+          isInterrupted = true;
+          break;
+        }
+      }
+
+      if (isInterrupted) {
+        throw new InterruptedException("Interrupted by " + socksFilter.getClass());
+      }
+
+    }
   }
 
 }

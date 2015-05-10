@@ -17,9 +17,10 @@ package fucksocks.server;
 import java.io.IOException;
 import java.util.Map;
 
+import fucksocks.client.SocksProxy;
 import fucksocks.common.methods.SocksMethod;
 import fucksocks.server.filters.SessionFilter;
-import fucksocks.server.filters.SocksListener;
+import fucksocks.server.filters.SocksCommandFilter;
 
 /**
  * The interface <code>SocksProxyServer</code> represents a SOCKS server.
@@ -31,7 +32,7 @@ import fucksocks.server.filters.SocksListener;
 public interface SocksProxyServer {
 
   /**
-   * Starts a SOCKS server bind a default port.
+   * Starts a SOCKS server.
    * 
    * @throws IOException If any I/O error occurs.
    */
@@ -108,18 +109,18 @@ public interface SocksProxyServer {
   public void setTimeout(int timeout);
 
   /**
-   * Adds a {@link SocksListener}.
+   * Adds a {@link SocksCommandFilter}.
    * 
-   * @param socksListener socksListener Instance of {@link SocksListener}.
+   * @param socksCommandFilter Instance of {@link SocksCommandFilter}.
    */
-  public void addSocksListenner(SocksListener socksListener);
+  public void addSocksCommandFilter(SocksCommandFilter socksCommandFilter);
 
   /**
-   * Removes a {@link SocksListener}.
+   * Removes a {@link SocksCommandFilter}.
    * 
-   * @param socksListener Instance of {@link SocksListener}.
+   * @param socksCommandFilter Instance of {@link SocksCommandFilter}.
    */
-  public void removeSocksListenner(SocksListener socksListener);
+  public void removeSocksCommandFilter(SocksCommandFilter socksCommandFilter);
 
   /**
    * Adds {@link SessionFilter}.
@@ -134,6 +135,14 @@ public interface SocksProxyServer {
    * @param sessionFilter Instance of {@link SessionFilter}.
    */
   public void removeSessionFilter(SessionFilter sessionFilter);
+  
+  public SocksProxy getProxy();
+
+  public void setProxy(SocksProxy proxy);
+  
+  public int getBindPort();
+
+  public void setBindPort(int bindPort);
 
   /**
    * SOCKS server default port.

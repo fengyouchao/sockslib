@@ -18,7 +18,9 @@ import fucksocks.server.Session;
 
 /**
  * 
- * The class <code>SessionFilter</code> represents a session filter.
+ * The class <code>SessionFilter</code> represents a session filter. When a SOCKS client connects a
+ * SOCKS server, the SOCKS server will create a {@link Session} for the client. Then,
+ * <code>SessionFilter</code> starts to work.
  * 
  * @author Youchao Feng
  * @date May 2, 2015 12:36:44 AM
@@ -28,8 +30,8 @@ import fucksocks.server.Session;
 public interface SessionFilter {
 
   /**
-   * Return true, the {@link SessionFilterChain} will call the next SessionFilter if it has next
-   * SessionFilter. It will break the process if return false.
+   * Return <code>true</code>, the {@link SessionFilterChain} will call the next SessionFilter if it
+   * has next SessionFilter. It will break the process if it returns <code>false<code>.
    * 
    * @param session Session between client and server.
    * @return <code>false</code> to break the process or <code>true</code> to continue.
