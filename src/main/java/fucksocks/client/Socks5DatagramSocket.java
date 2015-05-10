@@ -79,16 +79,16 @@ public class Socks5DatagramSocket extends DatagramSocket {
    */
   public Socks5DatagramSocket(SocksProxy proxy) throws SocksException, IOException {
     super();
-    this.proxy = proxy;
-    if (proxy.getChainProxy() != null) {
+    this.proxy = proxy.copy();
+    if (this.proxy.getChainProxy() != null) {
       throw new SocksException("Proxy chain not support UDP ASSOCIATE");
     }
-    if (!(proxy instanceof Socks5)) {
+    if (!(this.proxy instanceof Socks5)) {
       throw new SocksException("Only SOCKS5 protocol support UDP ASSOCIATE");
     }
-    proxy.buildConnection();
+    this.proxy.buildConnection();
     CommandReplyMesasge mesasge =
-        proxy.requestUdpAssociat(this.getLocalAddress(), this.getLocalPort());
+        this.proxy.requestUdpAssociat(this.getLocalAddress(), this.getLocalPort());
 
     logger.debug("create datagram socket at[{}:{}]", this.getLocalAddress(), this.getLocalPort());
     this.relayServerInetAddress = mesasge.getIp();

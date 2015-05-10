@@ -321,8 +321,13 @@ public class Socks5 implements SocksProxy {
     socks5.setAcceptableMethods(acceptableMethods)
         .setAlwaysResolveAddressLocally(alwaysResolveAddressLocally)
         .setAuthentication(authentication).setInetAddress(inetAddress).setPort(port)
-        .setSocksMethodRequestor(socksMethodRequestor);
+        .setSocksMethodRequestor(socksMethodRequestor).setChainProxy(chainProxy);
     return socks5;
+  }
+  
+  @Override
+  public SocksProxy copyWithoutChainProxy() {
+    return copy().setChainProxy(null);
   }
 
 

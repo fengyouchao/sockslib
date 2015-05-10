@@ -101,12 +101,12 @@ public class SocksServerSocket extends ServerSocket {
    */
   public SocksServerSocket(SocksProxy proxy, InetAddress inetAddress, int port)
       throws SocksException, IOException {
-    this.proxy = proxy;
+    this.proxy = proxy.copy();
     this.incomePort = port;
     this.incomeAddress = inetAddress;
-    proxy.buildConnection();
+    this.proxy.buildConnection();
     // Send BIND command to SOCKS server.
-    CommandReplyMesasge replyMesasge = proxy.requestBind(incomeAddress, incomePort);
+    CommandReplyMesasge replyMesasge = this.proxy.requestBind(incomeAddress, incomePort);
     // Get a bind IP and port in proxy server.
     bindAddress = replyMesasge.getIp();
     bindPort = replyMesasge.getPort();

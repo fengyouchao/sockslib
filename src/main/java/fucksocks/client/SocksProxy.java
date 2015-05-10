@@ -196,7 +196,7 @@ public interface SocksProxy {
    */
   CommandReplyMesasge requestUdpAssociat(InetAddress address, int port) throws SocksException,
       IOException;
-  
+
   /**
    * Gets InputStream from the socket that connected SOCKS server.
    * 
@@ -280,14 +280,22 @@ public interface SocksProxy {
    * @return The copy of this SocksProxy.
    */
   SocksProxy copy();
-  
+
+  /**
+   * Copy the {@link SocksProxy}. It will copy all properties of the
+   * {@link SocksProxy} but without chain proxy.
+   * 
+   * @return The copy of this SocksProxy but without chain proxy.
+   */
+  SocksProxy copyWithoutChainProxy();
+
   /**
    * Returns the chain proxy.
    * 
    * @return the chain proxy.
    */
   public SocksProxy getChainProxy();
-  
+
   /**
    * Returns the instance of <code>SocksProxy</code>.
    * 

@@ -76,16 +76,15 @@ public class SocksSocket extends Socket {
    */
   public SocksSocket(SocksProxy proxy, String remoteServerHost, int remoteServerPort)
       throws SocksException, IOException {
-    proxy.setProxySocket(proxySocket);
+    this.proxy = proxy.copy();
+    this.proxy.setProxySocket(proxySocket);
     this.remoteServerHost = remoteServerHost;
     this.remoteServerPort = remoteServerPort;
-    this.proxy = proxy;
-
-    proxy.buildConnection();
-    proxySocket = proxy.getProxySocket();
+    
+    this.proxy.buildConnection();
+    proxySocket = this.proxy.getProxySocket();
     initProxyChain();
-    proxy.requestConnect(remoteServerHost, remoteServerPort);
-
+    this.proxy.requestConnect(remoteServerHost, remoteServerPort);
   }
 
   /**
@@ -109,13 +108,13 @@ public class SocksSocket extends Socket {
       throw new IllegalArgumentException("Unsupported address type");
     }
     InetSocketAddress address = (InetSocketAddress) socketAddress;
-    this.proxy = proxy;
+    this.proxy = proxy.copy();
     this.remoteServerHost = address.getHostString();
     this.remoteServerPort = address.getPort();
-    proxy.buildConnection();
-    proxySocket = proxy.getProxySocket();
+    this.proxy.buildConnection();
+    proxySocket = this.proxy.getProxySocket();
     initProxyChain();
-    proxy.requestConnect(address.getAddress(), address.getPort());
+    this.proxy.requestConnect(address.getAddress(), address.getPort());
 
   }
 
@@ -126,8 +125,8 @@ public class SocksSocket extends Socket {
    */
   public SocksSocket(SocksProxy proxy) {
     proxySocket = new Socket();
-    proxy.setProxySocket(proxySocket);
-    this.proxy = proxy;
+    this.proxy = proxy.copy();
+    this.proxy.setProxySocket(proxySocket);
   }
 
   /**
@@ -349,6 +348,7 @@ public class SocksSocket extends Socket {
   @Override
   public synchronized void close() throws IOException {
     proxy.getProxySocket().close();
+    proxy.setProxySocket(null);
   }
 
   @Override
