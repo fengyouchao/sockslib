@@ -81,5 +81,19 @@ public interface Pipe {
    * @param pipeListener Pipe listener.
    */
   void removePipeListener(PipeListener pipeListener);
+  
+  /**
+   * Sets pipe's name.
+   * 
+   * @param name Name of pipe.
+   */
+  void setName(String name);
+  
+  /**
+   * Returns pipe's name.
+   * 
+   * @return Name of pipe.
+   */
+  String getName();
 
 }

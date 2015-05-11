@@ -58,6 +58,8 @@ public class SocketPipe implements Pipe {
    */
   private Socket socket2;
 
+  private String name;
+
   /**
    * flag.
    */
@@ -158,6 +160,18 @@ public class SocketPipe implements Pipe {
 
   }
 
+  @Override
+  public String getName() {
+    return name;
+  }
+
+  @Override
+  public void setName(String name) {
+    this.name = name;
+  }
+
+
+
   /**
    * The class <code>PipeListnerImp</code> is a pipe listener.
    * 
@@ -183,8 +197,12 @@ public class SocketPipe implements Pipe {
 
     @Override
     public void onTransfered(Pipe pipe, byte[] buffer, int bufferLength) {
-      // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void onError(Pipe pipe, Exception exception) {
+      logger.info("{} {}", name, exception.getMessage());
     }
 
   }

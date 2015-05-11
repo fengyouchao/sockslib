@@ -170,10 +170,8 @@ public class StreamPipe implements Runnable, Pipe {
       }
 
     } catch (IOException e) {
-      if (e.getMessage().equals("Socket closed")) {
-        logger.debug("Socket is closed, the pipe[{}] going to close", name);
-      } else {
-        logger.error("Unknow excepition:{}", e.getMessage());
+      for (PipeListener listener : pipeListeners) {
+        listener.onError(this, e);
       }
       stop();
     }
@@ -243,6 +241,7 @@ public class StreamPipe implements Runnable, Pipe {
    * 
    * @return Name of {@link StreamPipe}.
    */
+  @Override
   public String getName() {
     return name;
   }
@@ -252,6 +251,7 @@ public class StreamPipe implements Runnable, Pipe {
    * 
    * @param name Name of {@link StreamPipe}.
    */
+  @Override
   public void setName(String name) {
     this.name = name;
   }
