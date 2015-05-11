@@ -50,4 +50,12 @@ public interface PipeListener {
    */
   public void onTransfered(Pipe pipe, byte[] buffer, int bufferLength);
 
+  /**
+   * This method will be called when an error occurred.
+   * 
+   * @param pipe {@link Pipe} instance.
+   * @param exception The error that occurred in {@link Pipe}..
+   */
+  public void onError(Pipe pipe, Exception exception);
+
 }
