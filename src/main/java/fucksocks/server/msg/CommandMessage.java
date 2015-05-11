@@ -36,17 +36,17 @@ import fucksocks.utils.SocksUtil;
  *
  */
 public class CommandMessage implements ReadableMessage, WritableMessage {
-  
+
   /**
    * Value of CONNECTE command.
    */
   protected static final int CMD_CONNECT = 0x01;
-  
+
   /**
    * Value of BIND command.
    */
   protected static final int CMD_BIND = 0x02;
-  
+
   /**
    * Value of UDP ASSOCIATE command.
    */
@@ -91,6 +91,11 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
    * Address type.
    */
   private int addressType;
+
+  /**
+   * SOCKS exception in Command message.
+   */
+  private SocksException socksException;
 
   @Override
   public int getLength() {
@@ -163,13 +168,13 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
         break;
 
       default:
-        throw SocksException.serverReplyException(ServerReply.COMMAND_NOT_SUPPORTED);
+        socksException = SocksException.serverReplyException(ServerReply.COMMAND_NOT_SUPPORTED);
     }
     reserved = inputStream.read();
     addressType = inputStream.read();
 
-    if (!AddressType.isSupport(addressType)) {
-      throw SocksException.serverReplyException(ServerReply.ADDRESS_TYPE_NOT_SUPPORTED);
+    if (!AddressType.isSupport(addressType) && socksException == null) {
+      socksException = SocksException.serverReplyException(ServerReply.ADDRESS_TYPE_NOT_SUPPORTED);
     }
 
     // read address
@@ -191,9 +196,12 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
         try {
           inetAddress = InetAddress.getByName(host);
         } catch (UnknownHostException e) {
-          throw SocksException.serverReplyException(ServerReply.HOST_UNREACHABLE);
+          if (socksException == null) {
+            socksException = SocksException.serverReplyException(ServerReply.HOST_UNREACHABLE);
+          }
         }
       default:
+        // TODO Implement later.
         break;
     }
 
@@ -220,6 +228,10 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
    */
   public void setVersion(int version) {
     this.version = version;
+  }
+
+  public boolean hasSocksException() {
+    return socksException != null;
   }
 
   public InetAddress getInetAddress() {
@@ -272,6 +284,14 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
 
   public SocketAddress getSocketAddress() {
     return new InetSocketAddress(inetAddress, port);
+  }
+
+  public SocksException getSocksException() {
+    return socksException;
+  }
+
+  public void setSocksException(SocksException socksException) {
+    this.socksException = socksException;
   }
 
 }

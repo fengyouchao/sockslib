@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import fucksocks.client.SocksProxy;
 import fucksocks.client.SocksSocket;
+import fucksocks.common.AddressType;
 import fucksocks.common.NotImplementException;
 import fucksocks.common.ProtocolErrorException;
 import fucksocks.common.SocksException;
@@ -95,23 +96,22 @@ public class Socks5Handler implements SocksHandler {
     // do method.
     selectedMethod.doMethod(session);
 
-
     CommandMessage commandMessage = new CommandMessage();
+    session.read(commandMessage); // Read command request.
 
+    logger.info("Session[{}] send Rquest:{}  {}:{}", session.getId(), commandMessage.getCommand(),
+        commandMessage.getAddressType() != AddressType.DOMAINNAME ? commandMessage.getInetAddress()
+            : commandMessage.getHost(), commandMessage.getPort());
 
-    try {
-      session.read(commandMessage); // Read command request.
-
-      logger.info("Session[{}] send Rquest:{}  {}:{}", session.getId(),
-          commandMessage.getCommand(), commandMessage.getInetAddress(), commandMessage.getPort());
-
-    } catch (SocksException e) {
-      session.write(new CommandResponseMessage(e.getServerReply()));
-      logger.debug(e.getMessage());
+    // If there is a SOKCS exception in command message, It will send a right response to client.
+    if (commandMessage.hasSocksException()) {
+      ServerReply serverReply = commandMessage.getSocksException().getServerReply();
+      session.write(new CommandResponseMessage(serverReply));
+      logger.info("SESSION[{}] will close, because {}", session.getId(), serverReply);
       return;
     }
-    
-    doSocksCommandFilter(session, commandMessage); 
+
+    doSocksCommandFilter(session, commandMessage);
     /**************************** DO COMMAND ******************************************/
 
     switch (commandMessage.getCommand()) {
@@ -167,8 +167,13 @@ public class Socks5Handler implements SocksHandler {
         reply = ServerReply.TTL_EXPIRED;
       } else if (e.getMessage().equals("Network is unreachable")) {
         reply = ServerReply.NETWORK_UNREACHABLE;
+      } else if (e.getMessage().equals("Connection timed out")) {
+        reply = ServerReply.TTL_EXPIRED;
+      } else {
+        reply = ServerReply.GENERAL_SOCKS_SERVER_FAILURE;
       }
-      logger.debug("connect exception:", e);
+      logger.info("SESSION[{}] connect {} [{}] exception:{}", session.getId(),
+          new InetSocketAddress(remotServerInetAddress, remoteServerPort), reply, e.getMessage());
     }
 
     session.write(new CommandResponseMessage(VERSION, reply, bindAddress, bindPort));
@@ -179,6 +184,7 @@ public class Socks5Handler implements SocksHandler {
     }
 
     Pipe pipe = new SocketPipe(session.getSocket(), socket);
+    pipe.setName("SESSION[" + session.getId() + "]");
     pipe.setBufferSize(bufferSize);
     pipe.start(); // This method will create tow thread to run tow internal pipes.
 
@@ -329,14 +335,13 @@ public class Socks5Handler implements SocksHandler {
 
 
 
-  protected void doSocksCommandFilter(Session session, CommandMessage message)
-      throws Exception {
+  protected void doSocksCommandFilter(Session session, CommandMessage message) throws Exception {
 
     if (socksCommandFilter != null && socksCommandFilter.size() > 0) {
 
       boolean isInterrupted = false;
       SocksCommandFilter socksFilter = null;
-      
+
       for (int i = 0; i < socksCommandFilter.size(); i++) {
         socksFilter = socksCommandFilter.get(i);
         boolean bl = socksFilter.doFilter(session, message);
