@@ -184,7 +184,7 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
         socket.setSoTimeout(timeout);
         Session session = new SocksSession(getNextSessionId(), socket, sessions);
         sessions.put(session.getId(), session);
-        logger.info("Create {}", session);
+        logger.info("Create SESSION[{}] for {}", session.getId(), session.getRemoteAddress());
 
         try {
           sessionFilterChain.doFilterWork(session);
