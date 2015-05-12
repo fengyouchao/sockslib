@@ -358,6 +358,15 @@ public class Socks5 implements SocksProxy {
     return inetAddress;
   }
 
+  @Override
+  public String toString() {
+    String value =  "[SOCKS5:"+new InetSocketAddress(inetAddress, port)+"]";
+    if(getChainProxy() != null){
+      return value+" --> "+getChainProxy().toString();
+    }
+    return value;
+  }
+
   /**
    * Sets SOCKS5 proxy server's IP address.
    * 
