@@ -31,7 +31,7 @@ public interface SessionFilter {
 
   /**
    * Return <code>true</code>, the {@link SessionFilterChain} will call the next SessionFilter if it
-   * has next SessionFilter. It will break the process if it returns <code>false<code>.
+   * has next SessionFilter. It will break the process if it returns <code>false</code>.
    * 
    * @param session Session between client and server.
    * @return <code>false</code> to break the process or <code>true</code> to continue.
