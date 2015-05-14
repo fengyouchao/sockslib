@@ -14,46 +14,50 @@
 
 package fucksocks.common;
 
-import java.net.SocketAddress;
+import java.io.Serializable;
+import java.security.Principal;
+
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 
 /**
- * The class <code>AuthenticationException</code> represents a authentication exception.
- * 
+ * The class <code>AnonymousePrincipal</code> represents an anonymous principal.
+ *
  * @author Youchao Feng
- * @date Mar 24, 2015 9:11:35 PM
+ * @date May 14, 2015 2:36:34 PM
  * @version 1.0
  *
  */
-public class AuthenticationException extends SocksException {
+public class AnonymousePrincipal implements Principal, Serializable {
 
   /**
    * Serial version UID.
    */
   private static final long serialVersionUID = 1L;
 
-  private SocketAddress clientAddress;
-
-
-  /**
-   * Constructs an instance of {@link AuthenticationException} with a message.
-   * 
-   * @param msg Message.
-   */
-  public AuthenticationException(String msg) {
-    super(msg);
-  }
-  
-  public AuthenticationException(String msg, SocketAddress clientFrom){
-    super(msg);
-    this.clientAddress = clientFrom;
+  @Override
+  public String getName() {
+    return "Anonymouse";
   }
 
-  public SocketAddress getClientAddress() {
-    return clientAddress;
+  @Override
+  public int hashCode() {
+    return Hashing.md5().newHasher().putString(getName(), Charsets.UTF_8).hashCode();
   }
 
-  public void setClientAddress(SocketAddress clientAddress) {
-    this.clientAddress = clientAddress;
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof AnonymousCredentials) {
+      return true;
+    }
+    return false;
   }
+
+  @Override
+  public String toString() {
+    return "Principal[Anonymouse]";
+  }
+
+
 
 }

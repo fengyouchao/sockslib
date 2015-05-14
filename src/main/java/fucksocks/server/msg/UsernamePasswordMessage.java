@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import fucksocks.common.SocksException;
-import fucksocks.common.UsernamePasswordAuthentication;
+import fucksocks.common.UsernamePasswordCredentials;
 
 
 /**
@@ -35,7 +35,7 @@ public class UsernamePasswordMessage implements ReadableMessage, WritableMessage
   /**
    * Username password authentication.
    */
-  private UsernamePasswordAuthentication usernamePasswordAutencation;
+  private UsernamePasswordCredentials credentials;
 
   /**
    * Version.
@@ -106,6 +106,9 @@ public class UsernamePasswordMessage implements ReadableMessage, WritableMessage
   @Override
   public void read(InputStream inputStream) throws SocksException, IOException {
     version = inputStream.read();
+    if(version == -1){
+      throw new IOException("Socket closed");
+    }
     usernameLength = inputStream.read();
     byte[] buffer = new byte[usernameLength];
     int size = inputStream.read(buffer);
@@ -123,7 +126,7 @@ public class UsernamePasswordMessage implements ReadableMessage, WritableMessage
 
     password = new String(buffer);
 
-    usernamePasswordAutencation = new UsernamePasswordAuthentication(username, password);
+    credentials = new UsernamePasswordCredentials(username, password);
   }
 
   /**
@@ -172,12 +175,12 @@ public class UsernamePasswordMessage implements ReadableMessage, WritableMessage
   }
 
   /**
-   * Returns an instance of {@link UsernamePasswordAuthentication}.
+   * Returns an instance of {@link UsernamePasswordCredentials}.
    * 
-   * @return An instance of {@link UsernamePasswordAuthentication} .
+   * @return An instance of {@link UsernamePasswordCredentials} .
    */
-  public UsernamePasswordAuthentication getUsernamePasswordAutentication() {
-    return usernamePasswordAutencation;
+  public UsernamePasswordCredentials getUsernamePasswordCredentials() {
+    return credentials;
   }
 
 }

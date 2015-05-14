@@ -89,7 +89,7 @@ public class Socks5Handler implements SocksHandler {
     }
     SocksMethod selectedMethod = methodSelector.select(msg);
 
-    logger.debug("[{}]SOKCS5 Server seleted:{}", session, selectedMethod.getMethodName());
+    logger.debug("SESSION[{}] Response client:{}", session.getId(), selectedMethod.getMethodName());
     // send select method.
     session.write(new MethodSelecionResponseMessage(VERSION, selectedMethod));
 
@@ -99,7 +99,7 @@ public class Socks5Handler implements SocksHandler {
     CommandMessage commandMessage = new CommandMessage();
     session.read(commandMessage); // Read command request.
 
-    logger.info("Session[{}] send Rquest:{}  {}:{}", session.getId(), commandMessage.getCommand(),
+    logger.info("SESSION[{}] request:{}  {}:{}", session.getId(), commandMessage.getCommand(),
         commandMessage.getAddressType() != AddressType.DOMAINNAME ? commandMessage.getInetAddress()
             : commandMessage.getHost(), commandMessage.getPort());
 
@@ -195,7 +195,7 @@ public class Socks5Handler implements SocksHandler {
       } catch (InterruptedException e) {
         pipe.stop();
         session.close();
-        logger.info("Session[{}] closed", session.getId());
+        logger.info("SESSION[{}] closed", session.getId());
       }
     }
 
@@ -273,14 +273,14 @@ public class Socks5Handler implements SocksHandler {
     try {
       handle(session);
     } catch (Exception e) {
-      logger.error("Session[{}]:{}", session.getId(), e.getMessage());
+      logger.error("SESSION[{}]: {}", session.getId(), e.getMessage());
       logger.error(e.getMessage(), e);
     } finally {
       /*
        * At last, close the session.
        */
       session.close();
-      logger.info("Session[{}] closed", session.getId());
+      logger.info("SESSION[{}] closed", session.getId());
     }
   }
 

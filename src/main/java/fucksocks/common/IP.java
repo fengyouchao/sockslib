@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fucksocks.server.filters;
+package fucksocks.common;
 
 import java.io.Serializable;
 import java.util.regex.Matcher;

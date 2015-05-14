@@ -14,8 +14,8 @@
 
 package fucksocks.server;
 
-import fucksocks.common.Authentication;
 import fucksocks.common.AuthenticationException;
+import fucksocks.common.Credentials;
 
 /**
  * The class <code>Authenticator</code> represents an authenticator.
@@ -30,11 +30,11 @@ public interface Authenticator {
   /**
    * This method will do authentication work.
    * 
-   * @param authentication Authentication.
+   * @param credentials credentials.
    * @param session Session.
    * @throws AuthenticationException If authentication is failed.
    */
-  void doAuthenticate(Authentication authentication, Session session)
+  void doAuthenticate(Credentials credentials, Session session)
       throws AuthenticationException;
 
 }

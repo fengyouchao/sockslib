@@ -18,6 +18,8 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import fucksocks.common.IP;
+import fucksocks.common.IPRange;
 import fucksocks.server.Session;
 
 /**

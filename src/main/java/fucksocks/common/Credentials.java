@@ -14,17 +14,30 @@
 
 package fucksocks.common;
 
+import java.security.Principal;
 
 /**
- * The interface <code>Authentication</code> contains authentication information.
- * 
+ * The class <code>Credentials</code> represents a credentials.
+ *
  * @author Youchao Feng
- * @date Mar 19, 2015 2:17:51 PM
+ * @date May 14, 2015 2:35:26 PM
  * @version 1.0
- * 
- * @see fucksocks.common.UsernamePasswordAuthentication
- * @see fucksocks.common.AnonymousAuthentication
+ *
  */
-public interface Authentication {
+public interface Credentials {
+
+  /**
+   * Returns principal.
+   * 
+   * @return principal.
+   */
+  Principal getUserPrincipal();
+
+  /**
+   * Returns password.
+   * 
+   * @return password.
+   */
+  String getPassword();
 
 }

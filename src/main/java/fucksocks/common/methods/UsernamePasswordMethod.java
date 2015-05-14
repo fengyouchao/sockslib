@@ -23,10 +23,10 @@ import org.slf4j.LoggerFactory;
 
 import fucksocks.client.Socks5;
 import fucksocks.client.SocksProxy;
-import fucksocks.common.Authentication;
 import fucksocks.common.AuthenticationException;
+import fucksocks.common.Credentials;
 import fucksocks.common.SocksException;
-import fucksocks.common.UsernamePasswordAuthentication;
+import fucksocks.common.UsernamePasswordCredentials;
 import fucksocks.server.Session;
 import fucksocks.server.UsernamePasswordAuthenticator;
 import fucksocks.server.msg.UsernamePasswordMessage;
@@ -65,7 +65,8 @@ public class UsernamePasswordMethod extends AbstractSocksMethod {
   public UsernamePasswordMethod() {}
 
   /**
-   * Constructs an instance of {@link UsernamePasswordMethod} with {@link UsernamePasswordAuthenticator}.
+   * Constructs an instance of {@link UsernamePasswordMethod} with
+   * {@link UsernamePasswordAuthenticator}.
    * 
    * @param authenticator Authenticator.
    */
@@ -84,29 +85,26 @@ public class UsernamePasswordMethod extends AbstractSocksMethod {
   @Override
   public void doMethod(SocksProxy socksProxy) throws SocksException, IOException {
 
-    Authentication auth = socksProxy.getAuthentication();
-    if (auth == null || !(auth instanceof UsernamePasswordAuthentication)) {
+    Credentials credentials = socksProxy.getCredentials();
+    if (credentials == null || !(credentials instanceof UsernamePasswordCredentials)) {
       throw new SocksException("Need Username/Password authentication");
     }
-    UsernamePasswordAuthentication authentication = (UsernamePasswordAuthentication) auth;
+    // UsernamePasswordAuthentication authentication = (UsernamePasswordAuthentication) auth;
 
-    String username = authentication.getUsername();
-    String password = authentication.getPassword();
+    String username = credentials.getUserPrincipal().getName();
+    String password = credentials.getPassword();
     InputStream inputStream = socksProxy.getInputStream();
     OutputStream outputStream = socksProxy.getOutputStream();
     /*
      * RFC 1929
      * 
-     * +----+------+----------+------+----------+ 
-     * |VER | ULEN |   UNAME  | PLEN | PASSWD | |
-     * +----+------+----------+------+----------+
-     * |  1 |   1  | 1 to 255 |   1  | 1 to 255 |
-     * +----+------+----------+------+----------+ 
-     * The VER field contains the current version of the subnegotiation, which is X’01’. The ULEN
-     * field contains the length of the UNAME field that follows. The UNAME field contains the
-     * username as known to the source operating system. The PLEN field contains the length of the
-     * PASSWD field that follows. The PASSWD field contains the password association with the given
-     * UNAME.
+     * +----+------+----------+------+----------+ |VER | ULEN | UNAME | PLEN | PASSWD | |
+     * +----+------+----------+------+----------+ | 1 | 1 | 1 to 255 | 1 | 1 to 255 |
+     * +----+------+----------+------+----------+ The VER field contains the current version of the
+     * subnegotiation, which is X’01’. The ULEN field contains the length of the UNAME field that
+     * follows. The UNAME field contains the username as known to the source operating system. The
+     * PLEN field contains the length of the PASSWD field that follows. The PASSWD field contains
+     * the password association with the given UNAME.
      */
     final int USERNAME_LENGTH = username.getBytes().length;
     final int PASSWORD_LENGTH = password.getBytes().length;
@@ -144,10 +142,10 @@ public class UsernamePasswordMethod extends AbstractSocksMethod {
 
     UsernamePasswordMessage usernamePasswordMessage = new UsernamePasswordMessage();
     session.read(usernamePasswordMessage);
-    logger.debug("client sent authentication: {}:{}", usernamePasswordMessage.getUsername(),
-        usernamePasswordMessage.getPassword());
+    logger.debug("SESSION[{}] Receive credentials: {}", session.getId(),
+        usernamePasswordMessage.getUsernamePasswordCredentials());
     try {
-      authenticator.doAuthenticate(usernamePasswordMessage.getUsernamePasswordAutentication(),
+      authenticator.doAuthenticate(usernamePasswordMessage.getUsernamePasswordCredentials(),
           session);
     } catch (AuthenticationException e) {
       session.write(new UsernamePasswordResponseMessage(false));

@@ -14,15 +14,28 @@
 
 package fucksocks.common;
 
+import java.security.Principal;
+
 /**
- * The class <code>AnonymousAuthentication</code> represents an anonymous authentication which means
- * do not need authentication.<br>
- * It is supported by SOCKS4 and SOCKS5 protocol.
- * 
+ * The class <code>AnonymousCredentials</code> represents an anonymous credentials.
+ *
  * @author Youchao Feng
- * @date Mar 18, 2015 9:58:34 AM
+ * @date May 14, 2015 2:36:42 PM
  * @version 1.0
+ *
  */
-public class AnonymousAuthentication implements Authentication {
+public class AnonymousCredentials implements Credentials {
+
+  public AnonymousCredentials() {}
+
+  @Override
+  public Principal getUserPrincipal() {
+    return null;
+  }
+
+  @Override
+  public String getPassword() {
+    return null;
+  }
 
 }

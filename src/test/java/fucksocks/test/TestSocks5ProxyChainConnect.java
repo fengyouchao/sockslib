@@ -27,7 +27,7 @@ import fucksocks.client.Socks5;
 import fucksocks.client.SocksProxy;
 import fucksocks.client.SocksSocket;
 import fucksocks.common.SocksException;
-import fucksocks.common.UsernamePasswordAuthentication;
+import fucksocks.common.UsernamePasswordCredentials;
 
 /**
  * 
@@ -44,12 +44,12 @@ public class TestSocks5ProxyChainConnect {
   public static void main(String[] args) {
 
     SocksProxy proxy1 = new Socks5(new InetSocketAddress("localhost", 1080));
-    proxy1.setAuthentication(new UsernamePasswordAuthentication("socks", "1234"));
+    proxy1.setCredentials(new UsernamePasswordCredentials("socks", "1234"));
     SocksProxy proxy2 = new Socks5(new InetSocketAddress("localhost", 1081));
-    proxy2.setAuthentication(new UsernamePasswordAuthentication("socks", "1234"));
+    proxy2.setCredentials(new UsernamePasswordCredentials("socks", "1234"));
 
     SocksProxy proxy3 = new Socks5(new InetSocketAddress("localhost", 1082));
-    proxy3.setAuthentication(new UsernamePasswordAuthentication("socks", "1234"));
+    proxy3.setCredentials(new UsernamePasswordCredentials("socks", "1234"));
 
     proxy1.setChainProxy(proxy2.setChainProxy(proxy3.setChainProxy(proxy1.copy().setChainProxy(
         proxy2.copy()))));
@@ -57,7 +57,7 @@ public class TestSocks5ProxyChainConnect {
 
       @SuppressWarnings("resource")
       Socket socket = new SocksSocket(proxy1);
-      socket.connect( new InetSocketAddress("whois.internic.net", 43));
+      socket.connect(new InetSocketAddress("whois.internic.net", 43));
 
       InputStream inputStream = socket.getInputStream();
       OutputStream outputStream = socket.getOutputStream();

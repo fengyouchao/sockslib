@@ -23,7 +23,7 @@ import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 
-import fucksocks.common.Authentication;
+import fucksocks.common.Credentials;
 import fucksocks.common.SocksException;
 import fucksocks.common.methods.SocksMethod;
 
@@ -214,22 +214,22 @@ public interface SocksProxy {
   OutputStream getOutputStream() throws IOException;
 
   /**
-   * Sets Authentication.
+   * Sets credentials.
    * 
-   * @param authentication {@link Authentication} instance.
+   * @param credentials {@link Credentials} instance.
    * @return instance of SocksProxy.
    * 
-   * @see fucksocks.common.UsernamePasswordAuthentication
-   * @see fucksocks.common.AnonymousAuthentication
+   * @see fucksocks.common.UsernamePasswordCredentials
+   * @see fucksocks.common.AnonymousCredentials
    */
-  SocksProxy setAuthentication(Authentication authentication);
+  SocksProxy setCredentials(Credentials credentials);
 
   /**
-   * Gets Authentication instance from the SocksProxy.
+   * Gets credentials from the SocksProxy.
    * 
-   * @return {@link Authentication} instance.
+   * @return {@link Credentials} instance.
    */
-  Authentication getAuthentication();
+  Credentials getCredentials();
 
   /**
    * Sets client's acceptable methods.

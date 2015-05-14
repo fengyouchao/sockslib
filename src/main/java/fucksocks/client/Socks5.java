@@ -28,11 +28,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fucksocks.common.AnonymousAuthentication;
-import fucksocks.common.Authentication;
+import fucksocks.common.AnonymousCredentials;
+import fucksocks.common.Credentials;
 import fucksocks.common.SocksCommand;
 import fucksocks.common.SocksException;
-import fucksocks.common.UsernamePasswordAuthentication;
+import fucksocks.common.UsernamePasswordCredentials;
 import fucksocks.common.methods.GssApiMethod;
 import fucksocks.common.methods.NoAuthencationRequiredMethod;
 import fucksocks.common.methods.SocksMethod;
@@ -59,7 +59,7 @@ public class Socks5 implements SocksProxy {
   /**
    * Authentication.
    */
-  private Authentication authentication = new AnonymousAuthentication();
+  private Credentials credentials = new AnonymousCredentials();
 
   /**
    * SOCKS5 server's address. IPv4 or IPv6 address.
@@ -115,7 +115,7 @@ public class Socks5 implements SocksProxy {
    */
   public Socks5(SocketAddress socketAddress, String username, String password) {
     this(socketAddress);
-    setAuthentication(new UsernamePasswordAuthentication(username, password));
+    setCredentials(new UsernamePasswordCredentials(username, password));
   }
 
   /**
@@ -173,7 +173,7 @@ public class Socks5 implements SocksProxy {
     this();
     this.inetAddress = InetAddress.getByName(host);
     this.port = port;
-    this.authentication = new UsernamePasswordAuthentication(username, password);
+    this.credentials = new UsernamePasswordCredentials(username, password);
   }
 
   @Override
@@ -294,14 +294,14 @@ public class Socks5 implements SocksProxy {
   }
 
   @Override
-  public Socks5 setAuthentication(Authentication authentication) {
-    this.authentication = authentication;
+  public Socks5 setCredentials(Credentials credentials) {
+    this.credentials = credentials;
     return this;
   }
 
   @Override
-  public Authentication getAuthentication() {
-    return authentication;
+  public Credentials getCredentials() {
+    return credentials;
   }
 
   @Override
@@ -320,7 +320,7 @@ public class Socks5 implements SocksProxy {
     Socks5 socks5 = new Socks5();
     socks5.setAcceptableMethods(acceptableMethods)
         .setAlwaysResolveAddressLocally(alwaysResolveAddressLocally)
-        .setAuthentication(authentication).setInetAddress(inetAddress).setPort(port)
+        .setCredentials(credentials).setInetAddress(inetAddress).setPort(port)
         .setSocksMethodRequestor(socksMethodRequestor).setChainProxy(chainProxy);
     return socks5;
   }

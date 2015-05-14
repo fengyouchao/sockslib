@@ -14,9 +14,9 @@
 
 package fucksocks.server;
 
-import fucksocks.common.Authentication;
 import fucksocks.common.AuthenticationException;
-import fucksocks.common.UsernamePasswordAuthentication;
+import fucksocks.common.Credentials;
+import fucksocks.common.UsernamePasswordCredentials;
 import fucksocks.common.methods.UsernamePasswordMethod;
 
 /**
@@ -38,15 +38,15 @@ public class UsernamePasswordAuthenticator implements Authenticator {
   public static final String USER_KEY = "USER";
 
   @Override
-  public void doAuthenticate(Authentication authentication, Session session)
+  public void doAuthenticate(Credentials credentials, Session session)
       throws AuthenticationException {
-    if (authentication instanceof UsernamePasswordAuthentication) {
-      UsernamePasswordAuthentication auth = (UsernamePasswordAuthentication) authentication;
-      String username = auth.getUsername();
-      String password = auth.getPassword();
+    if (credentials instanceof UsernamePasswordCredentials) {
+      String username = credentials.getUserPrincipal().getName();
+      String password = credentials.getPassword();
       User user = userManager.findUser(username, password);
       if (user == null) {
-        throw new AuthenticationException("Not valid user");
+        throw new AuthenticationException("Authentication failed, client from "
+            + session.getRemoteAddress());
       }
       session.setAttribute(USER_KEY, user);
 

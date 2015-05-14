@@ -155,7 +155,7 @@ public class UDPRelayServer implements Runnable {
 
       }
     } catch (IOException e) {
-      if (e.getMessage().equals("Socket closed") && !running) {
+      if (e.getMessage().equalsIgnoreCase("Socket closed") && !running) {
         logger.debug("UDP relay server stoped");
       } else {
         logger.error(e.getMessage(), e);
