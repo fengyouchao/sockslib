@@ -23,14 +23,14 @@ import com.google.common.base.Preconditions;
 
 /**
  * 
- * The class <code>IpRange</code> represents an IPrange.
+ * The class <code>IPRange</code> represents an IPrange.
  * 
  * @author Youchao Feng
  * @date May 2, 2015 12:45:25 AM
  * @version 1.0
  *
  */
-public class IpRange implements Iterable<Ip>, Serializable {
+public class IPRange implements Iterable<IP>, Serializable {
 
   /**
    * Serial version UID.
@@ -40,12 +40,12 @@ public class IpRange implements Iterable<Ip>, Serializable {
   /**
    * Starting IP address of the IP address range.
    */
-  private final Ip startIp;
+  private final IP startIP;
 
   /**
    * End IP address of the IP address range。
    */
-  private final Ip endIp;
+  private final IP endIP;
 
   /**
    * Constructs a <code>IpRange</code> instance by given tow IP.
@@ -53,15 +53,15 @@ public class IpRange implements Iterable<Ip>, Serializable {
    * @param startIp IP starts.
    * @param endIp IP ends.
    */
-  public IpRange(Ip startIp, Ip endIp) {
+  public IPRange(IP startIp, IP endIp) {
 
     int result = endIp.compareTo(startIp);
     if (result > 0 || result == 0)
       Preconditions.checkArgument(result > 0 || result == 0,
           "maxIP must equal or bigger than minIP");
 
-    this.startIp = startIp;
-    this.endIp = endIp;
+    this.startIP = startIp;
+    this.endIP = endIp;
   }
 
   /**
@@ -70,27 +70,27 @@ public class IpRange implements Iterable<Ip>, Serializable {
    * @param range a string such as "1.1.1.1-1.1.2.255".
    * @return IP range.
    */
-  public static IpRange parseFromString(String range) {
+  public static IPRange parseFromString(String range) {
     String[] ips = range.split("-");
     Preconditions.checkArgument(ips.length == 2,
         "IP range string must be fomarted as [minIP-maxIP],error argument:" + range);
-    return new IpRange(Ip.parseFromString(ips[0]), Ip.parseFromString(ips[1]));
+    return new IPRange(IP.parseFromString(ips[0]), IP.parseFromString(ips[1]));
   }
 
 
   /**
-   * Creates a {@link IpRange} instance by IP with mask.
+   * Creates a {@link IPRange} instance by IP with mask.
    * 
    * @param ipWithMask IP/mask, such as 192.168.70.1/24
-   * @return {@link IpRange} instance
+   * @return {@link IPRange} instance
    */
-  public static IpRange parseFromIPWithMask(String ipWithMask) {
+  public static IPRange parseFromIPWithMask(String ipWithMask) {
     long minIpAsLong = 0;
     long maxIpAsLong = 0;
     String[] strs = ipWithMask.split("/");
 
     if (strs.length == 2) {
-      Ip ip = Ip.parseFromString(strs[0]);
+      IP ip = IP.parseFromString(strs[0]);
       int mask = Integer.parseInt(strs[1]);
       long maskAsLong = 0xffffffff << (32 - mask);
       minIpAsLong = ip.toLong();
@@ -99,7 +99,7 @@ public class IpRange implements Iterable<Ip>, Serializable {
       throw new IllegalArgumentException("The input String format error. for example"
           + " 192.168.1.1/24");
     }
-    return new IpRange(new Ip(minIpAsLong), new Ip(maxIpAsLong));
+    return new IPRange(new IP(minIpAsLong), new IP(maxIpAsLong));
   }
 
 
@@ -108,9 +108,9 @@ public class IpRange implements Iterable<Ip>, Serializable {
    * 
    * @return A class IP range.
    */
-  public static IpRange AClassLocalIPRange() {
+  public static IPRange AClassLocalIPRange() {
     // 10.0.0.0 - 10.255.255.255
-    return new IpRange(new Ip(0x0A000000), new Ip(0x0AFFFFFF));
+    return new IPRange(new IP(0x0A000000), new IP(0x0AFFFFFF));
   }
 
   /**
@@ -118,8 +118,8 @@ public class IpRange implements Iterable<Ip>, Serializable {
    * 
    * @return B class IP range.
    */
-  public static IpRange BClassLocalIPRange() {
-    return new IpRange(new Ip(172, 16, 0, 0), new Ip(172, 31, 255, 255));
+  public static IPRange BClassLocalIPRange() {
+    return new IPRange(new IP(172, 16, 0, 0), new IP(172, 31, 255, 255));
   }
 
   /**
@@ -127,8 +127,8 @@ public class IpRange implements Iterable<Ip>, Serializable {
    * 
    * @return C class IP range.
    */
-  public static IpRange CClassLocalIPRange() {
-    return new IpRange(new Ip(192, 168, 0, 0), new Ip(192, 168, 255, 255));
+  public static IPRange CClassLocalIPRange() {
+    return new IPRange(new IP(192, 168, 0, 0), new IP(192, 168, 255, 255));
   }
 
 
@@ -138,8 +138,8 @@ public class IpRange implements Iterable<Ip>, Serializable {
    * @param ip IP.
    * @return If the IP is in the rang return <code>true</code>.
    */
-  public boolean contains(Ip ip) {
-    if (ip.compareTo(startIp) >= 0 && ip.compareTo(endIp) <= 0) {
+  public boolean contains(IP ip) {
+    if (ip.compareTo(startIP) >= 0 && ip.compareTo(endIP) <= 0) {
       return true;
     }
     return false;
@@ -151,7 +151,7 @@ public class IpRange implements Iterable<Ip>, Serializable {
    * @return Size of IP range.
    */
   public long size() {
-    return (endIp.getValue() - startIp.getValue() + 1L);
+    return (endIP.getValue() - startIP.getValue() + 1L);
   }
 
   /**
@@ -159,8 +159,8 @@ public class IpRange implements Iterable<Ip>, Serializable {
    * 
    * @return Starting IP address.
    */
-  public Ip getStartIp() {
-    return startIp;
+  public IP getStartIP() {
+    return startIP;
   }
 
   /**
@@ -168,8 +168,8 @@ public class IpRange implements Iterable<Ip>, Serializable {
    * 
    * @return End ip address.
    */
-  public Ip getEndIp() {
-    return endIp;
+  public IP getEndIP() {
+    return endIP;
   }
 
   /**
@@ -178,23 +178,23 @@ public class IpRange implements Iterable<Ip>, Serializable {
    * @param ip IP address. IP address range should contains the IP address.
    * @return List of IP address ranges.
    */
-  public List<IpRange> split(Ip ip) {
-    List<IpRange> ranges = new ArrayList<IpRange>();
+  public List<IPRange> split(IP ip) {
+    List<IPRange> ranges = new ArrayList<IPRange>();
     if (this.contains(ip)) {
-      ranges.add(new IpRange(this.startIp, ip));
-      ranges.add(new IpRange(ip, this.endIp));
+      ranges.add(new IPRange(this.startIP, ip));
+      ranges.add(new IPRange(ip, this.endIP));
     }
     return ranges;
   }
 
   @Override
-  public Iterator<Ip> iterator() {
-    return new IpIterator(startIp, endIp);
+  public Iterator<IP> iterator() {
+    return new IPIterator(startIP, endIP);
   }
 
   @Override
   public String toString() {
-    return startIp + "-" + endIp;
+    return startIP + "-" + endIP;
   }
 
   @Override
@@ -204,9 +204,9 @@ public class IpRange implements Iterable<Ip>, Serializable {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof IpRange) {
-      IpRange range = (IpRange) obj;
-      return range.getStartIp().equals(startIp) && range.getEndIp().equals(endIp);
+    if (obj instanceof IPRange) {
+      IPRange range = (IPRange) obj;
+      return range.getStartIP().equals(startIP) && range.getEndIP().equals(endIP);
     } else {
       return false;
     }

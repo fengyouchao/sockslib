@@ -22,19 +22,19 @@ import fucksocks.server.Session;
 
 /**
  * 
- * The class <code>WhiteListIpSessionFilter</code> represents
+ * The class <code>IPSessionFilter</code> represents
  * 
  * @author Youchao Feng
  * @date May 2, 2015 12:42:18 AM
  * @version 1.0
  *
  */
-public class IpSessionFilter implements SessionFilter {
+public class IPSessionFilter implements SessionFilter {
 
   /**
    * Ranges of IP address.
    */
-  private List<IpRange> ipRanges = new ArrayList<IpRange>();
+  private List<IPRange> ipRanges = new ArrayList<IPRange>();
 
   /**
    * Mode.
@@ -43,11 +43,11 @@ public class IpSessionFilter implements SessionFilter {
 
   @Override
   public boolean doFilter(Session session) {
-    Ip ip = new Ip(((InetSocketAddress) session.getRemoteAddress()).getAddress().getAddress());
+    IP ip = new IP(((InetSocketAddress) session.getRemoteAddress()).getAddress().getAddress());
     switch (mode) {
 
       case BLACK_LIST:
-        for (IpRange range : ipRanges) {
+        for (IPRange range : ipRanges) {
           if (range.contains(ip)) {
             return false;
           }
@@ -55,7 +55,7 @@ public class IpSessionFilter implements SessionFilter {
         return true;
 
       case WHITE_LIST:
-        for (IpRange range : ipRanges) {
+        for (IPRange range : ipRanges) {
           if (range.contains(ip)) {
             return true;
           }
@@ -74,7 +74,7 @@ public class IpSessionFilter implements SessionFilter {
    * 
    * @return All IP address ranges.
    */
-  public List<IpRange> getIpRanges() {
+  public List<IPRange> getIPRanges() {
     return ipRanges;
   }
 
@@ -83,7 +83,7 @@ public class IpSessionFilter implements SessionFilter {
    * 
    * @param ipRanges IP address range.
    */
-  public void setIpRanges(List<IpRange> ipRanges) {
+  public void setIPRanges(List<IPRange> ipRanges) {
     this.ipRanges = ipRanges;
   }
 
@@ -100,9 +100,9 @@ public class IpSessionFilter implements SessionFilter {
    * Changes mode.
    * 
    * @param mode Mode.
-   * @return The instance of {@link IpSessionFilter}.
+   * @return The instance of {@link IPSessionFilter}.
    */
-  public IpSessionFilter setMode(Mode mode) {
+  public IPSessionFilter setMode(Mode mode) {
     this.mode = mode;
     return this;
   }
@@ -111,10 +111,10 @@ public class IpSessionFilter implements SessionFilter {
    * Add an IP address range to the List of IP address ranges.
    * 
    * @param ipRange IP address range in String such as "192.168.1.1-192.168.255.255".
-   * @return The instance of {@link IpSessionFilter}.
+   * @return The instance of {@link IPSessionFilter}.
    */
-  public IpSessionFilter addIpRange(String ipRange) {
-    ipRanges.add(IpRange.parseFromString(ipRange));
+  public IPSessionFilter addIpRange(String ipRange) {
+    ipRanges.add(IPRange.parseFromString(ipRange));
     return this;
   }
 
@@ -122,15 +122,15 @@ public class IpSessionFilter implements SessionFilter {
    * Add an IP address to the list of IP address ranges.
    * 
    * @param ip IP address in String such as "192.168.1.1".
-   * @return The instance of {@link IpSessionFilter}.
+   * @return The instance of {@link IPSessionFilter}.
    */
-  public IpSessionFilter addIp(String ip) {
-    ipRanges.add(IpRange.parseFromString(ip + "-" + ip));
+  public IPSessionFilter addIp(String ip) {
+    ipRanges.add(IPRange.parseFromString(ip + "-" + ip));
     return this;
   }
 
   /**
-   * The enumeration <code>Mode</code> represents a Mode of {@link IpSessionFilter}.
+   * The enumeration <code>Mode</code> represents a Mode of {@link IPSessionFilter}.
    * 
    * @author Youchao Feng
    * @date May 4, 2015 3:44:37 AM

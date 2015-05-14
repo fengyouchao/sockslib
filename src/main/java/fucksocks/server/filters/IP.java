@@ -26,14 +26,14 @@ import fucksocks.utils.UnsignedByte;
 
 /**
  * 
- * The class <code>Ip</code> represents an IP v4 address.
+ * The class <code>IP</code> represents an IP v4 address.
  * 
  * @author Youchao Feng
  * @date May 2, 2015 12:50:28 AM
  * @version 1.0
  *
  */
-public class Ip implements Comparable<Ip>, Serializable {
+public class IP implements Comparable<IP>, Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -71,7 +71,7 @@ public class Ip implements Comparable<Ip>, Serializable {
    * @param c Third number of the IP address.
    * @param d Last number of the IP address.
    */
-  public Ip(int a, int b, int c, int d) {
+  public IP(int a, int b, int c, int d) {
 
     Preconditions.checkArgument(checkRange(a) && checkRange(b) && checkRange(c) && checkRange(d),
         "Each number of IP must in 0 ~ 255");
@@ -87,8 +87,8 @@ public class Ip implements Comparable<Ip>, Serializable {
    * 
    * @param ip IP as Long integer.
    */
-  public Ip(long ip) {
-    Preconditions.checkArgument(ip <= 0xffffffffL && ip >= 0, "Unvalid ip");
+  public IP(long ip) {
+    Preconditions.checkArgument(ip <= 0xffffffffL && ip >= 0, "Unvalid IP");
     value = ip;
     a = (int) (ip >>> 24);
     b = (int) ((ip & 0x00ffffff) >>> 16);
@@ -101,7 +101,7 @@ public class Ip implements Comparable<Ip>, Serializable {
    * 
    * @param address Bytes of address.
    */
-  public Ip(byte[] address) {
+  public IP(byte[] address) {
     a = UnsignedByte.toInt(address[0]);
     b = UnsignedByte.toInt(address[1]);
     c = UnsignedByte.toInt(address[2]);
@@ -115,7 +115,7 @@ public class Ip implements Comparable<Ip>, Serializable {
    * @param ip IP as a string. such as "192.168.1.1".
    * @return Instance of <code>Ip</code>.
    */
-  public static Ip parseFromString(String ip) {
+  public static IP parseFromString(String ip) {
     String regex = "\\s*(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\s*";
 
     Pattern pattern = Pattern.compile(regex);
@@ -128,7 +128,7 @@ public class Ip implements Comparable<Ip>, Serializable {
     int c = Integer.parseInt(m.group(3));
     int d = Integer.parseInt(m.group(4));
 
-    return new Ip(a, b, c, d);
+    return new IP(a, b, c, d);
   }
 
   /**
@@ -136,8 +136,8 @@ public class Ip implements Comparable<Ip>, Serializable {
    * 
    * @return Max IP address.
    */
-  public static Ip MAX_IP() {
-    return new Ip(0xffffffffL);
+  public static IP MAX_IP() {
+    return new IP(0xffffffffL);
   }
 
   /**
@@ -145,8 +145,8 @@ public class Ip implements Comparable<Ip>, Serializable {
    * 
    * @return　Minimum IP address.
    */
-  public static Ip MIN_IP() {
-    return new Ip(0L);
+  public static IP MIN_IP() {
+    return new IP(0L);
   }
 
   public int getA() {
@@ -170,17 +170,18 @@ public class Ip implements Comparable<Ip>, Serializable {
    * 
    * @return　Next IP address.
    */
-  public Ip nextIP() {
-    return new Ip(value + 1);
+  public IP nextIP() {
+    return new IP(value + 1);
   }
 
   /**
-   * Gets previous IP address. If the IP address dosen't have previous IP then return <code>null</code>.
+   * Gets previous IP address. If the IP address dosen't have previous IP then return
+   * <code>null</code>.
    * 
    * @return Previous IP adderss.
    */
-  public Ip preIP() {
-    return new Ip(value - 1);
+  public IP preIP() {
+    return new IP(value - 1);
   }
 
   /**
@@ -190,9 +191,9 @@ public class Ip implements Comparable<Ip>, Serializable {
    */
   public boolean isLocalIP() {
 
-    return IpRange.AClassLocalIPRange().contains(this)
-        || IpRange.BClassLocalIPRange().contains(this)
-        || IpRange.CClassLocalIPRange().contains(this);
+    return IPRange.AClassLocalIPRange().contains(this)
+        || IPRange.BClassLocalIPRange().contains(this)
+        || IPRange.CClassLocalIPRange().contains(this);
   }
 
   /**
@@ -219,7 +220,7 @@ public class Ip implements Comparable<Ip>, Serializable {
 
   public static boolean isValid(String ip) {
     try {
-      Ip.parseFromString(ip);
+      IP.parseFromString(ip);
     } catch (Exception e) {
       return false;
     }
@@ -227,7 +228,7 @@ public class Ip implements Comparable<Ip>, Serializable {
   }
 
   @Override
-  public int compareTo(Ip ip) {
+  public int compareTo(IP ip) {
     return (value > ip.getValue() ? 1 : value < ip.getValue() ? -1 : 0);
   }
 
@@ -244,9 +245,9 @@ public class Ip implements Comparable<Ip>, Serializable {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof Ip) {
-      Ip ip = (Ip) obj;
-      if (ip.getA() == a && ip.getB() == b && ip.getC() == c && ip.getD() == d) {
+    if (obj instanceof IP) {
+      IP ip = (IP) obj;
+      if (getValue() == ip.getValue()) {
         return true;
       }
     }
@@ -267,7 +268,7 @@ public class Ip implements Comparable<Ip>, Serializable {
    * @param num a number.
    * @return <code>true</code> if the number is in 0~255.
    */
-  private static boolean checkRange(int num) {
+  private boolean checkRange(int num) {
     return num >= 0 && num <= 255;
   }
 

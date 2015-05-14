@@ -18,24 +18,24 @@ import java.util.Iterator;
 
 /**
  * 
- * The class <code>IpIterator</code> represents an IP address iterator.
+ * The class <code>IPIterator</code> represents an IP address iterator.
  * 
  * @author Youchao Feng
  * @date May 2, 2015 9:23:00 AM
  * @version 1.0
  *
  */
-public class IpIterator implements Iterator<Ip> {
+public class IPIterator implements Iterator<IP> {
 
   /**
    * IP address range.
    */
-  private IpRange range;
+  private IPRange range;
 
   /**
    * Current IP address.
    */
-  private Ip currentIP;
+  private IP currentIP;
 
   /**
    * A flag. It's always <code>true</code> in the beginning but it will become <code>false</code> if
@@ -44,23 +44,23 @@ public class IpIterator implements Iterator<Ip> {
   private boolean start = true;
 
   /**
-   * Constructs an instance of {@link IpIterator} with a {@link IpRange}.
+   * Constructs an instance of {@link IPIterator} with a {@link IPRange}.
    * 
    * @param range IP address range.
    */
-  public IpIterator(IpRange range) {
+  public IPIterator(IPRange range) {
     this.range = range;
-    currentIP = range.getStartIp();
+    currentIP = range.getStartIP();
   }
 
   /**
-   * Constructs an instance of {@link IpIterator} with tow IP address.
+   * Constructs an instance of {@link IPIterator} with tow IP address.
    * 
    * @param startIP Starting IP address.
    * @param endIP End IP address.
    */
-  public IpIterator(Ip startIP, Ip endIP) {
-    range = new IpRange(startIP, endIP);
+  public IPIterator(IP startIP, IP endIP) {
+    range = new IPRange(startIP, endIP);
     currentIP = startIP;
   }
 
@@ -74,7 +74,7 @@ public class IpIterator implements Iterator<Ip> {
   }
 
   @Override
-  public Ip next() {
+  public IP next() {
 
     if (start) {
       start = false;
