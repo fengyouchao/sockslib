@@ -113,16 +113,16 @@ public class CommandResponseMessage implements WritableMessage {
         for (int i = 0; i < bindAddress.getAddress().length; i++) {
           bytes[i + 4] = bindAddress.getAddress()[i];
         }
-        bytes[8] = SocksUtil.getFisrtByteFromPort(bindPort);
-        bytes[9] = SocksUtil.getSecondByteFromPort(bindPort);
+        bytes[8] = SocksUtil.getFisrtByteFromInt(bindPort);
+        bytes[9] = SocksUtil.getSecondByteFromInt(bindPort);
         break;
       case AddressType.IPV6:
         bytes = new byte[22];
         for (int i = 0; i < bindAddress.getAddress().length; i++) {
           bytes[i + 4] = bindAddress.getAddress()[i];
         }
-        bytes[20] = SocksUtil.getFisrtByteFromPort(bindPort);
-        bytes[21] = SocksUtil.getSecondByteFromPort(bindPort);
+        bytes[20] = SocksUtil.getFisrtByteFromInt(bindPort);
+        bytes[21] = SocksUtil.getSecondByteFromInt(bindPort);
         break;
       case AddressType.DOMAINNAME:
         throw new NotImplementException();

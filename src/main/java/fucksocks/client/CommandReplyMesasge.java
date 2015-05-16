@@ -99,7 +99,7 @@ public class CommandReplyMesasge implements SocksMessage {
 	 */
 	public int getPort() {
 
-		return SocksUtil.bytesToPort(replyBytes[replyBytes.length - 2],
+		return SocksUtil.bytesToInt(replyBytes[replyBytes.length - 2],
 				replyBytes[replyBytes.length - 1]);
 	}
 

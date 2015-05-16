@@ -113,8 +113,8 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
         for (int i = 0; i < ipv4Bytes.length; i++) {
           bytes[i + 4] = ipv4Bytes[i];
         }
-        bytes[8] = SocksUtil.getFisrtByteFromPort(port);
-        bytes[9] = SocksUtil.getSecondByteFromPort(port);
+        bytes[8] = SocksUtil.getFisrtByteFromInt(port);
+        bytes[9] = SocksUtil.getSecondByteFromInt(port);
         break;
 
       case AddressType.IPV6:
@@ -123,8 +123,8 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
         for (int i = 0; i < ipv6Bytes.length; i++) {
           bytes[i + 4] = ipv6Bytes[i];
         }
-        bytes[20] = SocksUtil.getFisrtByteFromPort(port);
-        bytes[21] = SocksUtil.getSecondByteFromPort(port);
+        bytes[20] = SocksUtil.getFisrtByteFromInt(port);
+        bytes[21] = SocksUtil.getSecondByteFromInt(port);
         break;
 
       case AddressType.DOMAINNAME:
@@ -134,8 +134,8 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
         for (int i = 0; i < hostLength; i++) {
           bytes[5 + i] = host.getBytes()[i];
         }
-        bytes[5 + hostLength] = SocksUtil.getFisrtByteFromPort(port);
-        bytes[6 + hostLength] = SocksUtil.getSecondByteFromPort(port);
+        bytes[5 + hostLength] = SocksUtil.getFisrtByteFromInt(port);
+        bytes[6 + hostLength] = SocksUtil.getSecondByteFromInt(port);
         break;
 
       default:
@@ -208,7 +208,7 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
     // Read port
     byte[] portBytes = new byte[2];
     inputStream.read(portBytes);
-    port = SocksUtil.bytesToPort(portBytes);
+    port = SocksUtil.bytesToInt(portBytes);
 
   }
 

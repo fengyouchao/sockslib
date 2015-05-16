@@ -24,49 +24,49 @@ package fucksocks.utils;
 public class SocksUtil {
 
   /**
-   * Get bytes from a port.
+   * Get bytes from an Integer.
    * 
    * @param port Port.
-   * @return Bytes of the port.
+   * @return Bytes of an integer.
    */
-  public static byte[] portTobytes(int port) {
+  public static byte[] intTo2bytes(int num) {
     byte[] array = new byte[2];
-    array[0] = (byte) ((port & 0xff00) >> 8);
-    array[1] = (byte) (port & 0xff);
+    array[0] = (byte) ((num & 0xff00) >> 8);
+    array[1] = (byte) (num & 0xff);
     return array;
   }
 
   /**
-   * Returns the first byte of the port.
+   * Returns the first byte of an integer.
    * 
    * @param port Port.
-   * @return The first byte of the port.
+   * @return The first byte of an integer.
    */
-  public static byte getFisrtByteFromPort(int port) {
-    return (byte) ((port & 0xff00) >> 8);
+  public static byte getFisrtByteFromInt(int num) {
+    return (byte) ((num & 0xff00) >> 8);
   }
 
   /**
-   * Returns the second byte of the port.
+   * Returns the second byte of an integer.
    * 
-   * @param port Port.
-   * @return The second byte of the port.
+   * @param num Port.
+   * @return The second byte of an integer.
    */
-  public static byte getSecondByteFromPort(int port) {
-    return (byte) (port & 0xff);
+  public static byte getSecondByteFromInt(int num) {
+    return (byte) (num & 0xff);
   }
 
   /**
-   * Get port from a byte array.
+   * Get an integer from a byte array.
    * 
    * @param bytes A byte array.
-   * @return a Port.
+   * @return an integer.
    */
-  public static int bytesToPort(byte[] bytes) {
+  public static int bytesToInt(byte[] bytes) {
     if (bytes.length != 2) {
       throw new IllegalArgumentException("byte array size must be 2");
     }
-    return bytesToPort(bytes[0], bytes[1]);
+    return bytesToInt(bytes[0], bytes[1]);
   }
 
   /**
@@ -74,9 +74,9 @@ public class SocksUtil {
    * 
    * @param b1 First byte.
    * @param b2 Second byte.
-   * @return A port.
+   * @return an integer.
    */
-  public static int bytesToPort(byte b1, byte b2) {
+  public static int bytesToInt(byte b1, byte b2) {
     return (UnsignedByte.toInt(b1) << 8) | UnsignedByte.toInt(b2);
   }
 

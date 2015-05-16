@@ -68,8 +68,8 @@ public class Socks5DatagramPacketHandler implements DatagramPacketEncapsulation,
       buffer[2] = 0; // fragment byte
       buffer[3] = (byte) (ADDRESS_LENGTH == 4 ? AddressType.IPV4 : AddressType.IPV6);
       System.arraycopy(addressBytes, 0, buffer, 4, ADDRESS_LENGTH);
-      buffer[4 + ADDRESS_LENGTH] = SocksUtil.getFisrtByteFromPort(remoteServerPort);
-      buffer[5 + ADDRESS_LENGTH] = SocksUtil.getSecondByteFromPort(remoteServerPort);
+      buffer[4 + ADDRESS_LENGTH] = SocksUtil.getFisrtByteFromInt(remoteServerPort);
+      buffer[5 + ADDRESS_LENGTH] = SocksUtil.getSecondByteFromInt(remoteServerPort);
       System.arraycopy(data, 0, buffer, 6 + ADDRESS_LENGTH, data.length);
       return new DatagramPacket(buffer, buffer.length, destinationAddress.getAddress(),
           destinationAddress.getPort());
@@ -101,7 +101,7 @@ public class Socks5DatagramPacketHandler implements DatagramPacketEncapsulation,
         } catch (UnknownHostException e) {
           logger.error(e.getMessage(), e);
         }
-        remoteServerPort = SocksUtil.bytesToPort(data[8], data[9]);
+        remoteServerPort = SocksUtil.bytesToInt(data[8], data[9]);
         originalData = Arrays.copyOfRange(data, 10, packet.getLength());
         break;
 
@@ -111,7 +111,7 @@ public class Socks5DatagramPacketHandler implements DatagramPacketEncapsulation,
         } catch (UnknownHostException e) {
           throw new SocksException("Unknown host");
         }
-        remoteServerPort = SocksUtil.bytesToPort(data[20], data[21]);
+        remoteServerPort = SocksUtil.bytesToInt(data[20], data[21]);
         originalData = Arrays.copyOfRange(data, 22, packet.getLength());
         break;
 
@@ -123,7 +123,7 @@ public class Socks5DatagramPacketHandler implements DatagramPacketEncapsulation,
         } catch (UnknownHostException e) {
           logger.error(e.getMessage(), e);
         }
-        remoteServerPort = SocksUtil.bytesToPort(data[5 + DOMAIN_LENGTH], data[6 + DOMAIN_LENGTH]);
+        remoteServerPort = SocksUtil.bytesToInt(data[5 + DOMAIN_LENGTH], data[6 + DOMAIN_LENGTH]);
         originalData = Arrays.copyOfRange(data, 7 + DOMAIN_LENGTH, packet.getLength());
         break;
 
