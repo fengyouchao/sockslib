@@ -80,7 +80,7 @@ public class SocksSocket extends Socket {
     this.proxy.setProxySocket(proxySocket);
     this.remoteServerHost = remoteServerHost;
     this.remoteServerPort = remoteServerPort;
-    
+
     this.proxy.buildConnection();
     proxySocket = this.proxy.getProxySocket();
     initProxyChain();
@@ -119,12 +119,28 @@ public class SocksSocket extends Socket {
   }
 
   /**
-   * Create an unconnected socket.
+   * Creates an unconnected socket.
    * 
    * @param proxy SOCKS proxy.
    */
   public SocksSocket(SocksProxy proxy) {
-    proxySocket = new Socket();
+   this(proxy, new Socket());
+  }
+
+  /**
+   * Creates a SocksSocket instance with a {@link SocksProxy} and a
+   * 
+   * @param proxy SOCKS proxy.
+   * @param proxySocket a unconnected socket. it will connect SOCKS server later.
+   */
+  public SocksSocket(SocksProxy proxy, Socket proxySocket) {
+    if(proxySocket == null) {
+      throw new IllegalArgumentException("Proxy socket can't be null");
+    }
+    if(proxySocket.isConnected()){
+      throw new IllegalArgumentException("Proxy socket should be unconnected");
+    }
+    this.proxySocket = proxySocket;
     this.proxy = proxy.copy();
     this.proxy.setProxySocket(proxySocket);
   }

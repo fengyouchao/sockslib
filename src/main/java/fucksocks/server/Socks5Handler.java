@@ -85,7 +85,7 @@ public class Socks5Handler implements SocksHandler {
     session.read(msg);
 
     if (msg.getVersion() != VERSION) {
-      throw new ProtocolErrorException("Protocol! error");
+      throw new ProtocolErrorException();
     }
     SocksMethod selectedMethod = methodSelector.select(msg);
 

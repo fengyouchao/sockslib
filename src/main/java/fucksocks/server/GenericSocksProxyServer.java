@@ -61,7 +61,7 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
   /**
    * Number of threads in thread pool.
    */
-  private static final int THREAD_NUMBER = 100;
+  protected static final int THREAD_NUMBER = 100;
 
   /**
    * Thread pool used to process each connection.
@@ -241,13 +241,16 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
 
   @Override
   public void start(int bindPort) throws IOException {
-    serverSocket = new ServerSocket(bindPort);
+    serverSocket = createServerSocket(bindPort);
     thread = new Thread(this);
     thread.start();
 
     logger.info("Start proxy server at port:{}", bindPort);
   }
 
+  protected ServerSocket createServerSocket(int bindPort) throws IOException {
+    return new ServerSocket(bindPort);
+  }
 
   @Override
   public SocksHandler createSocksHandler() {
@@ -296,6 +299,7 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
   @Override
   public void setSupportMethods(SocksMethod... methods) {
     methodSelector.setSupportMethod(methods);
+
   }
 
   @Override
@@ -371,6 +375,5 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
   public void setSessionFilterChain(SessionFilterChain sessionFilterChain) {
     this.sessionFilterChain = sessionFilterChain;
   }
-
 
 }
