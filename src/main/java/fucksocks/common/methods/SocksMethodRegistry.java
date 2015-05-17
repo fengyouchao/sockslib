@@ -15,6 +15,7 @@
 package fucksocks.common.methods;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -40,18 +41,7 @@ public class SocksMethodRegistry {
    */
   private static final Logger logger = LoggerFactory.getLogger(SocksMethodRegistry.class);
 
-  private static final Map<Byte, Class<? extends SocksMethod>> methodsMap;
-
-  /**
-   * Initialize.
-   */
-  static {
-    methodsMap = new HashMap<>();
-    putMethod(NoAuthencationRequiredMethod.class);
-    putMethod(GssApiMethod.class);
-    putMethod(NoAcceptableMethod.class);
-    putMethod(UsernamePasswordMethod.class);
-  }
+  private static final Map<Byte, SocksMethod> methods = new HashMap<Byte, SocksMethod>();
 
   /**
    * A private constructor.
@@ -65,33 +55,23 @@ public class SocksMethodRegistry {
    * @param socksMethod The instance of {@link SocksMethod}.
    */
   public static void putMethod(SocksMethod socksMethod) {
-    methodsMap.put((byte) socksMethod.getByte(), socksMethod.getClass());
+    logger.debug("Register {}[{}]", socksMethod.getMethodName(), socksMethod.getByte());
+    methods.put((byte) socksMethod.getByte(), socksMethod);
   }
 
-  /**
-   * Puts a {@link SocksMethod} class into the SOCKS method registry.
-   * 
-   * @param methodClass {@link SocksMethod} class.
-   */
-  public static void putMethod(Class<? extends SocksMethod> methodClass) {
-    int b = 0;
-    try {
-      b = methodClass.newInstance().getByte();
-    } catch (InstantiationException e) {
-      logger.error(e.getMessage(), e);
-    } catch (IllegalAccessException e) {
-      logger.error(e.getMessage(), e);
+  public static void overWriteReistry(List<SocksMethod> socksMethods) {
+    for (int i = 0; i < socksMethods.size(); i++) {
+      putMethod(socksMethods.get(i));
     }
-    methodsMap.put((byte) b, methodClass);
   }
 
   /**
    * Returns a {@link SocksMethod} class which value is equal the given byte.
    * 
    * @param b value of {@link SocksMethod}.
-   * @return A {@link SocksMethod} class which value is equal the given byte.
+   * @return A {@link SocksMethod} instance which value is equal the given byte.
    */
-  public static Class<? extends SocksMethod> getByByte(byte b) {
-    return methodsMap.get(b);
+  public static SocksMethod getByByte(byte b) {
+    return methods.get(b);
   }
 }

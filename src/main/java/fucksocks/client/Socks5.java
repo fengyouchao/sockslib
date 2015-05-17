@@ -36,6 +36,7 @@ import fucksocks.common.UsernamePasswordCredentials;
 import fucksocks.common.methods.GssApiMethod;
 import fucksocks.common.methods.NoAuthencationRequiredMethod;
 import fucksocks.common.methods.SocksMethod;
+import fucksocks.common.methods.SocksMethodRegistry;
 import fucksocks.common.methods.UsernamePasswordMethod;
 
 /**
@@ -285,6 +286,7 @@ public class Socks5 implements SocksProxy {
   @Override
   public Socks5 setAcceptableMethods(List<SocksMethod> acceptableMethods) {
     this.acceptableMethods = acceptableMethods;
+    SocksMethodRegistry.overWriteReistry(acceptableMethods);
     return this;
   }
 

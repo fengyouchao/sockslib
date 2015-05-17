@@ -72,15 +72,8 @@ public class GenericSocksMethodRequestor implements SocksMethodRequestor {
     if (bufferReceived[0] != socksVersion) {
       throw new SocksException("Remote server don't support SOCKS5");
     }
+    SocksMethod socksMethod = SocksMethodRegistry.getByByte(bufferReceived[1]);
 
-    SocksMethod socksMethod = null;
-    try {
-      socksMethod = SocksMethodRegistry.getByByte(bufferReceived[1]).newInstance();
-    } catch (InstantiationException e) {
-      logger.error(e.getMessage(), e);
-    } catch (IllegalAccessException e) {
-      logger.error(e.getMessage(), e);
-    }
     return socksMethod;
   }
 
