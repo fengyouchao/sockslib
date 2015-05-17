@@ -22,7 +22,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.hash.Hashing;
 
 /**
- * The class <code>Socks5UserPrincipal</code> represents 
+ * The class <code>Socks5UserPrincipal</code> represents a SOKCS5 user principal.
  *
  * @author Youchao Feng
  * @date May 14, 2015 2:35:53 PM
