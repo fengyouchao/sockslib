@@ -57,6 +57,10 @@ public class SocksSession implements Session {
 
   public SocksSession() {}
 
+  public SocksSession(Socket socket) {
+    this(0, socket, null);
+  }
+
   public SocksSession(long id, Socket socket, Map<Long, Session> sessions) {
     if (!socket.isConnected()) {
       throw new IllegalArgumentException("Socket should be a connected socket");
