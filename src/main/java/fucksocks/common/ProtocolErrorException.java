@@ -38,5 +38,9 @@ public class ProtocolErrorException extends SocksException {
   public ProtocolErrorException(String msg) {
     super(msg);
   }
+  
+  public ProtocolErrorException() {
+    this("Protocol error");
+  }
 
 }
