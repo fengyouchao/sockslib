@@ -44,7 +44,6 @@ public class StreamPipe implements Runnable, Pipe {
    */
   private static final int BUFFER_SIZE = 1024 * 1024 * 5;
 
-
   /**
    * Listeners
    */
