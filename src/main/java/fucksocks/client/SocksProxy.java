@@ -303,7 +303,21 @@ public interface SocksProxy {
    * @return the instance of <code>SocksProxy</code>.
    */
   public SocksProxy setChainProxy(SocksProxy chainProxy);
+  
+  /**
+   * Creates a proxy socket.
+   * 
+   * @param address address.
+   * @param port    port.
+   * @return        Socket instance.
+   * @throws IOException If an I\O error occurred.
+   */
+  public Socket createProxySocket(InetAddress address, int port) throws IOException;
 
+  /**
+   * Creates a unconnected socket.
+   */
+  public Socket createProxySocket() throws IOException;
   /**
    * Default SOCKS server port.
    */

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fucksocks.server;
+package fucksocks.common;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,12 +25,11 @@ import java.util.Properties;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import fucksocks.common.KeyStoreInfo;
 
 /**
  * The class <code>SSLConfiguration</code> represents a configuration of SSL.
@@ -66,15 +65,16 @@ public class SSLConfiguration {
     Properties properties = new Properties();
     properties.load(new FileInputStream(filePath));
 
-    String keystorePath = getAbstractPath(properties.getProperty("fucksocks.server.ssl.keystore"));
-    String password = properties.getProperty("fucksocks.server.ssl.keystore.password");
+    String keystorePath = getAbstractPath(properties.getProperty("fucksocks.ssl.keystore"));
+    String password = properties.getProperty("fucksocks.ssl.keystore.password");
+    String type = properties.getProperty("fucksocks.ssl.keystore.type", "JSK");
     String trustKeystorePath =
-        getAbstractPath(properties.getProperty("fucksocks.server.ssl.trust.keystore"));
-    String trustPassword = properties.getProperty("fucksocks.server.ssl.trust.keystore.password");
-
-    KeyStoreInfo keyStoreInfo = new KeyStoreInfo(keystorePath, password);
-    KeyStoreInfo trustKeyStoreInfo = new KeyStoreInfo(trustKeystorePath, trustPassword);
-    String clientAuthValue = properties.getProperty("fucksocks.server.ssl.client.auth");
+        getAbstractPath(properties.getProperty("fucksocks.ssl.trust.keystore"));
+    String trustPassword = properties.getProperty("fucksocks.ssl.trust.keystore.password");
+    String trustType = properties.getProperty("fucksocks.ssl.trust.keystore.type", "JSK");
+    KeyStoreInfo keyStoreInfo = new KeyStoreInfo(keystorePath, password, type);
+    KeyStoreInfo trustKeyStoreInfo = new KeyStoreInfo(trustKeystorePath, trustPassword, trustType);
+    String clientAuthValue = properties.getProperty("fucksocks.ssl.client.auth", "false");
     boolean clientAuth = false;
     if (clientAuthValue.equalsIgnoreCase("true")) {
       clientAuth = true;
@@ -91,7 +91,7 @@ public class SSLConfiguration {
       }
 
       URL url = SSLConfiguration.class.getResource(classPathValue);
-      if(url == null){
+      if (url == null) {
         throw new FileNotFoundException(path);
       }
       return url.getPath();
@@ -106,8 +106,8 @@ public class SSLConfiguration {
       filePath = File.separator + filePath;
     }
     URL url = SSLConfiguration.class.getResource(filePath);
-    if(url == null){
-      throw new FileNotFoundException("classpath:"+filePath);
+    if (url == null) {
+      throw new FileNotFoundException("classpath:" + filePath);
     }
     String path = url.getPath();
     return load(path);
@@ -127,6 +127,31 @@ public class SSLConfiguration {
 
   public void setTrustKeyStoreInfo(KeyStoreInfo trustKeyStoreInfo) {
     this.trustKeyStoreInfo = trustKeyStoreInfo;
+  }
+
+  public SSLSocketFactory getSSLSocketFactory() throws SSLConfigurationException {
+    String CLIENT_KEY_STORE_PASSWORD = keyStoreInfo.getPassword();
+    String CLIENT_TRUST_KEY_STORE_PASSWORD = trustKeyStoreInfo.getPassword();
+    try {
+      SSLContext ctx = SSLContext.getInstance("SSL");
+      KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+      TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+      KeyStore ks = KeyStore.getInstance("JKS");
+      KeyStore tks = KeyStore.getInstance("JKS");
+
+      ks.load(new FileInputStream(keyStoreInfo.getKeyStorePath()),
+          CLIENT_KEY_STORE_PASSWORD.toCharArray());
+      tks.load(new FileInputStream(trustKeyStoreInfo.getKeyStorePath()),
+          CLIENT_TRUST_KEY_STORE_PASSWORD.toCharArray());
+
+      kmf.init(ks, CLIENT_KEY_STORE_PASSWORD.toCharArray());
+      tmf.init(tks);
+
+      ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+      return ctx.getSocketFactory();
+    } catch (Exception e) {
+      throw new SSLConfigurationException(e.getMessage());
+    }
   }
 
   public SSLServerSocketFactory getSSLServerSocketFactory() throws SSLConfigurationException {

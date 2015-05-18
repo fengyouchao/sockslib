@@ -21,6 +21,7 @@ import java.util.concurrent.Executors;
 
 import javax.net.ssl.SSLServerSocket;
 
+import fucksocks.common.SSLConfiguration;
 import fucksocks.common.SocksException;
 
 

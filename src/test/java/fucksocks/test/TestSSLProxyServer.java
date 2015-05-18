@@ -17,8 +17,8 @@ package fucksocks.test;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import fucksocks.common.SSLConfiguration;
 import fucksocks.common.methods.NoAuthencationRequiredMethod;
-import fucksocks.server.SSLConfiguration;
 import fucksocks.server.SSLSocksProxyServer;
 import fucksocks.server.Socks5Handler;
 import fucksocks.server.SocksProxyServer;

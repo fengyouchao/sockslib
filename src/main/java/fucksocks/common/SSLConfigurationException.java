@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fucksocks.server;
+package fucksocks.common;
 
 
 /**

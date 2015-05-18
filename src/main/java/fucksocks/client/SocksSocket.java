@@ -122,9 +122,10 @@ public class SocksSocket extends Socket {
    * Creates an unconnected socket.
    * 
    * @param proxy SOCKS proxy.
+   * @throws IOException If an I/O error occurred.
    */
-  public SocksSocket(SocksProxy proxy) {
-   this(proxy, new Socket());
+  public SocksSocket(SocksProxy proxy) throws IOException {
+   this(proxy, proxy.createProxySocket());
   }
 
   /**

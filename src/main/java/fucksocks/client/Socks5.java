@@ -183,7 +183,7 @@ public class Socks5 implements SocksProxy {
       throw new IllegalArgumentException("Please set inetAddress before calling buildConnection.");
     }
     if (proxySocket == null) {
-      proxySocket = new Socket(inetAddress, port);
+      proxySocket = createProxySocket(inetAddress, port);
     } else if (!proxySocket.isConnected()) {
       proxySocket.connect(new InetSocketAddress(inetAddress, port));
     }
@@ -318,7 +318,7 @@ public class Socks5 implements SocksProxy {
   }
 
   @Override
-  public Socks5 copy() {
+  public SocksProxy copy() {
     Socks5 socks5 = new Socks5();
     socks5.setAcceptableMethods(acceptableMethods)
         .setAlwaysResolveAddressLocally(alwaysResolveAddressLocally)
@@ -367,6 +367,15 @@ public class Socks5 implements SocksProxy {
       return value+" --> "+getChainProxy().toString();
     }
     return value;
+  }
+  
+  @Override
+  public Socket createProxySocket(InetAddress address, int port) throws IOException{
+    return new Socket(address, port);
+  }
+  
+  public Socket createProxySocket() throws IOException{
+    return new Socket();
   }
 
   /**

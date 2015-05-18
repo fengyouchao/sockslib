@@ -21,29 +21,24 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import fucksocks.client.Socks5;
+import fucksocks.client.SSLSocks5;
 import fucksocks.client.SocksProxy;
 import fucksocks.client.SocksSocket;
+import fucksocks.common.SSLConfiguration;
 import fucksocks.common.methods.NoAuthencationRequiredMethod;
 import fucksocks.common.methods.SocksMethod;
-import fucksocks.utils.SocksClientSSLUtil;
 
-/**
- * SSL Client
- * 
- * @author Leo
- */
 public class SSLSocketClient {
 
   public static void main(String[] args) throws Exception {
 
-    SocksClientSSLUtil sslUtil = SocksClientSSLUtil.loadClassPath("client-ssl.properties");
-
-    SocksProxy proxy = new Socks5(new InetSocketAddress("localhost", 1080));
+    SSLConfiguration configuration = SSLConfiguration.loadClassPath("client-ssl.properties");
+    
+    SocksProxy proxy = new SSLSocks5(new InetSocketAddress("localhost", 1080), configuration);
     List<SocksMethod> methods = new ArrayList<SocksMethod>();
     methods.add(new NoAuthencationRequiredMethod());
     proxy.setAcceptableMethods(methods);
-    SocksSocket socket = sslUtil.create(proxy);
+    SocksSocket socket = new SocksSocket(proxy);
 
     socket.connect("whois.internic.net", 43);
     InputStream inputStream = socket.getInputStream();
@@ -53,7 +48,7 @@ public class SSLSocketClient {
     printWriter.flush();
 
     byte[] whoisrecords = new byte[2048];
-    java.util.List<Byte> bytelist = new ArrayList<>(1024 * 6);
+    List<Byte> bytelist = new ArrayList<>(1024 * 6);
     int size = 0;
     while ((size = inputStream.read(whoisrecords)) > 0) {
       for (int i = 0; i < size; i++) {

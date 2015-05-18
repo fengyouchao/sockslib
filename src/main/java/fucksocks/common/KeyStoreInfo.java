@@ -26,12 +26,17 @@ public class KeyStoreInfo {
 
   private String keyStorePath;
   private String password;
+  private String type;
 
   public KeyStoreInfo() {}
 
-  public KeyStoreInfo(String keyStorePath, String password) {
+  public KeyStoreInfo(String keyStorePath, String password, String type) {
     this.keyStorePath = keyStorePath;
     this.password = password;
+  }
+  
+  public KeyStoreInfo(String keyStorePath, String password){
+    this(keyStorePath, password, "JKS");
   }
 
   public String getKeyStorePath() {
@@ -52,9 +57,17 @@ public class KeyStoreInfo {
     return this;
   }
 
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
   @Override
   public String toString() {
-    return "[KEY STORE] PATH:" + keyStorePath + " PASSWORD:" + password;
+    return "[KEY STORE] PATH:" + keyStorePath + " PASSWORD:" + password + " TYPE:" + type;
   }
 
 }
