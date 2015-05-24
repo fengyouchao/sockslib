@@ -21,8 +21,8 @@ import fucksocks.common.methods.UsernamePasswordMethod;
  * The class <code>SocksProxyServerFactory</code> is a factory class for socks server.
  * 
  * @author Youchao Feng
- * @date Apr 19, 2015 10:41:59 PM
  * @version 1.0
+ * @since 1.0
  *
  */
 public class SocksProxyServerFactory {
@@ -36,7 +36,7 @@ public class SocksProxyServerFactory {
    * Default buffer size;
    */
   private static final int BUFFER_SIZE = 1024 * 1024 * 5;
-  
+
   private static final int DEFAULT_PORT = 1080;
 
   /**
