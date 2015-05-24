@@ -20,13 +20,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-
 import fucksocks.client.Socks5;
 import fucksocks.client.SocksProxy;
 import fucksocks.client.SocksSocket;
-import fucksocks.common.SocksException;
 import fucksocks.common.UsernamePasswordCredentials;
 
 /**
@@ -43,6 +39,13 @@ public class TestSocks5ProxyChainConnect {
 
   public static void main(String[] args) {
 
+    Socket socket = null;
+    InputStream inputStream = null;
+    OutputStream outputStream = null;
+    StringBuffer response = null;
+    byte[] buffer = new byte[2048];
+    int length = 0;
+
     SocksProxy proxy1 = new Socks5(new InetSocketAddress("localhost", 1080));
     proxy1.setCredentials(new UsernamePasswordCredentials("socks", "1234"));
     SocksProxy proxy2 = new Socks5(new InetSocketAddress("localhost", 1081));
@@ -51,41 +54,32 @@ public class TestSocks5ProxyChainConnect {
     SocksProxy proxy3 = new Socks5(new InetSocketAddress("localhost", 1082));
     proxy3.setCredentials(new UsernamePasswordCredentials("socks", "1234"));
 
-    proxy1.setChainProxy(proxy2.setChainProxy(proxy3.setChainProxy(proxy1.copy().setChainProxy(
-        proxy2.copy()))));
+    proxy1.setChainProxy(proxy2.setChainProxy(proxy3));
+    
+    System.out.println("USE proxy:"+proxy1);
+
     try {
 
-      @SuppressWarnings("resource")
-      Socket socket = new SocksSocket(proxy1);
+      socket = new SocksSocket(proxy1);
       socket.connect(new InetSocketAddress("whois.internic.net", 43));
 
-      InputStream inputStream = socket.getInputStream();
-      OutputStream outputStream = socket.getOutputStream();
+      inputStream = socket.getInputStream();
+      outputStream = socket.getOutputStream();
       PrintWriter printWriter = new PrintWriter(outputStream);
       printWriter.print("domain google.com\r\n");
       printWriter.flush();
 
-      byte[] whoisrecords = new byte[2048];
-      java.util.List<Byte> bytelist = new ArrayList<>(1024 * 6);
-      int size = 0;
-      while ((size = inputStream.read(whoisrecords)) > 0) {
-        for (int i = 0; i < size; i++) {
-          bytelist.add(whoisrecords[i]);
-        }
+      length = 0;
+      response = new StringBuffer();
+      while ((length = inputStream.read(buffer)) > 0) {
+        response.append(new String(buffer, 0, length));
       }
-      System.out.println("size:" + bytelist.size());
-      byte[] resultbyte = new byte[bytelist.size()];
-      for (int i = 0; i < resultbyte.length; i++) {
-        resultbyte[i] = bytelist.get(i);
-      }
-      String string = new String(resultbyte);
-      System.out.println(string);
-    } catch (UnknownHostException e) {
-      e.printStackTrace();
-    } catch (SocksException e) {
-      e.printStackTrace();
+      System.out.println(response.toString());
+
     } catch (IOException e) {
       e.printStackTrace();
+    } finally {
+      ResourceUtil.close(inputStream, outputStream, socket);
     }
 
   }

@@ -18,32 +18,38 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.Arrays;
 
 import fucksocks.client.Socks5;
 import fucksocks.client.SocksServerSocket;
-import fucksocks.common.SocksException;
 
 public class TestSocks5Bind {
 
-  public static final void main(String[] args) throws SocksException, IOException,
-      InterruptedException {
+  public static final void main(String[] args) {
 
-    Socks5 proxy = new Socks5(new InetSocketAddress(InetAddress.getByName("localhost"), 1080));
-    InetAddress inetAddress = InetAddress.getByName("127.0.0.1");
-    @SuppressWarnings("resource")
-    SocksServerSocket serverSocket = new SocksServerSocket(proxy, inetAddress, 8080);
-    serverSocket.getBindAddress();
-    Socket socket = serverSocket.accept();
-
-    while (true) {
-      byte[] bytes = new byte[1024];
-      int size = socket.getInputStream().read(bytes);
-      byte[] message = Arrays.copyOf(bytes, size);
-      System.out.println("received：" + new String(message));
-      String response = "you have send " + message.length + " characters\n";
-      socket.getOutputStream().write(response.getBytes());
-      socket.getOutputStream().flush();
+    SocksServerSocket serverSocket = null;
+    Socket socket = null;
+    try {
+      Socks5 proxy = new Socks5(new InetSocketAddress(InetAddress.getByName("localhost"), 1080));
+      InetAddress inetAddress = InetAddress.getByName("127.0.0.1");
+      serverSocket = new SocksServerSocket(proxy, inetAddress, 8080);
+      SocketAddress socketAddress = serverSocket.getBindSocketAddress();
+      System.out.println("Create server bind at ["+socketAddress+"]");
+      socket = serverSocket.accept();
+      while (true) {
+        byte[] bytes = new byte[1024];
+        int size = socket.getInputStream().read(bytes);
+        byte[] message = Arrays.copyOf(bytes, size);
+        System.out.println("received：" + new String(message));
+        String response = "you have send " + message.length + " characters\n";
+        socket.getOutputStream().write(response.getBytes());
+        socket.getOutputStream().flush();
+      }
+    } catch (IOException e) {
+     e.printStackTrace();
+    } finally {
+      
     }
   }
 

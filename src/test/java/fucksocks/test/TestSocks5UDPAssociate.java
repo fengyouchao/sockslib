@@ -21,32 +21,30 @@ import java.net.InetSocketAddress;
 
 import fucksocks.client.Socks5;
 import fucksocks.client.Socks5DatagramSocket;
-import fucksocks.common.SocksException;
 
 public class TestSocks5UDPAssociate {
 
   public static void main(String[] args) throws InterruptedException {
 
+    DatagramSocket clientSocket = null;
     Socks5 proxy = new Socks5(new InetSocketAddress("localhost", 1080));
 
     try {
-      @SuppressWarnings("resource")
-      DatagramSocket socket = new Socks5DatagramSocket(proxy);
+      clientSocket = new Socks5DatagramSocket(proxy);
       String message = "Are you UDP server?";
-
       byte[] buffer = message.getBytes();
-      socket.send(new DatagramPacket(buffer, buffer.length,
-          new InetSocketAddress("localhost", 5050)));
+      clientSocket.send(new DatagramPacket(buffer, buffer.length, new InetSocketAddress(
+          "localhost", 5050)));
       byte[] recvBuf = new byte[100];
       DatagramPacket recvPacket = new DatagramPacket(recvBuf, recvBuf.length);
-      socket.receive(recvPacket);
+      clientSocket.receive(recvPacket);
       String recvStr = new String(recvPacket.getData(), 0, recvPacket.getLength());
       System.out.println("received:" + recvStr);
-      Thread.sleep(10000);
-    } catch (SocksException e) {
-      e.printStackTrace();
+
     } catch (IOException e) {
       e.printStackTrace();
+    } finally {
+      ResourceUtil.close(clientSocket);
     }
 
   }
