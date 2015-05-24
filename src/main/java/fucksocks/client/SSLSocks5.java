@@ -25,7 +25,7 @@ import fucksocks.common.SocksException;
 
 /**
  * The class <code>SSLSocks5</code> represents a SSL based SOCKS5 proxy. It will create a SSL based
- * connection between SOCKS5 server.
+ * connection between the client and SOCKS5 server.
  *
  * @author Youchao Feng
  * @date May 18, 2015 1:00:18 PM
@@ -36,6 +36,9 @@ import fucksocks.common.SocksException;
  */
 public class SSLSocks5 extends Socks5 {
 
+  /**
+   * SSL configuration.
+   */
   private SSLConfiguration configuration;
 
   public SSLSocks5(SocketAddress address, SSLConfiguration configuration) {
