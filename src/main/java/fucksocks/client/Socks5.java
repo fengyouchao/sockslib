@@ -100,7 +100,7 @@ public class Socks5 implements SocksProxy {
    * Constructs a Socks5 instance without any parameter.
    * 
    */
-  public Socks5() {
+  private void init() {
     acceptableMethods = new ArrayList<>();
     acceptableMethods.add(new NoAuthencationRequiredMethod());
     acceptableMethods.add(new GssApiMethod());
@@ -150,7 +150,7 @@ public class Socks5 implements SocksProxy {
   }
 
   public Socks5(SocksProxy chainProxy, SocketAddress socketAddress) {
-    this();
+    init();
     if (socketAddress instanceof InetSocketAddress) {
       inetAddress = ((InetSocketAddress) socketAddress).getAddress();
       port = ((InetSocketAddress) socketAddress).getPort();
@@ -171,7 +171,7 @@ public class Socks5 implements SocksProxy {
    */
   public Socks5(String host, int port, String username, String password)
       throws UnknownHostException {
-    this();
+    init();
     this.inetAddress = InetAddress.getByName(host);
     this.port = port;
     this.credentials = new UsernamePasswordCredentials(username, password);
@@ -319,14 +319,13 @@ public class Socks5 implements SocksProxy {
 
   @Override
   public SocksProxy copy() {
-    Socks5 socks5 = new Socks5();
+    Socks5 socks5 = new Socks5(inetAddress, port);
     socks5.setAcceptableMethods(acceptableMethods)
-        .setAlwaysResolveAddressLocally(alwaysResolveAddressLocally)
-        .setCredentials(credentials).setInetAddress(inetAddress).setPort(port)
+        .setAlwaysResolveAddressLocally(alwaysResolveAddressLocally).setCredentials(credentials)
         .setSocksMethodRequestor(socksMethodRequestor).setChainProxy(chainProxy);
     return socks5;
   }
-  
+
   @Override
   public SocksProxy copyWithoutChainProxy() {
     return copy().setChainProxy(null);
@@ -362,19 +361,21 @@ public class Socks5 implements SocksProxy {
 
   @Override
   public String toString() {
-    String value =  "[SOCKS5:"+new InetSocketAddress(inetAddress, port)+"]";
-    if(getChainProxy() != null){
-      return value+" --> "+getChainProxy().toString();
+    StringBuffer stringBuffer = new StringBuffer("[SOCKS5:");
+    stringBuffer.append(new InetSocketAddress(inetAddress, port)).append("]");
+    if (getChainProxy() != null) {
+      return stringBuffer.append(" --> ").append(getChainProxy().toString()).toString();
     }
-    return value;
+    return stringBuffer.toString();
   }
-  
+
   @Override
-  public Socket createProxySocket(InetAddress address, int port) throws IOException{
+  public Socket createProxySocket(InetAddress address, int port) throws IOException {
     return new Socket(address, port);
   }
-  
-  public Socket createProxySocket() throws IOException{
+
+  @Override
+  public Socket createProxySocket() throws IOException {
     return new Socket();
   }
 
