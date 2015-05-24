@@ -24,14 +24,13 @@ import fucksocks.server.Socks5Handler;
 import fucksocks.server.SocksProxyServer;
 
 /**
- * The class <code>TestProxyServer</code> a test class to start a SOCKS5 proxy server.
+ * The class <code>SSLBasedProxyServer</code> is a test class to start a SSL based SOCKS5 proxy server.
  * 
  * @author Youchao Feng
- * @date Apr 19, 2015 11:43:22 PM
  * @version 1.0
- *
+ * @since 1.0
  */
-public class TestSSLProxyServer {
+public class SSLBasedProxyServer {
 
   public static void main(String[] args) throws FileNotFoundException, IOException {
     SSLConfiguration configuration = SSLConfiguration.loadClassPath("/server-ssl.properties");

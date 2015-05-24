@@ -31,6 +31,8 @@ import javax.net.ssl.TrustManagerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fucksocks.utils.PathUtil;
+
 /**
  * The class <code>SSLConfiguration</code> represents a configuration of SSL.
  * 
@@ -65,11 +67,12 @@ public class SSLConfiguration {
     Properties properties = new Properties();
     properties.load(new FileInputStream(filePath));
 
-    String keystorePath = getAbstractPath(properties.getProperty("fucksocks.ssl.keystore"));
+    String keystorePath =
+        PathUtil.getAbstractPath(properties.getProperty("fucksocks.ssl.keystore"));
     String password = properties.getProperty("fucksocks.ssl.keystore.password");
     String type = properties.getProperty("fucksocks.ssl.keystore.type", "JSK");
     String trustKeystorePath =
-        getAbstractPath(properties.getProperty("fucksocks.ssl.trust.keystore"));
+        PathUtil.getAbstractPath(properties.getProperty("fucksocks.ssl.trust.keystore"));
     String trustPassword = properties.getProperty("fucksocks.ssl.trust.keystore.password");
     String trustType = properties.getProperty("fucksocks.ssl.trust.keystore.type", "JSK");
     KeyStoreInfo keyStoreInfo = new KeyStoreInfo(keystorePath, password, type);
@@ -81,22 +84,6 @@ public class SSLConfiguration {
     }
 
     return new SSLConfiguration(keyStoreInfo, trustKeyStoreInfo, clientAuth);
-  }
-
-  private static String getAbstractPath(String path) throws FileNotFoundException {
-    if (path.startsWith("classpath:")) {
-      String classPathValue = path.split(":")[1];
-      if (!classPathValue.startsWith(File.separator)) {
-        classPathValue = File.separator + classPathValue;
-      }
-
-      URL url = SSLConfiguration.class.getResource(classPathValue);
-      if (url == null) {
-        throw new FileNotFoundException(path);
-      }
-      return url.getPath();
-    }
-    return path;
   }
 
   public static SSLConfiguration loadClassPath(String filePath) throws FileNotFoundException,
@@ -130,26 +117,30 @@ public class SSLConfiguration {
   }
 
   public SSLSocketFactory getSSLSocketFactory() throws SSLConfigurationException {
-    String CLIENT_KEY_STORE_PASSWORD = keyStoreInfo.getPassword();
-    String CLIENT_TRUST_KEY_STORE_PASSWORD = trustKeyStoreInfo.getPassword();
     try {
-      SSLContext ctx = SSLContext.getInstance("SSL");
-      KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-      TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-      KeyStore ks = KeyStore.getInstance("JKS");
-      KeyStore tks = KeyStore.getInstance("JKS");
+      SSLContext context = SSLContext.getInstance("SSL");
 
-      ks.load(new FileInputStream(keyStoreInfo.getKeyStorePath()),
-          CLIENT_KEY_STORE_PASSWORD.toCharArray());
-      tks.load(new FileInputStream(trustKeyStoreInfo.getKeyStorePath()),
-          CLIENT_TRUST_KEY_STORE_PASSWORD.toCharArray());
+      TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+      KeyStore TrustKeyStory = KeyStore.getInstance("JKS");
+      TrustKeyStory.load(new FileInputStream(trustKeyStoreInfo.getKeyStorePath()),
+          trustKeyStoreInfo.getPassword().toCharArray());
+      trustManagerFactory.init(TrustKeyStory);
 
-      kmf.init(ks, CLIENT_KEY_STORE_PASSWORD.toCharArray());
-      tmf.init(tks);
+      if (keyStoreInfo != null && keyStoreInfo.getKeyStorePath() != null) {
+        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+        KeyStore keyStore = KeyStore.getInstance("JKS");
+        keyStore.load(new FileInputStream(keyStoreInfo.getKeyStorePath()), keyStoreInfo
+            .getPassword().toCharArray());
+        keyManagerFactory.init(keyStore, keyStoreInfo.getPassword().toCharArray());
 
-      ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
-      return ctx.getSocketFactory();
+        context.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(),
+            null);
+      } else {
+        context.init(null, trustManagerFactory.getTrustManagers(), null);
+      }
+      return context.getSocketFactory();
     } catch (Exception e) {
+      logger.error(e.getMessage(), e);
       throw new SSLConfigurationException(e.getMessage());
     }
   }
