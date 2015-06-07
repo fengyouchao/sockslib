@@ -7,3 +7,5 @@ target/
 /cache/
 *.bak
 *.log
+.idea/
+*.iml
