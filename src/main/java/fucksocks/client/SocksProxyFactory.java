@@ -84,7 +84,7 @@ public class SocksProxyFactory {
           if (Strings.isNullOrEmpty(username)) {
             return new Socks5(host, port);
           } else {
-            return new Socks5(host, port, username, password);
+            return new Socks5(host, port, new UsernamePasswordCredentials(username, password));
           }
 
         case 6:

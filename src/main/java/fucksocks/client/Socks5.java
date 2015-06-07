@@ -165,16 +165,15 @@ public class Socks5 implements SocksProxy {
    * 
    * @param host SOCKS5 server's host.
    * @param port SOCKS5 server's port.
-   * @param username Username of the authentication.
-   * @param password Password of the authentication.
+   * @param credentials credentials.
    * @throws UnknownHostException If the host can't be resolved.
    */
-  public Socks5(String host, int port, String username, String password)
+  public Socks5(String host, int port, Credentials credentials)
       throws UnknownHostException {
     init();
     this.inetAddress = InetAddress.getByName(host);
     this.port = port;
-    this.credentials = new UsernamePasswordCredentials(username, password);
+    this.credentials = credentials;
   }
 
   @Override
