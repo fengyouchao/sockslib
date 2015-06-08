@@ -18,7 +18,7 @@ See [Java API Documentation](http://fengyouchao.github.io/projects/fucksocks/api
 * Bind
 * Anonymouse authenticaion
 * USERNAME/PASSWORD authencation
-* Proxy chain.
+* Proxy chain
 
 ### Server
 
@@ -27,18 +27,20 @@ See [Java API Documentation](http://fengyouchao.github.io/projects/fucksocks/api
 * Bind
 * Anonymouse authenticaion
 * USERNAME/PASSWORD authencation
-* Black or white IP lists for clients.
+* Proxy chain
+* Black or white IP lists for clients
 
 ## Quick start
 
-#### Dependency
+#### Dependencies
 
 You should put following libraries in your project's *CLASSPATH*:
 
-* log4j-1.2.17.jar
-* slf4j-log4j12-1.7.5.jar
-* slf4j-api-1.7.5.jar
-* guava-18.0-rc2.jar
+* [log4j-slf4j-impl-2.3.jar](https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j-impl/2.3/log4j-slf4j-impl-2.3.jar)
+* [slf4j-api-1.7.12.jar](https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.12/slf4j-api-1.7.12.jar)
+* [log4j-api-2.3.jar](https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.3/log4j-api-2.3.jar)
+* [log4j-core-2.3.jar](https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.3/log4j-core-2.3.jar)
+* [guava-18.0.jar](https://repo1.maven.org/maven2/com/google/guava/guava/18.0/guava-18.0.jar)
 
 ### SCOKS5 Client
 
