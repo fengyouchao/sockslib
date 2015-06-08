@@ -1,11 +1,18 @@
 # Fucksocks
 
-**Fucksocks** is a Java library of **SOCKS5** protocol.
+**Fucksocks** is a Java library for **SOCKS5** protocol.
 
 See [Java API Documentation](http://fengyouchao.github.io/projects/fucksocks/apidocs/index.html)
 
-#### References
+See [Wiki Page](http://git.oschina.net/fyc/fucksocks/wikis/home) (Chinese)
 
+If you are looking for a SOCKS5 server instead of a SOKCS5 library, I hope [Esocks](https://github.com/fengyouchao/esocks) can help you.
+
+
+
+
+#### References
+ 
 * [SOCKS Protocol Version 5](http://www.ietf.org/rfc/rfc1928.txt)
 * [Username/Password Authentication for SOCKS V5](http://www.ietf.org/rfc/rfc1929.txt)
 
