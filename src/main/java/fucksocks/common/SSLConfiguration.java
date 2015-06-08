@@ -58,11 +58,11 @@ public class SSLConfiguration {
    * KEYS_TORE_PATH,KEY_STORE_PASSWORD,TURST_KEY_STORE_PATH,TRUST_KEY_STORE_PASSWORD,CLIENT_AUTH
    * </pre>
    *
-   * @param vlvalueaue
+   * @param configuration configuration as a string.
    * @return the instance of {@link SSLConfiguration}.
    */
-  public static SSLConfiguration parse(String value) {
-    String[] strings = value.split(",");
+  public static SSLConfiguration parse(String configuration) {
+    String[] strings = configuration.split(",");
     if (strings.length == 2) {
       KeyStoreInfo keyStoreInfo = new KeyStoreInfo(strings[0], strings[1]);
       return new SSLConfiguration(keyStoreInfo, null);

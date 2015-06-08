@@ -26,7 +26,7 @@ public class SocksUtil {
   /**
    * Get bytes from an Integer.
    * 
-   * @param port Port.
+   * @param num an integer.
    * @return Bytes of an integer.
    */
   public static byte[] intTo2bytes(int num) {
@@ -39,7 +39,7 @@ public class SocksUtil {
   /**
    * Returns the first byte of an integer.
    * 
-   * @param port Port.
+   * @param num an integer.
    * @return The first byte of an integer.
    */
   public static byte getFisrtByteFromInt(int num) {

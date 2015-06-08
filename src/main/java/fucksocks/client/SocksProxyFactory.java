@@ -20,6 +20,7 @@ import java.net.UnknownHostException;
 
 import com.google.common.base.Strings;
 
+import fucksocks.common.Credentials;
 import fucksocks.common.KeyStoreInfo;
 import fucksocks.common.SSLConfiguration;
 import fucksocks.common.UsernamePasswordCredentials;
@@ -40,8 +41,8 @@ public class SocksProxyFactory {
    * Creates a {@link SocksProxy} instance with a string.<br>
    * For example:<br>
    * <ul>
-   * <li>host,1080 = {@link Socks5#Socks5(String, int, String, String)}</li>
-   * <li>host,1080,root,123456 = {@link Socks5#Socks5(String, int, String, String)}</li>
+   * <li>host,1080 = {@link Socks5#Socks5(String, int)}</li>
+   * <li>host,1080,root,123456 = {@link Socks5#Socks5(String, int, Credentials)}</li>
    * <li>host,1080,root,123456,trustKeystorePath,trustKeyStorePassoword = Creates a
    * {@link SSLSocks5} instance</li>
    * <li>host,1080,root,123456,trustKeystorePath,trustKeyStorePassoword,keystorePath,
