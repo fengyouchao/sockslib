@@ -54,7 +54,7 @@ public class SSLConfiguration {
   /**
    * Creates a {@link SSLConfiguration} instance with a string.<br>
    * The string should format as: <br>
-   * <per>
+   * <pre>
    * KEYS_TORE_PATH,KEY_STORE_PASSWORD,TURST_KEY_STORE_PATH,TRUST_KEY_STORE_PASSWORD,CLIENT_AUTH
    * </pre>
    *

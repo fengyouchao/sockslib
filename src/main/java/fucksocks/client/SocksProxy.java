@@ -282,8 +282,8 @@ public interface SocksProxy {
   SocksProxy copy();
 
   /**
-   * Copy the {@link SocksProxy}. It will copy all properties of the
-   * {@link SocksProxy} but without chain proxy.
+   * Copy the {@link SocksProxy}. It will copy all properties of the {@link SocksProxy} but without
+   * chain proxy.
    * 
    * @return The copy of this SocksProxy but without chain proxy.
    */
@@ -303,23 +303,28 @@ public interface SocksProxy {
    * @return the instance of <code>SocksProxy</code>.
    */
   public SocksProxy setChainProxy(SocksProxy chainProxy);
-  
+
   /**
    * Creates a proxy socket.
    * 
    * @param address address.
-   * @param port    port.
-   * @return        Socket instance.
+   * @param port port.
+   * @return Socket instance.
    * @throws IOException If an I\O error occurred.
    */
   public Socket createProxySocket(InetAddress address, int port) throws IOException;
 
   /**
    * Creates a unconnected socket.
+   * 
+   * @return a unconnected socket.
+   * @throws IOException If an I\O error occurred.
    */
   public Socket createProxySocket() throws IOException;
+
   /**
    * Default SOCKS server port.
+   * 
    */
   public static final int SOCKS_DEFAULT_PORT = 1080;
 

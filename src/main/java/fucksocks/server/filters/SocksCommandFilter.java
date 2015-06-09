@@ -37,7 +37,7 @@ public interface SocksCommandFilter {
    * 
    * @param session Session
    * @param message The message send from a SOKCS client.
-   * @return code>false</code> to block the request or <code>true</code> to continue.
+   * @return <code>false</code> to block the request or <code>true</code> to continue.
    * @throws IOException If an I/O error occurred. If this method throws any exception, the filter
    *         will block the client's request.
    */
