@@ -99,10 +99,10 @@ public class UDPRelayServer implements Runnable {
     this(new InetSocketAddress(clientInetAddress, clientPort));
   }
 
-  public UDPRelayServer(SocketAddress clientSocketAddresss) {
-    if (clientSocketAddresss instanceof InetSocketAddress) {
-      clientAddresss = ((InetSocketAddress) clientSocketAddresss).getAddress();
-      clientPort = ((InetSocketAddress) clientSocketAddresss).getPort();
+  public UDPRelayServer(SocketAddress clientSocketAddress) {
+    if (clientSocketAddress instanceof InetSocketAddress) {
+      clientAddresss = ((InetSocketAddress) clientSocketAddress).getAddress();
+      clientPort = ((InetSocketAddress) clientSocketAddress).getPort();
     } else {
       throw new IllegalArgumentException("Only support java.net.InetSocketAddress");
     }

@@ -16,6 +16,7 @@ package fucksocks.server;
 
 import fucksocks.common.methods.NoAuthencationRequiredMethod;
 import fucksocks.common.methods.UsernamePasswordMethod;
+import fucksocks.server.manager.User;
 
 /**
  * The class <code>SocksProxyServerFactory</code> is a factory class for socks server.

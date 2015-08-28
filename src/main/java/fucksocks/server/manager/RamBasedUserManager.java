@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fucksocks.server;
+package fucksocks.server.manager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +33,20 @@ public class RamBasedUserManager implements UserManager {
    */
   private Map<String, User> users = new HashMap<>();
 
+  @Override public void create(User user) {
+    if(user == null){
+      throw new IllegalArgumentException("User can't be null");
+    }
+    if(user.getUsername() == null){
+      throw new IllegalArgumentException("username can't be null");
+    }
+    users.put(user.getUsername(), user);
+  }
+
   @Override
-  public void addUser(String username, String password) {
+  public Void addUser(String username, String password) {
     users.put(username, new User(username, password));
+    return null;
   }
 
   @Override

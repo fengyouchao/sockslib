@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fucksocks.server;
+package fucksocks.server.manager;
 
 import java.util.List;
 
@@ -26,13 +26,14 @@ import java.util.List;
  */
 public interface UserManager {
 
+  void create(User user);
+
   /**
    * Adds a user to the {@link UserManager}.
-   * 
-   * @param username Username.
+   *  @param username Username.
    * @param password Password.
    */
-  void addUser(String username, String password);
+  Void addUser(String username, String password);
 
   /**
    * finds a user by username and password.

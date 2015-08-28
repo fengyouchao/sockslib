@@ -32,23 +32,23 @@ public interface PipeListener {
    * 
    * @param pipe The started {@link Pipe} instance.
    */
-  public void onStarted(Pipe pipe);
+  public void onStart(Pipe pipe);
 
   /**
    * This method will be called when the {@link Pipe} stopped.
    * 
    * @param pipe The stopped {@link Pipe} instance.
    */
-  public void onStoped(Pipe pipe);
+  public void onStop(Pipe pipe);
 
   /**
-   * This method will be called when the {@link Pipe} transfered data.
+   * This method will be called when the {@link Pipe} transferring data.
    * 
    * @param pipe {@link Pipe} instance.
-   * @param buffer Data which is transfered.
+   * @param buffer Data which is transferring.
    * @param bufferLength length of data.
    */
-  public void onTransfered(Pipe pipe, byte[] buffer, int bufferLength);
+  public void onTransfer(Pipe pipe, byte[] buffer, int bufferLength);
 
   /**
    * This method will be called when an error occurred.

@@ -113,7 +113,7 @@ public class StreamPipe implements Runnable, Pipe {
       runningThread = new Thread(this);
       runningThread.start();
       for (PipeListener listener : pipeListeners) {
-        listener.onStarted(this);
+        listener.onStart(this);
       }
       return true;
     }
@@ -130,7 +130,7 @@ public class StreamPipe implements Runnable, Pipe {
       }
       for (int i = 0; i < pipeListeners.size(); i++) {
         PipeListener listener = pipeListeners.get(i);
-        listener.onStoped(this);
+        listener.onStop(this);
       }
       return true;
     }
@@ -164,7 +164,7 @@ public class StreamPipe implements Runnable, Pipe {
         to.write(buffer, 0, length);
         to.flush();
         for (PipeListener listener : pipeListeners) {
-          listener.onTransfered(this, buffer, length);
+          listener.onTransfer(this, buffer, length);
         }
       }
 

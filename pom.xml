@@ -18,6 +18,7 @@
 		<slf4j-api.version>1.7.12</slf4j-api.version>
 		<log4j-core.version>2.3</log4j-core.version>
 		<junit.version>4.9</junit.version>
+		<mongo.verson>3.0.3</mongo.verson>
 	</properties>
 
 	<dependencies>
@@ -44,6 +45,12 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>${mongo.verson}</version>
 		</dependency>
 
 		<dependency>

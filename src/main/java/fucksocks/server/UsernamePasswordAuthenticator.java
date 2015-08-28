@@ -18,6 +18,9 @@ import fucksocks.common.AuthenticationException;
 import fucksocks.common.Credentials;
 import fucksocks.common.UsernamePasswordCredentials;
 import fucksocks.common.methods.UsernamePasswordMethod;
+import fucksocks.server.manager.RamBasedUserManager;
+import fucksocks.server.manager.User;
+import fucksocks.server.manager.UserManager;
 
 /**
  * The class <code>UsernamePasswordAuthenticator</code> represents a username password
@@ -36,6 +39,12 @@ public class UsernamePasswordAuthenticator implements Authenticator {
   private UserManager userManager = new RamBasedUserManager();
 
   public static final String USER_KEY = "USER";
+
+  public UsernamePasswordAuthenticator(){}
+
+  public UsernamePasswordAuthenticator(UserManager userManager){
+    this.userManager = userManager;
+  }
 
   @Override
   public void doAuthenticate(Credentials credentials, Session session)

@@ -256,9 +256,7 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
   public SocksHandler createSocksHandler() {
     try {
       return socksHandlerClass.newInstance();
-    } catch (InstantiationException e) {
-      logger.error(e.getMessage(), e);
-    } catch (IllegalAccessException e) {
+    } catch (InstantiationException | IllegalAccessException e) {
       logger.error(e.getMessage(), e);
     }
     return null;
@@ -306,6 +304,7 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
   public int getTimeout() {
     return timeout;
   }
+
 
   @Override
   public void setTimeout(int timeout) {

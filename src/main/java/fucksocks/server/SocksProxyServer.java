@@ -16,6 +16,7 @@ package fucksocks.server;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 import fucksocks.client.SocksProxy;
 import fucksocks.common.methods.SocksMethod;
@@ -139,6 +140,8 @@ public interface SocksProxyServer {
   public SocksProxy getProxy();
 
   public void setProxy(SocksProxy proxy);
+
+  public void setExecutorService(ExecutorService executeService);
   
   public int getBindPort();
 

@@ -57,7 +57,7 @@ public class UsernamePasswordMethod extends AbstractSocksMethod {
   /**
    * USERNAME/PASSWORD authenticator.
    */
-  private UsernamePasswordAuthenticator authenticator;
+  private UsernamePasswordAuthenticator authenticator = new UsernamePasswordAuthenticator();
 
   /**
    * Constructs an instance of {@link UsernamePasswordMethod}.
@@ -98,7 +98,8 @@ public class UsernamePasswordMethod extends AbstractSocksMethod {
     /*
      * RFC 1929
      * 
-     * +----+------+----------+------+----------+ |VER | ULEN | UNAME | PLEN | PASSWD | |
+     * +----+------+----------+------+----------+
+     * |VER | ULEN | UNAME | PLEN | PASSWD | |
      * +----+------+----------+------+----------+ | 1 | 1 | 1 to 255 | 1 | 1 to 255 |
      * +----+------+----------+------+----------+ The VER field contains the current version of the
      * subnegotiation, which is X’01’. The ULEN field contains the length of the UNAME field that
@@ -123,12 +124,12 @@ public class UsernamePasswordMethod extends AbstractSocksMethod {
     // logger send bytes
     logger.debug("{}", LogMessage.create(bufferSent, MsgType.SEND));
 
-    byte[] authencationResult = new byte[2];
-    inputStream.read(authencationResult);
+    byte[] authenticationResult = new byte[2];
+    inputStream.read(authenticationResult);
     // logger
-    logger.debug("{}", LogMessage.create(authencationResult, MsgType.RECEIVE));
+    logger.debug("{}", LogMessage.create(authenticationResult, MsgType.RECEIVE));
 
-    if (authencationResult[1] != Socks5.AUTHENTICATION_SUCCEEDED) {
+    if (authenticationResult[1] != Socks5.AUTHENTICATION_SUCCEEDED) {
       // Close connection if authentication is failed.
       outputStream.close();
       inputStream.close();

@@ -19,7 +19,7 @@ import fucksocks.common.methods.SocksMethod;
 
 /**
  * 
- * The class <code>MethodSelecionResponseMessage</code> represents response message for method
+ * The class <code>MethodSelectionResponseMessage</code> represents response message for method
  * selection message. This message is always sent by SOCKS server.
  * 
  * @author Youchao Feng
@@ -27,7 +27,7 @@ import fucksocks.common.methods.SocksMethod;
  * @version 1.0
  *
  */
-public class MethodSelecionResponseMessage implements WritableMessage {
+public class MethodSelectionResponseMessage implements WritableMessage {
 
   /**
    * Version. 5 is default.
@@ -41,39 +41,39 @@ public class MethodSelecionResponseMessage implements WritableMessage {
 
 
   /**
-   * Constructs an instance of {@link MethodSelecionResponseMessage}
+   * Constructs an instance of {@link MethodSelectionResponseMessage}
    */
-  public MethodSelecionResponseMessage() {
+  public MethodSelectionResponseMessage() {
 
   }
 
   /**
-   * Constructs an instance of {@link MethodSelecionResponseMessage} with a method.
+   * Constructs an instance of {@link MethodSelectionResponseMessage} with a method.
    * 
    * @param socksMethod Selected method.
    */
-  public MethodSelecionResponseMessage(SocksMethod socksMethod) {
+  public MethodSelectionResponseMessage(SocksMethod socksMethod) {
     this(5, socksMethod.getByte());
   }
 
   /**
-   * Constructs an instance of {@link MethodSelecionResponseMessage} with a version and a method.
+   * Constructs an instance of {@link MethodSelectionResponseMessage} with a version and a method.
    * 
    * @param version Version.
    * @param method Value of selected method.
    */
-  public MethodSelecionResponseMessage(int version, int method) {
+  public MethodSelectionResponseMessage(int version, int method) {
     this.version = version;
     this.method = method;
   }
 
   /**
-   * Constructs an instance of {@link MethodSelecionResponseMessage} with a version and a method.
+   * Constructs an instance of {@link MethodSelectionResponseMessage} with a version and a method.
    * 
    * @param version Version.
    * @param socksMethod Selected method.
    */
-  public MethodSelecionResponseMessage(int version, SocksMethod socksMethod) {
+  public MethodSelectionResponseMessage(int version, SocksMethod socksMethod) {
     this(version, socksMethod.getByte());
   }
 
@@ -109,7 +109,7 @@ public class MethodSelecionResponseMessage implements WritableMessage {
   }
 
   /**
-   * REturn value of selected method.
+   * Return value of selected method.
    * 
    * @return Value of selected method.
    */

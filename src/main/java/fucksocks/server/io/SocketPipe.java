@@ -65,7 +65,7 @@ public class SocketPipe implements Pipe {
    */
   private boolean running = false;
 
-  private PipeListener listener = new PipeListnerImp();
+  private PipeListener listener = new PipeListenerImp();
 
   /**
    * Constructs SocketPipe instance by tow connected sockets.
@@ -102,7 +102,7 @@ public class SocketPipe implements Pipe {
     if (running) {
       pipe1.stop();
       pipe2.stop();
-      logger.debug("Socket pipe stoped");
+      logger.debug("Socket pipe stopped");
       if (!pipe1.isRunning() && !pipe2.isRunning()) {
         running = false;
       }
@@ -173,30 +173,30 @@ public class SocketPipe implements Pipe {
 
 
   /**
-   * The class <code>PipeListnerImp</code> is a pipe listener.
+   * The class <code>PipeListenerImp</code> is a pipe listener.
    * 
    * @author Youchao Feng
    * @date Apr 15, 2015 9:05:45 PM
    * @version 1.0
    *
    */
-  private class PipeListnerImp implements PipeListener {
+  private class PipeListenerImp implements PipeListener {
 
     @Override
-    public void onStoped(Pipe pipe) {
+    public void onStop(Pipe pipe) {
       StreamPipe streamPipe = (StreamPipe) pipe;
       logger.debug("Pipe[{}] stoped", streamPipe.getName());
       close();
     }
 
     @Override
-    public void onStarted(Pipe pipe) {
+    public void onStart(Pipe pipe) {
       // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onTransfered(Pipe pipe, byte[] buffer, int bufferLength) {
+    public void onTransfer(Pipe pipe, byte[] buffer, int bufferLength) {
 
     }
 

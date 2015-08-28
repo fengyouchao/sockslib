@@ -14,16 +14,6 @@
 
 package fucksocks.server;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import fucksocks.client.SocksProxy;
 import fucksocks.client.SocksSocket;
 import fucksocks.common.AddressType;
@@ -34,11 +24,16 @@ import fucksocks.common.methods.SocksMethod;
 import fucksocks.server.filters.SocksCommandFilter;
 import fucksocks.server.io.Pipe;
 import fucksocks.server.io.SocketPipe;
-import fucksocks.server.msg.CommandMessage;
-import fucksocks.server.msg.CommandResponseMessage;
-import fucksocks.server.msg.MethodSelecionResponseMessage;
-import fucksocks.server.msg.MethodSelectionMessage;
-import fucksocks.server.msg.ServerReply;
+import fucksocks.server.msg.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.List;
 
 /**
  * The class <code>Socks5Handler</code> represents a handler that can handle SOCKS5 protocol.
@@ -91,7 +86,7 @@ public class Socks5Handler implements SocksHandler {
 
     logger.debug("SESSION[{}] Response client:{}", session.getId(), selectedMethod.getMethodName());
     // send select method.
-    session.write(new MethodSelecionResponseMessage(VERSION, selectedMethod));
+    session.write(new MethodSelectionResponseMessage(VERSION, selectedMethod));
 
     // do method.
     selectedMethod.doMethod(session);
@@ -142,7 +137,7 @@ public class Socks5Handler implements SocksHandler {
     Socket socket = null;
     InetAddress bindAddress = null;
     int bindPort = 0;
-    InetAddress remotServerInetAddress = commandMessage.getInetAddress();
+    InetAddress remoteServerInetAddress = commandMessage.getInetAddress();
     int remoteServerPort = commandMessage.getPort();
 
     // set default bind address.
@@ -152,9 +147,9 @@ public class Socks5Handler implements SocksHandler {
     try {
       // Connect directly.
       if (proxy == null) {
-        socket = new Socket(remotServerInetAddress, remoteServerPort);
+        socket = new Socket(remoteServerInetAddress, remoteServerPort);
       } else {
-        socket = new SocksSocket(proxy, remotServerInetAddress, remoteServerPort);
+        socket = new SocksSocket(proxy, remoteServerInetAddress, remoteServerPort);
       }
       bindAddress = socket.getLocalAddress();
       bindPort = socket.getLocalPort();
@@ -173,7 +168,7 @@ public class Socks5Handler implements SocksHandler {
         reply = ServerReply.GENERAL_SOCKS_SERVER_FAILURE;
       }
       logger.info("SESSION[{}] connect {} [{}] exception:{}", session.getId(),
-          new InetSocketAddress(remotServerInetAddress, remoteServerPort), reply, e.getMessage());
+          new InetSocketAddress(remoteServerInetAddress, remoteServerPort), reply, e.getMessage());
     }
 
     session.write(new CommandResponseMessage(VERSION, reply, bindAddress, bindPort));
