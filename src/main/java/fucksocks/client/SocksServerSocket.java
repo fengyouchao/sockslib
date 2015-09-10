@@ -14,6 +14,10 @@
 
 package fucksocks.client;
 
+import fucksocks.common.SocksException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -21,23 +25,17 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import fucksocks.common.SocksException;
-
 /**
  * The class <code>SocksServerSocket</code> is server socket that can bind a port at SOCKS server
  * and accept a connection. This server socket can only accept one connection from specified IP
  * address and port.<br>
  * <p>
- * You can create a TCP server in SOCKS server easily by using following codes:
+ * You can build a TCP server in SOCKS server easily by using following codes:
  * </p>
- * 
  * <pre>
  * SocksProxy proxy = new Socks5(new InetSocketAddress("foo.com", 1080));
  * //Create SOCKS5 proxy.
- * 
+ *
  * ServerSocket serverSocket = new SocksServerSocket(proxy, inetAddress, 8080);
  * // Get bind address in SOCKS server.
  * InetAddress bindAddress = ((SocksServerSocket) serverSocket).getBindAddress();
@@ -45,10 +43,10 @@ import fucksocks.common.SocksException;
  * int bindPort = ((SocksServerSocket) serverSocket).getBindPort();
  * Socket socket = serverSocket.accept();
  * </pre>
- * 
+ *
  * @author Youchao Feng
- * @date Mar 25, 2015 11:40:36 AM
  * @version 1.0
+ * @date Mar 25, 2015 11:40:36 AM
  */
 public class SocksServerSocket extends ServerSocket {
 
@@ -92,21 +90,20 @@ public class SocksServerSocket extends ServerSocket {
 
   /**
    * Constructs a server socket. This server socket will established in SOCKS server.
-   * 
-   * @param proxy SOCKS proxy.
+   *
+   * @param proxy       SOCKS proxy.
    * @param inetAddress The IP address that server socket will accept.
-   * @param port The port that server socket will accept.
+   * @param port        The port that server socket will accept.
    * @throws SocksException If any error about SOCKS protocol occurs.
-   * @throws IOException If any I/O error occurs.
+   * @throws IOException    If any I/O error occurs.
    */
-  public SocksServerSocket(SocksProxy proxy, InetAddress inetAddress, int port)
-      throws SocksException, IOException {
+  public SocksServerSocket(SocksProxy proxy, InetAddress inetAddress, int port) throws SocksException, IOException {
     this.proxy = proxy.copy();
     this.incomePort = port;
     this.incomeAddress = inetAddress;
     this.proxy.buildConnection();
     // Send BIND command to SOCKS server.
-    CommandReplyMesasge replyMesasge = this.proxy.requestBind(incomeAddress, incomePort);
+    CommandReplyMessage replyMesasge = this.proxy.requestBind(incomeAddress, incomePort);
     // Get a bind IP and port in proxy server.
     bindAddress = replyMesasge.getIp();
     bindPort = replyMesasge.getPort();

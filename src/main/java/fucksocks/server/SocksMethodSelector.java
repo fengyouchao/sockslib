@@ -23,13 +23,11 @@ import fucksocks.server.msg.MethodSelectionMessage;
 
 /**
  * The class <code>SocksMethodSelector</code> implements the {@link MethodSelector}.
- * 
- * @author Youchao Feng
- * @date Apr 7, 2015 10:24:43 AM
- * @version 1.0
- * 
- * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 7, 2015 10:24:43 AM
+ * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
  */
 public class SocksMethodSelector implements MethodSelector {
 

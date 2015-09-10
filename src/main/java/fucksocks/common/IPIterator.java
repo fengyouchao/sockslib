@@ -17,13 +17,11 @@ package fucksocks.common;
 import java.util.Iterator;
 
 /**
- * 
  * The class <code>IPIterator</code> represents an IP address iterator.
- * 
- * @author Youchao Feng
- * @date May 2, 2015 9:23:00 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date May 2, 2015 9:23:00 AM
  */
 public class IPIterator implements Iterator<IP> {
 
@@ -45,7 +43,7 @@ public class IPIterator implements Iterator<IP> {
 
   /**
    * Constructs an instance of {@link IPIterator} with a {@link IPRange}.
-   * 
+   *
    * @param range IP address range.
    */
   public IPIterator(IPRange range) {
@@ -55,9 +53,9 @@ public class IPIterator implements Iterator<IP> {
 
   /**
    * Constructs an instance of {@link IPIterator} with tow IP address.
-   * 
+   *
    * @param startIP Starting IP address.
-   * @param endIP End IP address.
+   * @param endIP   End IP address.
    */
   public IPIterator(IP startIP, IP endIP) {
     range = new IPRange(startIP, endIP);
@@ -86,6 +84,7 @@ public class IPIterator implements Iterator<IP> {
   }
 
   @Override
-  public void remove() {}
+  public void remove() {
+  }
 
 }

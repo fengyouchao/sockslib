@@ -24,11 +24,10 @@ import fucksocks.common.methods.SocksMethod;
 /**
  * The interface <code>SocksMethodRequestor</code> is a tool that can send request message from
  * SOCKS server and get a method that server accepted.
- * 
+ *
  * @author Youchao Feng
- * @date Mar 19, 2015 10:43:41 AM
  * @version 1.0
- * 
+ * @date Mar 19, 2015 10:43:41 AM
  * @see fucksocks.client.GenericSocksMethodRequestor
  */
 public interface SocksMethodRequestor {
@@ -39,14 +38,13 @@ public interface SocksMethodRequestor {
    * This method will send list of methods to SOCKS server and receive the method that SOCKS server
    * selected.
    * </p>
-   * 
+   *
    * @param acceptableMethods Methods that client can handle.
-   * @param socket The socket instance that has connected SOCKS server.
-   * @param socksVersion SOCKS protocol version
+   * @param socket            The socket instance that has connected SOCKS server.
+   * @param socksVersion      SOCKS protocol version
    * @return Method that server accepted.
    * @throws SocksException If any errors about SOCKS protocol occurred.
-   * @throws IOException if any IO errors occurred.
+   * @throws IOException    if any IO errors occurred.
    */
-  public SocksMethod doRequest(List<SocksMethod> acceptableMethods, Socket socket, int socksVersion)
-      throws SocksException, IOException;
+  public SocksMethod doRequest(List<SocksMethod> acceptableMethods, Socket socket, int socksVersion) throws SocksException, IOException;
 }

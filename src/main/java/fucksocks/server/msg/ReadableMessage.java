@@ -23,20 +23,19 @@ import fucksocks.server.Session;
 /**
  * The interface <code>ReadableMessage</code> represents a message that can be read by
  * {@link Session}.
- * 
- * @author Youchao Feng
- * @date Apr 5, 2015 10:35:12 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 5, 2015 10:35:12 AM
  */
 public interface ReadableMessage extends Message {
 
   /**
    * Read message from a input stream.
-   * 
+   *
    * @param inputStream Input stream.
    * @throws SocksException If a SOCKS protocol error occurred.
-   * @throws IOException If an I/O error occurred.
+   * @throws IOException    If an I/O error occurred.
    */
   public void read(InputStream inputStream) throws SocksException, IOException;
 

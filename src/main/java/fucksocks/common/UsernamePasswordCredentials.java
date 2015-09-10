@@ -24,9 +24,8 @@ import com.google.common.base.Strings;
  * Only SOCKS5 protocol supports this credentials.
  *
  * @author Youchao Feng
- * @date May 14, 2015 2:36:52 PM
  * @version 1.0
- *
+ * @date May 14, 2015 2:36:52 PM
  */
 public class UsernamePasswordCredentials implements Credentials {
 
@@ -35,8 +34,7 @@ public class UsernamePasswordCredentials implements Credentials {
   private String password;
 
   public UsernamePasswordCredentials(String username, String password) {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(username),
-        "Username may not be null or empty");
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "Username may not be null or empty");
     this.principal = new Socks5UserPrincipal(username);
     this.password = password;
   }

@@ -20,11 +20,10 @@ import fucksocks.server.manager.User;
 
 /**
  * The class <code>SocksProxyServerFactory</code> is a factory class for socks server.
- * 
+ *
  * @author Youchao Feng
  * @version 1.0
  * @since 1.0
- *
  */
 public class SocksProxyServerFactory {
 
@@ -42,20 +41,20 @@ public class SocksProxyServerFactory {
 
   /**
    * Creates a no authentication SOCKS5 server. The server will listen at port 1080.
-   * 
+   *
    * @return The instance of {@link SocksProxyServer} that supports SOCKS5 protocol.
    */
-  public static SocksProxyServer newNoAuthenticaionServer() {
-    return newNoAuthenticaionServer(DEFAULT_PORT);
+  public static SocksProxyServer newNoAuthenticationServer() {
+    return newNoAuthenticationServer(DEFAULT_PORT);
   }
 
   /**
    * Creates a no authentication SOCKS5 server.
-   * 
+   *
    * @param port The port that SOCKS5 Server will listen.
    * @return The instance of {@link SocksProxyServer} that supports SOCKS5 protocol.
    */
-  public static SocksProxyServer newNoAuthenticaionServer(int port) {
+  public static SocksProxyServer newNoAuthenticationServer(int port) {
     SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class, port);
     proxyServer.setBufferSize(BUFFER_SIZE);
     proxyServer.setTimeout(TIMEOUT);
@@ -64,16 +63,16 @@ public class SocksProxyServerFactory {
   }
 
   /**
-   * Create a USERNAME/PASSWROD authentication SOCKS5 server.
-   * 
+   * Create a USERNAME/PASSWORD authentication SOCKS5 server.
+   *
    * @param users Users.
    * @return The instance of {@link SocksProxyServer} that supports SOCKS5 protocol.
    */
-  public static SocksProxyServer newUsernamePasswordAutenticationServer(User... users) {
-    return newUsernamePasswordAutenticationServer(DEFAULT_PORT, users);
+  public static SocksProxyServer newUsernamePasswordAuthenticationServer(User... users) {
+    return newUsernamePasswordAuthenticationServer(DEFAULT_PORT, users);
   }
 
-  public static SocksProxyServer newUsernamePasswordAutenticationServer(int port, User... users) {
+  public static SocksProxyServer newUsernamePasswordAuthenticationServer(int port, User... users) {
     SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class, port);
     proxyServer.setBufferSize(BUFFER_SIZE);
     proxyServer.setTimeout(TIMEOUT);

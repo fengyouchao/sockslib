@@ -34,11 +34,10 @@ import fucksocks.server.Session;
  * <li>X’80’ to X’FE’ RESERVED FOR PRIVATE METHODS</li>
  * <li>X’FF’ NO ACCEPTABLE METHODS</li>
  * </ul>
- * 
+ *
  * @author Youchao Feng
- * @date Mar 17, 2015 11:12:16 AM
  * @version 1.0
- * 
+ * @date Mar 17, 2015 11:12:16 AM
  * @see fucksocks.common.methods.AbstractSocksMethod
  * @see fucksocks.common.methods.GssApiMethod
  * @see fucksocks.common.methods.NoAcceptableMethod
@@ -50,33 +49,33 @@ public interface SocksMethod {
 
   /**
    * method byte.
-   * 
+   *
    * @return byte.
    */
   int getByte();
 
   /**
    * Gets method's name.
-   * 
+   *
    * @return Name of the method.
    */
   String getMethodName();
 
   /**
    * Do method job. This method will be called by SOCKS client.
-   * 
+   *
    * @param socksProxy SocksProxy instance.
    * @throws SocksException If there are any errors about SOCKS protocol.
-   * @throws IOException if there are any IO errors.
+   * @throws IOException    if there are any IO errors.
    */
   void doMethod(SocksProxy socksProxy) throws SocksException, IOException;
 
   /**
    * Do method job. This method will be called by SOCKS server.
-   * 
+   *
    * @param session Session.
    * @throws SocksException TODO
-   * @throws IOException TODO
+   * @throws IOException    TODO
    */
   void doMethod(Session session) throws SocksException, IOException;
 

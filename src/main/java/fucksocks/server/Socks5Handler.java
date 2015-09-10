@@ -39,9 +39,8 @@ import java.util.List;
  * The class <code>Socks5Handler</code> represents a handler that can handle SOCKS5 protocol.
  *
  * @author Youchao Feng
- * @date Apr 16, 2015 11:03:49 AM
  * @version 1.0
- *
+ * @date Apr 16, 2015 11:03:49 AM
  */
 public class Socks5Handler implements SocksHandler {
 
@@ -95,10 +94,11 @@ public class Socks5Handler implements SocksHandler {
     session.read(commandMessage); // Read command request.
 
     logger.info("SESSION[{}] request:{}  {}:{}", session.getId(), commandMessage.getCommand(),
-        commandMessage.getAddressType() != AddressType.DOMAINNAME ? commandMessage.getInetAddress()
-            : commandMessage.getHost(), commandMessage.getPort());
+        commandMessage.getAddressType() != AddressType.DOMAINNAME ?
+            commandMessage.getInetAddress() :
+            commandMessage.getHost(), commandMessage.getPort());
 
-    // If there is a SOKCS exception in command message, It will send a right response to client.
+    // If there is a SOCKS exception in command message, It will send a right response to client.
     if (commandMessage.hasSocksException()) {
       ServerReply serverReply = commandMessage.getSocksException().getServerReply();
       session.write(new CommandResponseMessage(serverReply));
@@ -130,14 +130,13 @@ public class Socks5Handler implements SocksHandler {
   }
 
   @Override
-  public void doConnect(Session session, CommandMessage commandMessage) throws SocksException,
-      IOException {
+  public void doConnect(Session session, CommandMessage commandMessage) throws SocksException, IOException {
 
     ServerReply reply = null;
     Socket socket = null;
     InetAddress bindAddress = null;
     int bindPort = 0;
-    InetAddress remoteServerInetAddress = commandMessage.getInetAddress();
+    InetAddress remoteServerAddress = commandMessage.getInetAddress();
     int remoteServerPort = commandMessage.getPort();
 
     // set default bind address.
@@ -147,9 +146,9 @@ public class Socks5Handler implements SocksHandler {
     try {
       // Connect directly.
       if (proxy == null) {
-        socket = new Socket(remoteServerInetAddress, remoteServerPort);
+        socket = new Socket(remoteServerAddress, remoteServerPort);
       } else {
-        socket = new SocksSocket(proxy, remoteServerInetAddress, remoteServerPort);
+        socket = new SocksSocket(proxy, remoteServerAddress, remoteServerPort);
       }
       bindAddress = socket.getLocalAddress();
       bindPort = socket.getLocalPort();
@@ -167,8 +166,7 @@ public class Socks5Handler implements SocksHandler {
       } else {
         reply = ServerReply.GENERAL_SOCKS_SERVER_FAILURE;
       }
-      logger.info("SESSION[{}] connect {} [{}] exception:{}", session.getId(),
-          new InetSocketAddress(remoteServerInetAddress, remoteServerPort), reply, e.getMessage());
+      logger.info("SESSION[{}] connect {} [{}] exception:{}", session.getId(), new InetSocketAddress(remoteServerAddress, remoteServerPort), reply, e.getMessage());
     }
 
     session.write(new CommandResponseMessage(VERSION, reply, bindAddress, bindPort));
@@ -181,7 +179,7 @@ public class Socks5Handler implements SocksHandler {
     Pipe pipe = new SocketPipe(session.getSocket(), socket);
     pipe.setName("SESSION[" + session.getId() + "]");
     pipe.setBufferSize(bufferSize);
-    pipe.start(); // This method will create tow thread to run tow internal pipes.
+    pipe.start(); // This method will build tow thread to run tow internal pipes.
 
     // wait for pipe exit.
     while (pipe.isRunning()) {
@@ -197,20 +195,16 @@ public class Socks5Handler implements SocksHandler {
   }
 
   @Override
-  public void doBind(Session session, CommandMessage commandMessage) throws SocksException,
-      IOException {
+  public void doBind(Session session, CommandMessage commandMessage) throws SocksException, IOException {
 
     ServerSocket serverSocket = new ServerSocket(commandMessage.getPort());
     int bindPort = serverSocket.getLocalPort();
     Socket socket = null;
-    logger.info("Create TCP server bind at {} for session[{}]",
-        serverSocket.getLocalSocketAddress(), session.getId());
-    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, serverSocket
-        .getInetAddress(), bindPort));
+    logger.info("Create TCP server bind at {} for session[{}]", serverSocket.getLocalSocketAddress(), session.getId());
+    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, serverSocket.getInetAddress(), bindPort));
 
     socket = serverSocket.accept();
-    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, socket
-        .getLocalAddress(), socket.getLocalPort()));
+    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, socket.getLocalAddress(), socket.getLocalPort()));
 
     Pipe pipe = new SocketPipe(session.getSocket(), socket);
     pipe.setBufferSize(bufferSize);
@@ -231,16 +225,12 @@ public class Socks5Handler implements SocksHandler {
   }
 
   @Override
-  public void doUDPAssociate(Session session, CommandMessage commandMessage) throws SocksException,
-      IOException {
+  public void doUDPAssociate(Session session, CommandMessage commandMessage) throws SocksException, IOException {
     UDPRelayServer udpRelayServer =
-        new UDPRelayServer(((InetSocketAddress) session.getRemoteAddress()).getAddress(),
-            commandMessage.getPort());
+        new UDPRelayServer(((InetSocketAddress) session.getRemoteAddress()).getAddress(), commandMessage.getPort());
     InetSocketAddress socketAddress = (InetSocketAddress) udpRelayServer.start();
-    logger.info("Create UDP relay server at[{}] for {}", socketAddress,
-        commandMessage.getSocketAddress());
-    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, InetAddress
-        .getLocalHost(), socketAddress.getPort()));
+    logger.info("Create UDP relay server at[{}] for {}", socketAddress, commandMessage.getSocketAddress());
+    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, InetAddress.getLocalHost(), socketAddress.getPort()));
     while (udpRelayServer.isRunning()) {
       try {
         Thread.sleep(idleTime);

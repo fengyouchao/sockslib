@@ -14,25 +14,23 @@
 
 package fucksocks.client;
 
+import fucksocks.common.SSLConfiguration;
+import fucksocks.common.SSLConfigurationException;
+import fucksocks.common.SocksException;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-import fucksocks.common.SSLConfiguration;
-import fucksocks.common.SSLConfigurationException;
-import fucksocks.common.SocksException;
-
 /**
- * The class <code>SSLSocks5</code> represents a SSL based SOCKS5 proxy. It will create a SSL based
+ * The class <code>SSLSocks5</code> represents a SSL based SOCKS5 proxy. It will build a SSL based
  * connection between the client and SOCKS5 server.
  *
  * @author Youchao Feng
- * @date May 18, 2015 1:00:18 PM
  * @version 1.0
- * 
+ * @date May 18, 2015 1:00:18 PM
  * @see fucksocks.client.Socks5
- *
  */
 public class SSLSocks5 extends Socks5 {
 
@@ -79,10 +77,7 @@ public class SSLSocks5 extends Socks5 {
   @Override
   public SocksProxy copyWithoutChainProxy() {
     SSLSocks5 socks5 = new SSLSocks5(getInetAddress(), getPort(), configuration);
-    socks5.setAcceptableMethods(getAcceptableMethods())
-        .setAlwaysResolveAddressLocally(isAlwaysResolveAddressLocally())
-        .setCredentials(getCredentials()).setInetAddress(getInetAddress()).setPort(getPort())
-        .setSocksMethodRequestor(getSocksMethodRequestor());
+    socks5.setAcceptableMethods(getAcceptableMethods()).setAlwaysResolveAddressLocally(isAlwaysResolveAddressLocally()).setCredentials(getCredentials()).setInetAddress(getInetAddress()).setPort(getPort()).setSocksMethodRequestor(getSocksMethodRequestor());
     return socks5;
   }
 

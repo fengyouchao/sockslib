@@ -20,22 +20,21 @@ import java.security.Principal;
  * The class <code>Credentials</code> represents a credentials.
  *
  * @author Youchao Feng
- * @date May 14, 2015 2:35:26 PM
  * @version 1.0
- *
+ * @date May 14, 2015 2:35:26 PM
  */
 public interface Credentials {
 
   /**
    * Returns principal.
-   * 
+   *
    * @return principal.
    */
   Principal getUserPrincipal();
 
   /**
    * Returns password.
-   * 
+   *
    * @return password.
    */
   String getPassword();

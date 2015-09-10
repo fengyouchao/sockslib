@@ -28,11 +28,10 @@ import org.slf4j.LoggerFactory;
  * {@link #getByByte(byte)} to return a {@link SocksMethod} class which value is equal the given
  * byte.
  * </p>
- * 
+ *
  * @author Youchao Feng
- * @date Mar 17, 2015 11:12:06 AM
  * @version 1.0
- * 
+ * @date Mar 17, 2015 11:12:06 AM
  */
 public class SocksMethodRegistry {
 
@@ -46,12 +45,13 @@ public class SocksMethodRegistry {
   /**
    * A private constructor.
    */
-  private SocksMethodRegistry() {}
+  private SocksMethodRegistry() {
+  }
 
   /**
    * Puts a {@link SocksMethod} class into the SOCKS method registry with an instance of
    * {@link SocksMethod}.
-   * 
+   *
    * @param socksMethod The instance of {@link SocksMethod}.
    */
   public static void putMethod(SocksMethod socksMethod) {
@@ -67,7 +67,7 @@ public class SocksMethodRegistry {
 
   /**
    * Returns a {@link SocksMethod} class which value is equal the given byte.
-   * 
+   *
    * @param b value of {@link SocksMethod}.
    * @return A {@link SocksMethod} instance which value is equal the given byte.
    */

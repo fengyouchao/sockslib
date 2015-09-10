@@ -20,26 +20,24 @@ import fucksocks.server.Session;
 import fucksocks.server.msg.CommandMessage;
 
 /**
- * 
  * The class <code>SocksCommandFilter</code> represents a SOCKS command filter. When a client sends
  * a SOCKS command request message to a SOCKS server, {@link SocksCommandFilter} will intercept the
  * execution process.
- * 
- * @author Youchao Feng
- * @date May 10, 2015 10:56:17 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date May 10, 2015 10:56:17 AM
  */
 public interface SocksCommandFilter {
 
   /**
    * This method will be called before the SOCKS server do the SOCKS command.
-   * 
+   *
    * @param session Session
    * @param message The message send from a SOKCS client.
    * @return <code>false</code> to block the request or <code>true</code> to continue.
    * @throws IOException If an I/O error occurred. If this method throws any exception, the filter
-   *         will block the client's request.
+   *                     will block the client's request.
    */
   boolean doFilter(Session session, CommandMessage message) throws IOException;
 

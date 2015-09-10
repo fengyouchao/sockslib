@@ -27,36 +27,30 @@ import fucksocks.common.SocksException;
 
 /**
  * The class <code>SSLSocksProxyServer</code> represents a SSL based SOCKS proxy server.
- * 
- * @author Youchao Feng
- * @date May 17, 2015 4:08:06 PM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date May 17, 2015 4:08:06 PM
  */
 public class SSLSocksProxyServer extends GenericSocksProxyServer {
 
   private SSLConfiguration configuration;
 
-  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass,
-      ExecutorService executorService, SSLConfiguration configuration) {
+  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, ExecutorService executorService, SSLConfiguration configuration) {
     this(socketHandlerClass, DEFAULT_SOCKS_PORT, executorService, configuration);
   }
 
-  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, int port,
-      ExecutorService executorService, SSLConfiguration configuration) {
+  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, int port, ExecutorService executorService, SSLConfiguration configuration) {
     super(socketHandlerClass, port, executorService);
     this.configuration = configuration;
   }
 
-  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, int port,
-      SSLConfiguration configuration) {
+  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, int port, SSLConfiguration configuration) {
     this(socketHandlerClass, port, Executors.newFixedThreadPool(THREAD_NUMBER), configuration);
   }
 
-  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass,
-      SSLConfiguration configuration) {
-    this(socketHandlerClass, DEFAULT_SOCKS_PORT, Executors.newFixedThreadPool(THREAD_NUMBER),
-        configuration);
+  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, SSLConfiguration configuration) {
+    this(socketHandlerClass, DEFAULT_SOCKS_PORT, Executors.newFixedThreadPool(THREAD_NUMBER), configuration);
   }
 
   @Override
@@ -81,7 +75,7 @@ public class SSLSocksProxyServer extends GenericSocksProxyServer {
         (SSLServerSocket) configuration.getSSLServerSocketFactory().createServerSocket(port);
     if (configuration.isNeedClientAuth()) {
       serverSocket.setNeedClientAuth(true);
-    }else{
+    } else {
       serverSocket.setNeedClientAuth(false);
     }
     return serverSocket;

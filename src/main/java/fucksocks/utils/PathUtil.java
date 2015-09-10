@@ -20,17 +20,16 @@ import java.net.URL;
 
 /**
  * The class <code>PathUtil</code> represents a path utility.
- * 
+ *
  * @author Youchao Feng
  * @version 1.0
  * @since 1.0
- *
  */
 public class PathUtil {
 
   /**
    * Returns abstract path.
-   * 
+   *
    * @param path the path that can start with "classpath:" or "file:".
    * @return abstract path.
    * @throws FileNotFoundException if the file not found.

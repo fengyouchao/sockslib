@@ -19,17 +19,16 @@ import java.net.DatagramPacket;
 /**
  * The interface <code>DatagramPacketDecapsulation</code> represents a datagram packet
  * decapsulation.
- * 
- * @author Youchao Feng
- * @date Mar 24, 2015 9:07:34 PM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Mar 24, 2015 9:07:34 PM
  */
 public interface DatagramPacketDecapsulation {
 
   /**
    * Decapsulates a datagram packet.
-   * 
+   *
    * @param packet Datagram packet that need to be decapsulated.
    * @throws SocksException If any error about SOCKS protocol occurs.
    */

@@ -14,18 +14,12 @@
 
 package fucksocks.server;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.net.SocketException;
-
+import fucksocks.common.Socks5DatagramPacketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fucksocks.common.Socks5DatagramPacketHandler;
+import java.io.IOException;
+import java.net.*;
 
 /**
  * The class <code>UDPRelayServer</code> represents a UDP relay server.
@@ -35,11 +29,10 @@ import fucksocks.common.Socks5DatagramPacketHandler;
  * client. UDP relay server must need to know the client's IP address and port to find out where the
  * datagram packet from, because UDP is not long connection protocol.
  * </p>
- * 
- * @author Youchao Feng
- * @date Apr 22, 2015 12:54:50 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 22, 2015 12:54:50 AM
  */
 public class UDPRelayServer implements Runnable {
 
@@ -76,7 +69,7 @@ public class UDPRelayServer implements Runnable {
   /**
    * Client's IP address.
    */
-  private InetAddress clientAddresss;
+  private InetAddress clientAddress;
 
   /**
    * Client's port.
@@ -86,14 +79,15 @@ public class UDPRelayServer implements Runnable {
   /**
    * Constructs a {@link UDPRelayServer} instance.
    */
-  public UDPRelayServer() {}
+  public UDPRelayServer() {
+  }
 
   /**
    * Constructs a {@link UDPRelayServer} instance with client's IP address and port. The UDP relay
    * server will use client's IP and port to find out where the datagram packet from.
-   * 
+   *
    * @param clientInetAddress Client's IP address.
-   * @param clientPort Client's port.
+   * @param clientPort        Client's port.
    */
   public UDPRelayServer(InetAddress clientInetAddress, int clientPort) {
     this(new InetSocketAddress(clientInetAddress, clientPort));
@@ -101,7 +95,7 @@ public class UDPRelayServer implements Runnable {
 
   public UDPRelayServer(SocketAddress clientSocketAddress) {
     if (clientSocketAddress instanceof InetSocketAddress) {
-      clientAddresss = ((InetSocketAddress) clientSocketAddress).getAddress();
+      clientAddress = ((InetSocketAddress) clientSocketAddress).getAddress();
       clientPort = ((InetSocketAddress) clientSocketAddress).getPort();
     } else {
       throw new IllegalArgumentException("Only support java.net.InetSocketAddress");
@@ -110,7 +104,7 @@ public class UDPRelayServer implements Runnable {
 
   /**
    * Starts a UDP relay server.
-   * 
+   *
    * @return Server bind socket address.
    * @throws SocketException If a SOCKS protocol error occurred.
    */
@@ -148,15 +142,13 @@ public class UDPRelayServer implements Runnable {
           server.send(packet);
         } else {
           packet =
-              datagramPacketHandler.encapsulate(packet, new InetSocketAddress(clientAddresss,
-                  clientPort));
+              datagramPacketHandler.encapsulate(packet, new InetSocketAddress(clientAddress, clientPort));
           server.send(packet);
         }
-
       }
     } catch (IOException e) {
       if (e.getMessage().equalsIgnoreCase("Socket closed") && !running) {
-        logger.debug("UDP relay server stoped");
+        logger.debug("UDP relay server stopped");
       } else {
         logger.error(e.getMessage(), e);
       }
@@ -165,17 +157,17 @@ public class UDPRelayServer implements Runnable {
 
   /**
    * Returns <code>true</code> if the the datagram packet from client.
-   * 
+   *
    * @param packet Datagram packet the UDP server received.
    * @return If the datagram packet is sent from client, it will return <code>true</code>.
    */
   protected boolean isFromClient(DatagramPacket packet) {
 
-    if (packet.getPort() == clientPort && clientAddresss.equals(packet.getAddress())) {
+    if (packet.getPort() == clientPort && clientAddress.equals(packet.getAddress())) {
       return true;
     }
     // client is in local.
-    else if (packet.getPort() == clientPort && clientAddresss.getHostAddress().startsWith("127.")) {
+    else if (packet.getPort() == clientPort && clientAddress.getHostAddress().startsWith("127.")) {
       return true;
     }
     return false;
@@ -183,7 +175,7 @@ public class UDPRelayServer implements Runnable {
 
   /**
    * Return UDP server.
-   * 
+   *
    * @return UDP server.
    */
   public DatagramSocket getServer() {
@@ -192,7 +184,7 @@ public class UDPRelayServer implements Runnable {
 
   /**
    * Sets UDP server.
-   * 
+   *
    * @param server UDP server.
    */
   public void setServer(DatagramSocket server) {
@@ -201,7 +193,7 @@ public class UDPRelayServer implements Runnable {
 
   /**
    * Returns buffer size.
-   * 
+   *
    * @return Buffer size.
    */
   public int getBufferSize() {
@@ -210,7 +202,7 @@ public class UDPRelayServer implements Runnable {
 
   /**
    * Sets buffer size.
-   * 
+   *
    * @param bufferSize Buffer size.
    */
   public void setBufferSize(int bufferSize) {
@@ -219,7 +211,7 @@ public class UDPRelayServer implements Runnable {
 
   /**
    * Returns datagram packet handler.
-   * 
+   *
    * @return the instance of {@link Socks5DatagramPacketHandler}.
    */
   public Socks5DatagramPacketHandler getDatagramPacketHandler() {
@@ -228,7 +220,7 @@ public class UDPRelayServer implements Runnable {
 
   /**
    * Sets datagram packet handler.
-   * 
+   *
    * @param datagramPacketHandler Datagram packet handler.
    */
   public void setDatagramPacketHandler(Socks5DatagramPacketHandler datagramPacketHandler) {
@@ -237,25 +229,25 @@ public class UDPRelayServer implements Runnable {
 
   /**
    * Returns client's IP address.
-   * 
-   * @return clinet's IP address.
+   *
+   * @return client's IP address.
    */
-  public InetAddress getClientAddresss() {
-    return clientAddresss;
+  public InetAddress getClientAddress() {
+    return clientAddress;
   }
 
   /**
    * Sets client's IP address.
-   * 
-   * @param clientAddresss client's IP address.
+   *
+   * @param clientAddress client's IP address.
    */
-  public void setClientAddresss(InetAddress clientAddresss) {
-    this.clientAddresss = clientAddresss;
+  public void setClientAddress(InetAddress clientAddress) {
+    this.clientAddress = clientAddress;
   }
 
   /**
    * Returns client's port.
-   * 
+   *
    * @return client's port.
    */
   public int getClientPort() {
@@ -264,7 +256,7 @@ public class UDPRelayServer implements Runnable {
 
   /**
    * Sets client's port.
-   * 
+   *
    * @param clientPort client's port.
    */
   public void setClientPort(int clientPort) {
@@ -273,7 +265,7 @@ public class UDPRelayServer implements Runnable {
 
   /**
    * Return <code>true</code> if the UDP relay server is running.
-   * 
+   *
    * @return If the UDP relay server is running, it will return <code>true</code>.
    */
   public boolean isRunning() {

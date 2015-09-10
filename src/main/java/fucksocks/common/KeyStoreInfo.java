@@ -16,11 +16,10 @@ package fucksocks.common;
 
 /**
  * The class <code>KeyStoreInfo</code> represents a key store information.
- * 
+ *
  * @author Youchao Feng
  * @version 1.0
  * @since 1.0
- *
  */
 public class KeyStoreInfo {
 
@@ -28,7 +27,8 @@ public class KeyStoreInfo {
   private String password;
   private String type;
 
-  public KeyStoreInfo() {}
+  public KeyStoreInfo() {
+  }
 
   public KeyStoreInfo(String keyStorePath, String password, String type) {
     this.keyStorePath = keyStorePath;

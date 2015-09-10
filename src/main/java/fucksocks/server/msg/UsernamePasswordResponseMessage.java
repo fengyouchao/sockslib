@@ -17,11 +17,10 @@ package fucksocks.server.msg;
 /**
  * The class <code>UsernamePasswordResponseMessage</code> represents a response message for
  * USERNAME/PASSWORD authentication.
- * 
- * @author Youchao Feng
- * @date Apr 24, 2015 10:31:02 PM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 24, 2015 10:31:02 PM
  */
 public class UsernamePasswordResponseMessage implements WritableMessage {
 
@@ -37,7 +36,7 @@ public class UsernamePasswordResponseMessage implements WritableMessage {
 
   /**
    * Constructs an instance of {@link UsernamePasswordResponseMessage}.
-   * 
+   *
    * @param success If username and password is matched, it will return <code>true</code>.
    */
   public UsernamePasswordResponseMessage(boolean success) {
@@ -63,7 +62,7 @@ public class UsernamePasswordResponseMessage implements WritableMessage {
 
   /**
    * Returns status.
-   * 
+   *
    * @return Status.
    */
   public int getStatus() {
@@ -72,7 +71,7 @@ public class UsernamePasswordResponseMessage implements WritableMessage {
 
   /**
    * Sets status.
-   * 
+   *
    * @param status Status.
    */
   public void setStatus(int status) {
@@ -81,7 +80,7 @@ public class UsernamePasswordResponseMessage implements WritableMessage {
 
   /**
    * Returns version.
-   * 
+   *
    * @return version.
    */
   public int getVersion() {

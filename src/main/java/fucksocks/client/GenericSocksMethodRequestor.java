@@ -14,30 +14,27 @@
 
 package fucksocks.client;
 
+import fucksocks.common.SocksException;
+import fucksocks.common.methods.SocksMethod;
+import fucksocks.common.methods.SocksMethodRegistry;
+import fucksocks.utils.LogMessageBuilder;
+import fucksocks.utils.LogMessageBuilder.MsgType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import fucksocks.common.SocksException;
-import fucksocks.utils.LogMessage;
-import fucksocks.utils.LogMessage.MsgType;
-import fucksocks.common.methods.SocksMethod;
-import fucksocks.common.methods.SocksMethodRegistry;
-
 /**
  * The class <code>GenericSocksMethodRequestor</code> implements {@link SocksMethodRequestor}.
- * 
+ *
  * @author Youchao Feng
- * @date Mar 19, 2015 10:48:42 AM
  * @version 1.0
- * 
+ * @date Mar 19, 2015 10:48:42 AM
  * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
- * 
  */
 public class GenericSocksMethodRequestor implements SocksMethodRequestor {
 
@@ -47,8 +44,7 @@ public class GenericSocksMethodRequestor implements SocksMethodRequestor {
   protected static final Logger logger = LoggerFactory.getLogger(GenericSocksMethodRequestor.class);
 
   @Override
-  public SocksMethod doRequest(List<SocksMethod> acceptableMethods, Socket socket, int socksVersion)
-      throws SocksException, IOException {
+  public SocksMethod doRequest(List<SocksMethod> acceptableMethods, Socket socket, int socksVersion) throws SocksException, IOException {
     InputStream inputStream = socket.getInputStream();
     OutputStream outputStream = socket.getOutputStream();
     byte[] bufferSent = new byte[2 + acceptableMethods.size()];
@@ -62,12 +58,12 @@ public class GenericSocksMethodRequestor implements SocksMethodRequestor {
     outputStream.write(bufferSent);
     outputStream.flush();
 
-    logger.debug("{}", LogMessage.create(bufferSent, MsgType.SEND));
+    logger.debug("{}", LogMessageBuilder.build(bufferSent, MsgType.SEND));
 
     // Received data.
     byte[] bufferReceived = new byte[2];
     inputStream.read(bufferReceived);
-    logger.debug("{}", LogMessage.create(bufferReceived, MsgType.RECEIVE));
+    logger.debug("{}", LogMessageBuilder.build(bufferReceived, MsgType.RECEIVE));
 
     if (bufferReceived[0] != socksVersion) {
       throw new SocksException("Remote server don't support SOCKS5");

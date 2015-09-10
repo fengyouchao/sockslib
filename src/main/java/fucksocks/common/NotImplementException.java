@@ -19,15 +19,14 @@ package fucksocks.common;
  * feature haven't implemented.
  *
  * @author Youchao Feng
- * @date Apr 15, 2015 4:23:32 PM
  * @version 1.0
- *
+ * @date Apr 15, 2015 4:23:32 PM
  */
 public class NotImplementException extends RuntimeException {
-  
-  
+
+
   /**
-   *  Serial version UID.
+   * Serial version UID.
    */
   private static final long serialVersionUID = 1L;
 
@@ -36,8 +35,7 @@ public class NotImplementException extends RuntimeException {
     // TODO Auto-generated constructor stub
   }
 
-  public NotImplementException(String message, Throwable cause, boolean enableSuppression,
-      boolean writableStackTrace) {
+  public NotImplementException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
     super(message, cause, enableSuppression, writableStackTrace);
     // TODO Auto-generated constructor stub
   }

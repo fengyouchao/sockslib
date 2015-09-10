@@ -22,11 +22,10 @@ package fucksocks.common.methods;
  * This class has override {@link #hashCode()} and {@link #equals(Object)} methods. Two methods are
  * same if the byte that return by {@link #getByte()} is equal.
  * </p>
- * 
+ *
  * @author Youchao Feng
- * @date Mar 24, 2015 4:38:50 PM
  * @version 1.0
- * 
+ * @date Mar 24, 2015 4:38:50 PM
  * @see SocksMethod
  */
 public abstract class AbstractSocksMethod implements SocksMethod {

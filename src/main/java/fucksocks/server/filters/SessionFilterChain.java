@@ -14,19 +14,17 @@
 
 package fucksocks.server.filters;
 
+import fucksocks.server.Session;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import fucksocks.server.Session;
-
 /**
- * 
  * The class <code>SessionFilterChain</code> represents session filter chain.
- * 
- * @author Youchao Feng
- * @date May 2, 2015 12:36:05 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date May 2, 2015 12:36:05 AM
  */
 public class SessionFilterChain {
 
@@ -44,7 +42,7 @@ public class SessionFilterChain {
     this.sessionFilters.remove(sessionFilter);
   }
 
-  public void doFilterWork(Session session) throws InterruptedException {
+  public void doFilterChain(Session session) throws InterruptedException {
     for (int i = 0; i < sessionFilters.size(); i++) {
       if (!sessionFilters.get(i).doFilter(session)) {
         throw new InterruptedException("Session is interrupted");

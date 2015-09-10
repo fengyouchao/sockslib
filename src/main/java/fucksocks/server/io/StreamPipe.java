@@ -26,11 +26,10 @@ import org.slf4j.LoggerFactory;
 /**
  * The class <code>StreamPipe</code> represents a pipe the can transfer data from a input stream to
  * a output stream.
- * 
- * @author Youchao Feng
- * @date Apr 6, 2015 11:37:16 PM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 6, 2015 11:37:16 PM
  */
 public class StreamPipe implements Runnable, Pipe {
 
@@ -82,9 +81,9 @@ public class StreamPipe implements Runnable, Pipe {
 
   /**
    * Constructs a Pipe instance with a input stream and a output stream.
-   * 
+   *
    * @param from stream where it comes from.
-   * @param to stream where it will be transfered to.
+   * @param to   stream where it will be transfered to.
    */
   public StreamPipe(InputStream from, OutputStream to) {
     this.from = from;
@@ -94,9 +93,9 @@ public class StreamPipe implements Runnable, Pipe {
 
   /**
    * Constructs an instance of {@link StreamPipe}.
-   * 
+   *
    * @param from stream where it comes from.
-   * @param to stream where it will be transfered to.
+   * @param to   stream where it will be transfered to.
    * @param name Name of {@link StreamPipe}.
    */
   public StreamPipe(InputStream from, OutputStream to, String name) {
@@ -151,7 +150,7 @@ public class StreamPipe implements Runnable, Pipe {
 
   /**
    * Transfer a buffer.
-   * 
+   *
    * @param buffer Buffer that transfer once.
    * @return number of byte that transfered.
    */
@@ -219,7 +218,7 @@ public class StreamPipe implements Runnable, Pipe {
 
   /**
    * Returns all {@link PipeListener}.
-   * 
+   *
    * @return All {@link PipeListener}.
    */
   public List<PipeListener> getPipeListeners() {
@@ -228,7 +227,7 @@ public class StreamPipe implements Runnable, Pipe {
 
   /**
    * Sets {@link PipeListener}.
-   * 
+   *
    * @param pipeListeners a List of {@link PipeListener}.
    */
   public void setPipeListeners(List<PipeListener> pipeListeners) {
@@ -237,7 +236,7 @@ public class StreamPipe implements Runnable, Pipe {
 
   /**
    * Returns name of {@link StreamPipe}.
-   * 
+   *
    * @return Name of {@link StreamPipe}.
    */
   @Override
@@ -247,7 +246,7 @@ public class StreamPipe implements Runnable, Pipe {
 
   /**
    * Sets a name.
-   * 
+   *
    * @param name Name of {@link StreamPipe}.
    */
   @Override

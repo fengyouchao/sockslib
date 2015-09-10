@@ -19,6 +19,7 @@
 		<log4j-core.version>2.3</log4j-core.version>
 		<junit.version>4.9</junit.version>
 		<mongo.verson>3.0.3</mongo.verson>
+		<mysql.version>5.1.9</mysql.version>
 	</properties>
 
 	<dependencies>
@@ -54,6 +55,20 @@
 		</dependency>
 
 		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>dbcp</artifactId>
+			<version>6.0.44</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
@@ -71,6 +86,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
@@ -80,7 +96,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.1.1</version>
+				<version>2.4</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -91,13 +107,15 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.3</version>
 				<configuration>
 					<tags>
 						<tag>
 							<name>date</name>
 							<placement>a</placement>
-							<head>date</head>
+							<head>Date</head>
 						</tag>
 					</tags>
 				</configuration>
@@ -170,13 +188,13 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.10.2</version>
+						<version>2.10.3</version>
 						<configuration>
 							<tags>
 								<tag>
 									<name>date</name>
 									<placement>a</placement>
-									<head>date</head>
+									<head>Date</head>
 								</tag>
 							</tags>
 						</configuration>
@@ -193,7 +211,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.5</version>
+						<version>1.6</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>

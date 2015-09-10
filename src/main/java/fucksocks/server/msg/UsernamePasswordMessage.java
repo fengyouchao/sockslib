@@ -26,9 +26,8 @@ import fucksocks.common.UsernamePasswordCredentials;
  * message.
  *
  * @author Youchao Feng
- * @date Apr 16, 2015 11:41:28 AM
  * @version 1.0
- *
+ * @date Apr 16, 2015 11:41:28 AM
  */
 public class UsernamePasswordMessage implements ReadableMessage, WritableMessage {
 
@@ -106,7 +105,7 @@ public class UsernamePasswordMessage implements ReadableMessage, WritableMessage
   @Override
   public void read(InputStream inputStream) throws SocksException, IOException {
     version = inputStream.read();
-    if(version == -1){
+    if (version == -1) {
       throw new IOException("Socket closed");
     }
     usernameLength = inputStream.read();
@@ -131,7 +130,7 @@ public class UsernamePasswordMessage implements ReadableMessage, WritableMessage
 
   /**
    * Returns version.
-   * 
+   *
    * @return Version.
    */
   public int getVersion() {
@@ -140,7 +139,7 @@ public class UsernamePasswordMessage implements ReadableMessage, WritableMessage
 
   /**
    * Returns username.
-   * 
+   *
    * @return username.
    */
   public String getUsername() {
@@ -149,7 +148,7 @@ public class UsernamePasswordMessage implements ReadableMessage, WritableMessage
 
   /**
    * Sets username.
-   * 
+   *
    * @param username Username.
    */
   public void setUsername(String username) {
@@ -158,7 +157,7 @@ public class UsernamePasswordMessage implements ReadableMessage, WritableMessage
 
   /**
    * Returns password.
-   * 
+   *
    * @return Password.
    */
   public String getPassword() {
@@ -167,7 +166,7 @@ public class UsernamePasswordMessage implements ReadableMessage, WritableMessage
 
   /**
    * Sets password.
-   * 
+   *
    * @param password Password.
    */
   public void setPassword(String password) {
@@ -176,7 +175,7 @@ public class UsernamePasswordMessage implements ReadableMessage, WritableMessage
 
   /**
    * Returns an instance of {@link UsernamePasswordCredentials}.
-   * 
+   *
    * @return An instance of {@link UsernamePasswordCredentials} .
    */
   public UsernamePasswordCredentials getUsernamePasswordCredentials() {

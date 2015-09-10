@@ -14,6 +14,12 @@
 
 package fucksocks.common;
 
+import fucksocks.client.Socks5DatagramSocket;
+import fucksocks.server.Socks5Handler;
+import fucksocks.utils.SocksUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -21,27 +27,18 @@ import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import fucksocks.client.Socks5DatagramSocket;
-import fucksocks.server.Socks5Handler;
-import fucksocks.utils.SocksUtil;
-
 /**
  * The class <code>Socks5DatagramPacketHandler</code> represents a datagram packet handler.
  * <p>
  * This class can encapsulate a datagram packet or decapsulate a datagram packet to help
  * {@link Socks5DatagramSocket} and {@link Socks5Handler} to implement UDP ASSOCIATE.
  * </p>
- * 
- * @author Youchao Feng
- * @date Mar 24, 2015 9:09:39 PM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Mar 24, 2015 9:09:39 PM
  */
-public class Socks5DatagramPacketHandler implements DatagramPacketEncapsulation,
-    DatagramPacketDecapsulation {
+public class Socks5DatagramPacketHandler implements DatagramPacketEncapsulation, DatagramPacketDecapsulation {
 
   /**
    * Logger that subclasses also can use.
@@ -53,8 +50,7 @@ public class Socks5DatagramPacketHandler implements DatagramPacketEncapsulation,
   }
 
   @Override
-  public DatagramPacket encapsulate(DatagramPacket packet, SocketAddress destination)
-      throws SocksException {
+  public DatagramPacket encapsulate(DatagramPacket packet, SocketAddress destination) throws SocksException {
     if (destination instanceof InetSocketAddress) {
       InetSocketAddress destinationAddress = (InetSocketAddress) destination;
       final byte[] data = packet.getData();
@@ -68,11 +64,10 @@ public class Socks5DatagramPacketHandler implements DatagramPacketEncapsulation,
       buffer[2] = 0; // fragment byte
       buffer[3] = (byte) (ADDRESS_LENGTH == 4 ? AddressType.IPV4 : AddressType.IPV6);
       System.arraycopy(addressBytes, 0, buffer, 4, ADDRESS_LENGTH);
-      buffer[4 + ADDRESS_LENGTH] = SocksUtil.getFisrtByteFromInt(remoteServerPort);
+      buffer[4 + ADDRESS_LENGTH] = SocksUtil.getFirstByteFromInt(remoteServerPort);
       buffer[5 + ADDRESS_LENGTH] = SocksUtil.getSecondByteFromInt(remoteServerPort);
       System.arraycopy(data, 0, buffer, 6 + ADDRESS_LENGTH, data.length);
-      return new DatagramPacket(buffer, buffer.length, destinationAddress.getAddress(),
-          destinationAddress.getPort());
+      return new DatagramPacket(buffer, buffer.length, destinationAddress.getAddress(), destinationAddress.getPort());
     } else {
       throw new IllegalArgumentException("Only support java.net.InetSocketAddress");
     }

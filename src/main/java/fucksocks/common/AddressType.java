@@ -16,11 +16,10 @@ package fucksocks.common;
 
 /**
  * The class <code>AddressType</code> represents type of address.
- * 
- * @author Youchao Feng
- * @date Apr 24, 2015 8:21:31 PM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 24, 2015 8:21:31 PM
  */
 public class AddressType {
 
@@ -41,11 +40,12 @@ public class AddressType {
   /**
    * A private constructor.
    */
-  private AddressType() {}
+  private AddressType() {
+  }
 
   /**
    * Return <code>true</code> if type is supported.
-   * 
+   *
    * @param type Type of address.
    * @return If type is supported, it will return <code>true</code>.
    */

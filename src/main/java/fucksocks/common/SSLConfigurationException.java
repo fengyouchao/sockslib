@@ -19,16 +19,15 @@ package fucksocks.common;
 
 /**
  * The class <code>SSLConfigurationException</code> represents an SSL configuration exception.
- * 
- * @author Youchao Feng
- * @date May 17, 2015 7:57:28 PM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date May 17, 2015 7:57:28 PM
  */
-public class SSLConfigurationException extends Exception{
+public class SSLConfigurationException extends Exception {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 
@@ -37,8 +36,7 @@ public class SSLConfigurationException extends Exception{
     // TODO Auto-generated constructor stub
   }
 
-  public SSLConfigurationException(String message, Throwable cause, boolean enableSuppression,
-      boolean writableStackTrace) {
+  public SSLConfigurationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
     super(message, cause, enableSuppression, writableStackTrace);
     // TODO Auto-generated constructor stub
   }
@@ -57,7 +55,7 @@ public class SSLConfigurationException extends Exception{
     super(cause);
     // TODO Auto-generated constructor stub
   }
-  
-  
+
+
 
 }

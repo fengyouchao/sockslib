@@ -20,13 +20,11 @@ import java.io.InputStream;
 import fucksocks.common.SocksException;
 
 /**
- * 
  * The class <code>MethodSelectionMessage</code> represents a method selection message.
- * 
- * @author Youchao Feng
- * @date Apr 5, 2015 10:47:05 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 5, 2015 10:47:05 AM
  */
 public class MethodSelectionMessage implements ReadableMessage, WritableMessage {
 

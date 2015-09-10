@@ -19,17 +19,16 @@ import fucksocks.server.Session;
 /**
  * The interface <code>WritableMessage</code> represents a message that can be written by
  * {@link Session}.
- * 
- * @author Youchao Feng
- * @date Apr 5, 2015 10:25:45 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 5, 2015 10:25:45 AM
  */
 public interface WritableMessage extends Message {
 
   /**
    * Returns the byte array of the message.
-   * 
+   *
    * @return The byte array of the message.
    */
   public byte[] getBytes();

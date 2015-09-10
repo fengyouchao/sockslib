@@ -18,7 +18,7 @@ import fucksocks.common.AuthenticationException;
 import fucksocks.common.Credentials;
 import fucksocks.common.UsernamePasswordCredentials;
 import fucksocks.common.methods.UsernamePasswordMethod;
-import fucksocks.server.manager.RamBasedUserManager;
+import fucksocks.server.manager.MemoryBasedUserManager;
 import fucksocks.server.manager.User;
 import fucksocks.server.manager.UserManager;
 
@@ -27,42 +27,50 @@ import fucksocks.server.manager.UserManager;
  * authenticator. It will be used by {@link UsernamePasswordMethod}.
  *
  * @author Youchao Feng
- * @date Apr 16, 2015 11:30:46 AM
  * @version 1.0
- *
+ * @date Apr 16, 2015 11:30:46 AM
  */
 public class UsernamePasswordAuthenticator implements Authenticator {
 
-  /**
-   * {@link RamBasedUserManager} is default.
-   */
-  private UserManager userManager = new RamBasedUserManager();
-
   public static final String USER_KEY = "USER";
+  /**
+   * {@link MemoryBasedUserManager} is default.
+   */
+  private UserManager userManager = new MemoryBasedUserManager();
 
-  public UsernamePasswordAuthenticator(){}
+  public UsernamePasswordAuthenticator() {
+  }
 
-  public UsernamePasswordAuthenticator(UserManager userManager){
+  public UsernamePasswordAuthenticator(UserManager userManager) {
     this.userManager = userManager;
   }
 
   @Override
-  public void doAuthenticate(Credentials credentials, Session session)
-      throws AuthenticationException {
+  public void doAuthenticate(Credentials credentials, Session session) throws AuthenticationException {
     if (credentials instanceof UsernamePasswordCredentials) {
       String username = credentials.getUserPrincipal().getName();
       String password = credentials.getPassword();
-      User user = userManager.findUser(username, password);
+      User user = userManager.check(username, password);
       if (user == null) {
-        throw new AuthenticationException("Authentication failed, client from "
-            + session.getRemoteAddress());
+        throw new AuthenticationException(
+            "Authentication failed, client from " + session.getRemoteAddress());
       }
-      session.setAttribute(USER_KEY, user);
+      authenticateSuccess(session, user);
 
     } else {
       throw new AuthenticationException("Only support Username/Password Authentication");
     }
 
+  }
+
+  /**
+   * This method will save user in session.
+   *
+   * @param session Current session.
+   * @param user    user.
+   */
+  protected void authenticateSuccess(Session session, User user) {
+    session.setAttribute(USER_KEY, user);
   }
 
   public UserManager getUserManager() {
@@ -77,8 +85,8 @@ public class UsernamePasswordAuthenticator implements Authenticator {
     userManager.addUser(username, password);
   }
 
-  public User deleteUser(String username) {
-    return userManager.deleteUser(username);
+  public void deleteUser(String username) {
+    userManager.delete(username);
   }
 
 }

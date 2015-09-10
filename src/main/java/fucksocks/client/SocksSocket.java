@@ -36,7 +36,6 @@ import fucksocks.common.SocksException;
  * The class <code>SocksSocket</code> is proxy class that help developers use {@link SocksProxy} as
  * same as a java.net.Socket.<br>
  * For example:<br>
- * 
  * <pre>
  * SocksProxy proxy = new Socks5(new InetSocketAddress(&quot;127.0.0.1&quot;, 1080));
  * // Setting proxy...
@@ -45,10 +44,10 @@ import fucksocks.common.SocksException;
  * OutputStream outStream = socket.getOutputStream();
  * // Just use the socket as normal java.net.Socket now.
  * </pre>
- * 
+ *
  * @author Youchao Feng
- * @date Mar 18, 2015 5:02:31 PM
  * @version 1.0
+ * @date Mar 18, 2015 5:02:31 PM
  */
 public class SocksSocket extends Socket {
 
@@ -67,15 +66,14 @@ public class SocksSocket extends Socket {
 
   /**
    * Create a socket and connect SOCKS Server.
-   * 
-   * @param proxy Socks proxy.
+   *
+   * @param proxy            Socks proxy.
    * @param remoteServerHost Remote sever host.
    * @param remoteServerPort Remote server port.
    * @throws SocksException If any errors about SOCKS protocol occurred.
-   * @throws IOException If any IO errors occurred.
+   * @throws IOException    If any IO errors occurred.
    */
-  public SocksSocket(SocksProxy proxy, String remoteServerHost, int remoteServerPort)
-      throws SocksException, IOException {
+  public SocksSocket(SocksProxy proxy, String remoteServerHost, int remoteServerPort) throws SocksException, IOException {
     this.proxy = proxy.copy();
     this.proxy.setProxySocket(proxySocket);
     this.remoteServerHost = remoteServerHost;
@@ -89,20 +87,18 @@ public class SocksSocket extends Socket {
 
   /**
    * Same as {@link #SocksSocket(SocksProxy, String, int)}
-   * 
-   * @param proxy Socks proxy.
+   *
+   * @param proxy   Socks proxy.
    * @param address Remote server's IP address.
-   * @param port Remote server's port.
+   * @param port    Remote server's port.
    * @throws SocksException If any error about SOCKS protocol occurs.
-   * @throws IOException If I/O error occurs.
+   * @throws IOException    If I/O error occurs.
    */
-  public SocksSocket(SocksProxy proxy, InetAddress address, int port) throws SocksException,
-      IOException {
+  public SocksSocket(SocksProxy proxy, InetAddress address, int port) throws SocksException, IOException {
     this(proxy, new InetSocketAddress(address, port));
   }
 
-  public SocksSocket(SocksProxy proxy, SocketAddress socketAddress) throws SocksException,
-      IOException {
+  public SocksSocket(SocksProxy proxy, SocketAddress socketAddress) throws SocksException, IOException {
 
     if (!(socketAddress instanceof InetSocketAddress)) {
       throw new IllegalArgumentException("Unsupported address type");
@@ -120,25 +116,25 @@ public class SocksSocket extends Socket {
 
   /**
    * Creates an unconnected socket.
-   * 
+   *
    * @param proxy SOCKS proxy.
    * @throws IOException If an I/O error occurred.
    */
   public SocksSocket(SocksProxy proxy) throws IOException {
-   this(proxy, proxy.createProxySocket());
+    this(proxy, proxy.createProxySocket());
   }
 
   /**
    * Creates a SocksSocket instance with a {@link SocksProxy} and a
-   * 
-   * @param proxy SOCKS proxy.
+   *
+   * @param proxy       SOCKS proxy.
    * @param proxySocket a unconnected socket. it will connect SOCKS server later.
    */
   public SocksSocket(SocksProxy proxy, Socket proxySocket) {
-    if(proxySocket == null) {
+    if (proxySocket == null) {
       throw new IllegalArgumentException("Proxy socket can't be null");
     }
-    if(proxySocket.isConnected()){
+    if (proxySocket.isConnected()) {
       throw new IllegalArgumentException("Proxy socket should be unconnected");
     }
     this.proxySocket = proxySocket;
@@ -148,9 +144,9 @@ public class SocksSocket extends Socket {
 
   /**
    * Initialize proxy chain.
-   * 
+   *
    * @throws SocketException If a SOCKS protocol error occurred.
-   * @throws IOException If an I/O error occurred.
+   * @throws IOException     If an I/O error occurred.
    */
   private void initProxyChain() throws SocketException, IOException {
     List<SocksProxy> proxyChain = new ArrayList<SocksProxy>();
@@ -175,11 +171,11 @@ public class SocksSocket extends Socket {
 
   /**
    * Connect to SOCKS Server and server will proxy remote server.
-   * 
+   *
    * @param host Remote server's host.
    * @param port Remote server's port.
    * @throws SocksException If any error about SOCKS protocol occurs.
-   * @throws IOException If I/O error occurs.
+   * @throws IOException    If I/O error occurs.
    */
   public void connect(String host, int port) throws SocksException, IOException {
     this.remoteServerHost = host;

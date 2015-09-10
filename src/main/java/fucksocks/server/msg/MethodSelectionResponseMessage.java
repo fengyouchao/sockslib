@@ -18,14 +18,12 @@ import fucksocks.common.methods.SocksMethod;
 
 
 /**
- * 
  * The class <code>MethodSelectionResponseMessage</code> represents response message for method
  * selection message. This message is always sent by SOCKS server.
- * 
- * @author Youchao Feng
- * @date Apr 6, 2015 11:10:05 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 6, 2015 11:10:05 AM
  */
 public class MethodSelectionResponseMessage implements WritableMessage {
 
@@ -49,7 +47,7 @@ public class MethodSelectionResponseMessage implements WritableMessage {
 
   /**
    * Constructs an instance of {@link MethodSelectionResponseMessage} with a method.
-   * 
+   *
    * @param socksMethod Selected method.
    */
   public MethodSelectionResponseMessage(SocksMethod socksMethod) {
@@ -58,9 +56,9 @@ public class MethodSelectionResponseMessage implements WritableMessage {
 
   /**
    * Constructs an instance of {@link MethodSelectionResponseMessage} with a version and a method.
-   * 
+   *
    * @param version Version.
-   * @param method Value of selected method.
+   * @param method  Value of selected method.
    */
   public MethodSelectionResponseMessage(int version, int method) {
     this.version = version;
@@ -69,8 +67,8 @@ public class MethodSelectionResponseMessage implements WritableMessage {
 
   /**
    * Constructs an instance of {@link MethodSelectionResponseMessage} with a version and a method.
-   * 
-   * @param version Version.
+   *
+   * @param version     Version.
    * @param socksMethod Selected method.
    */
   public MethodSelectionResponseMessage(int version, SocksMethod socksMethod) {
@@ -92,7 +90,7 @@ public class MethodSelectionResponseMessage implements WritableMessage {
 
   /**
    * Returns version.
-   * 
+   *
    * @return Version.
    */
   public int getVersion() {
@@ -101,7 +99,7 @@ public class MethodSelectionResponseMessage implements WritableMessage {
 
   /**
    * Sets version.
-   * 
+   *
    * @param version Version.
    */
   public void setVersion(int version) {
@@ -110,7 +108,7 @@ public class MethodSelectionResponseMessage implements WritableMessage {
 
   /**
    * Return value of selected method.
-   * 
+   *
    * @return Value of selected method.
    */
   public int getMethod() {
@@ -119,7 +117,7 @@ public class MethodSelectionResponseMessage implements WritableMessage {
 
   /**
    * Sets selected method with an integer.
-   * 
+   *
    * @param method Value of a method.
    */
   public void setMethod(int method) {

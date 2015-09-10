@@ -37,11 +37,10 @@ import fucksocks.utils.PathUtil;
 
 /**
  * The class <code>SSLConfiguration</code> represents a configuration of SSL.
- * 
- * @author Youchao Feng
- * @date May 17, 2015 6:52:52 PM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date May 17, 2015 6:52:52 PM
  */
 public class SSLConfiguration {
 
@@ -82,8 +81,7 @@ public class SSLConfiguration {
     this(keyStoreInfo, trustKeyStoreInfo, false);
   }
 
-  public SSLConfiguration(KeyStoreInfo keyStoreInfo, KeyStoreInfo trustKeyStoreInfo,
-      boolean clientAuth) {
+  public SSLConfiguration(KeyStoreInfo keyStoreInfo, KeyStoreInfo trustKeyStoreInfo, boolean clientAuth) {
     this.keyStoreInfo = keyStoreInfo;
     this.trustKeyStoreInfo = trustKeyStoreInfo;
     this.needClientAuth = clientAuth;
@@ -122,8 +120,7 @@ public class SSLConfiguration {
     return new SSLConfiguration(keyStoreInfo, trustKeyStoreInfo, clientAuth);
   }
 
-  public static SSLConfiguration loadClassPath(String filePath) throws FileNotFoundException,
-      IOException {
+  public static SSLConfiguration loadClassPath(String filePath) throws FileNotFoundException, IOException {
 
     if (!filePath.startsWith(File.separator)) {
       filePath = File.separator + filePath;
@@ -147,19 +144,16 @@ public class SSLConfiguration {
 
       TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
       trustKeyStore = KeyStore.getInstance("JKS");
-      trustKeyStore.load(new FileInputStream(trustKeyStoreInfo.getKeyStorePath()),
-          trustKeyStoreInfo.getPassword().toCharArray());
+      trustKeyStore.load(new FileInputStream(trustKeyStoreInfo.getKeyStorePath()), trustKeyStoreInfo.getPassword().toCharArray());
       trustManagerFactory.init(trustKeyStore);
 
       if (keyStoreInfo != null && keyStoreInfo.getKeyStorePath() != null) {
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
         keyStore = KeyStore.getInstance("JKS");
-        keyStore.load(new FileInputStream(keyStoreInfo.getKeyStorePath()), keyStoreInfo
-            .getPassword().toCharArray());
+        keyStore.load(new FileInputStream(keyStoreInfo.getKeyStorePath()), keyStoreInfo.getPassword().toCharArray());
         keyManagerFactory.init(keyStore, keyStoreInfo.getPassword().toCharArray());
 
-        context.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(),
-            null);
+        context.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
       } else {
         context.init(null, trustManagerFactory.getTrustManagers(), null);
       }
@@ -200,8 +194,7 @@ public class SSLConfiguration {
         String TRUST_KEY_STORE_PASSWORD = getTrustKeyStoreInfo().getPassword();
         TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
         trustKeyStore = KeyStore.getInstance("JKS");
-        trustKeyStore.load(new FileInputStream(TRUST_KEY_STORE_PATH),
-            TRUST_KEY_STORE_PASSWORD.toCharArray());
+        trustKeyStore.load(new FileInputStream(TRUST_KEY_STORE_PATH), TRUST_KEY_STORE_PASSWORD.toCharArray());
         trustManagerFactory.init(trustKeyStore);
         ctx.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
       } else {
@@ -214,7 +207,8 @@ public class SSLConfiguration {
       if (trustKeyStore != null) {
         logger.info("SSL: Trust key store:{}", trustKeyStoreInfo.getKeyStorePath());
       }
-      logger.info("SSL: Client authentication:{}", needClientAuth);;
+      logger.info("SSL: Client authentication:{}", needClientAuth);
+      ;
       return ctx.getServerSocketFactory();
     } catch (Exception e) {
       throw new SSLConfigurationException(e.getMessage());
@@ -224,7 +218,7 @@ public class SSLConfiguration {
 
   /**
    * Returns the keyStoreInfo.
-   * 
+   *
    * @return the keyStoreInfo
    */
   public KeyStoreInfo getKeyStoreInfo() {
@@ -254,7 +248,7 @@ public class SSLConfiguration {
 
   /**
    * Returns the needClientAuth.
-   * 
+   *
    * @return the needClientAuth
    */
   public boolean isNeedClientAuth() {

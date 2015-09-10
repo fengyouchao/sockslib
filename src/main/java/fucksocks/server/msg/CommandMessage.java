@@ -14,6 +14,11 @@
 
 package fucksocks.server.msg;
 
+import fucksocks.common.AddressType;
+import fucksocks.common.SocksCommand;
+import fucksocks.common.SocksException;
+import fucksocks.utils.SocksUtil;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -22,18 +27,12 @@ import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 
-import fucksocks.common.AddressType;
-import fucksocks.common.SocksCommand;
-import fucksocks.common.SocksException;
-import fucksocks.utils.SocksUtil;
-
 /**
  * The class <code>RequestCommandMessage</code> represents a SOCKS5 command message.
- * 
- * @author Youchao Feng
- * @date Apr 6, 2015 11:10:12 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 6, 2015 11:10:12 AM
  */
 public class CommandMessage implements ReadableMessage, WritableMessage {
 
@@ -113,7 +112,7 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
         for (int i = 0; i < ipv4Bytes.length; i++) {
           bytes[i + 4] = ipv4Bytes[i];
         }
-        bytes[8] = SocksUtil.getFisrtByteFromInt(port);
+        bytes[8] = SocksUtil.getFirstByteFromInt(port);
         bytes[9] = SocksUtil.getSecondByteFromInt(port);
         break;
 
@@ -123,7 +122,7 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
         for (int i = 0; i < ipv6Bytes.length; i++) {
           bytes[i + 4] = ipv6Bytes[i];
         }
-        bytes[20] = SocksUtil.getFisrtByteFromInt(port);
+        bytes[20] = SocksUtil.getFirstByteFromInt(port);
         bytes[21] = SocksUtil.getSecondByteFromInt(port);
         break;
 
@@ -134,7 +133,7 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
         for (int i = 0; i < hostLength; i++) {
           bytes[5 + i] = host.getBytes()[i];
         }
-        bytes[5 + hostLength] = SocksUtil.getFisrtByteFromInt(port);
+        bytes[5 + hostLength] = SocksUtil.getFirstByteFromInt(port);
         bytes[6 + hostLength] = SocksUtil.getSecondByteFromInt(port);
         break;
 
@@ -214,7 +213,7 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
 
   /**
    * Returns version.
-   * 
+   *
    * @return Version.
    */
   public int getVersion() {
@@ -223,7 +222,7 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
 
   /**
    * Sets version.
-   * 
+   *
    * @param version Version.
    */
   public void setVersion(int version) {

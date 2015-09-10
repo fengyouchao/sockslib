@@ -19,41 +19,40 @@ package fucksocks.server.io;
  * <p>
  * You can add a {@link PipeListener} to a {@link Pipe} to monitor the {@link Pipe}.
  * </p>
- * 
- * @author Youchao Feng
- * @date May 3, 2015 1:37:10 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date May 3, 2015 1:37:10 AM
  */
 public interface PipeListener {
 
   /**
    * This method will be called when the {@link Pipe} started.
-   * 
+   *
    * @param pipe The started {@link Pipe} instance.
    */
   public void onStart(Pipe pipe);
 
   /**
    * This method will be called when the {@link Pipe} stopped.
-   * 
+   *
    * @param pipe The stopped {@link Pipe} instance.
    */
   public void onStop(Pipe pipe);
 
   /**
    * This method will be called when the {@link Pipe} transferring data.
-   * 
-   * @param pipe {@link Pipe} instance.
-   * @param buffer Data which is transferring.
+   *
+   * @param pipe         {@link Pipe} instance.
+   * @param buffer       Data which is transferring.
    * @param bufferLength length of data.
    */
   public void onTransfer(Pipe pipe, byte[] buffer, int bufferLength);
 
   /**
    * This method will be called when an error occurred.
-   * 
-   * @param pipe {@link Pipe} instance.
+   *
+   * @param pipe      {@link Pipe} instance.
    * @param exception The error that occurred in {@link Pipe}..
    */
   public void onError(Pipe pipe, Exception exception);

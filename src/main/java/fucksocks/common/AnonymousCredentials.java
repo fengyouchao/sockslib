@@ -20,13 +20,13 @@ import java.security.Principal;
  * The class <code>AnonymousCredentials</code> represents an anonymous credentials.
  *
  * @author Youchao Feng
- * @date May 14, 2015 2:36:42 PM
  * @version 1.0
- *
+ * @date May 14, 2015 2:36:42 PM
  */
 public class AnonymousCredentials implements Credentials {
 
-  public AnonymousCredentials() {}
+  public AnonymousCredentials() {
+  }
 
   @Override
   public Principal getUserPrincipal() {

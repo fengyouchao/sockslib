@@ -14,6 +14,12 @@
 
 package fucksocks.server;
 
+import fucksocks.common.SocksException;
+import fucksocks.server.msg.ReadableMessage;
+import fucksocks.server.msg.WritableMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,20 +28,12 @@ import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import fucksocks.common.SocksException;
-import fucksocks.server.msg.WritableMessage;
-import fucksocks.server.msg.ReadableMessage;
-
 /**
  * The class <code>SocksSession</code> represents
- * 
- * @author Youchao Feng
- * @date Apr 5, 2015 10:21:36 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 5, 2015 10:21:36 AM
  */
 public class SocksSession implements Session {
 
@@ -55,7 +53,8 @@ public class SocksSession implements Session {
 
   private Map<Object, Object> attributes;
 
-  public SocksSession() {}
+  public SocksSession() {
+  }
 
   public SocksSession(Socket socket) {
     this(0, socket, null);
@@ -97,8 +96,8 @@ public class SocksSession implements Session {
   }
 
   @Override
-  public int read(byte[] byetes) throws SocksException, IOException {
-    return inputStream.read(byetes);
+  public int read(byte[] bytes) throws SocksException, IOException {
+    return inputStream.read(bytes);
   }
 
   @Override

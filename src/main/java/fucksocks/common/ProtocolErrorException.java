@@ -17,11 +17,10 @@ package fucksocks.common;
 
 /**
  * The class <code>ProtocolErrorException</code> will be threw when there is a SOCKS protocol error.
- * 
- * @author Youchao Feng
- * @date Apr 18, 2015 11:19:50 PM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 18, 2015 11:19:50 PM
  */
 public class ProtocolErrorException extends SocksException {
 
@@ -32,13 +31,13 @@ public class ProtocolErrorException extends SocksException {
 
   /**
    * Constructs an instance of {@link ProtocolErrorException} with a message.
-   * 
+   *
    * @param msg Message.
    */
   public ProtocolErrorException(String msg) {
     super(msg);
   }
-  
+
   public ProtocolErrorException() {
     this("Protocol error");
   }

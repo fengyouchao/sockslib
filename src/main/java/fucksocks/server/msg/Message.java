@@ -17,17 +17,16 @@ package fucksocks.server.msg;
 
 /**
  * The interface <code>Message</code> represents socks message.
- * 
- * @author Youchao Feng
- * @date Apr 19, 2015 6:55:16 PM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 19, 2015 6:55:16 PM
  */
 public interface Message {
 
   /**
    * Returns the length of message.
-   * 
+   *
    * @return The length of message.
    */
   int getLength();

@@ -14,76 +14,70 @@
 
 package fucksocks.client;
 
+import fucksocks.common.SocksCommand;
+import fucksocks.common.SocksException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-import fucksocks.common.SocksCommand;
-import fucksocks.common.SocksException;
-
 /**
  * The interface <code>SocksCommandSender</code> can send SOCKS command to SOCKS server.
- * 
+ *
  * @author Youchao Feng
- * @date Mar 19, 2015 11:39:43 AM
  * @version 1.0
- * 
+ * @date Mar 19, 2015 11:39:43 AM
  * @see fucksocks.common.SocksCommand
  * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
- * 
  */
 public interface SocksCommandSender {
 
   /**
    * Send a command to SOCKS server.
-   * 
-   * @param socket Socket that has connected SOCKS server.
+   *
+   * @param socket  Socket that has connected SOCKS server.
    * @param command The Command such as CONNECT, BIND, UDP ASSOCIATE.
    * @param address Remote server IPv4 or IPv6 address.
-   * @param port Remote server port.
+   * @param port    Remote server port.
    * @param version The version of SOCKS protocol.
    * @return The bytes received from SOCKS server.
    * @throws SocksException If any error about SOCKS protocol occurs.
-   * @throws IOException If any I/O error occurs.
+   * @throws IOException    If any I/O error occurs.
    */
-  public CommandReplyMesasge send(Socket socket, SocksCommand command, InetAddress address,
-      int port, int version) throws SocksException, IOException;
+  public CommandReplyMessage send(Socket socket, SocksCommand command, InetAddress address, int port, int version) throws SocksException, IOException;
 
 
   /**
    * Send a command to SOCKS server.
-   * 
-   * @param socket Socket that has connected SOCKS server.
+   *
+   * @param socket  Socket that has connected SOCKS server.
    * @param command The Command such as CONNECT, BIND, UDP ASSOCIATE.
    * @param address Remote server address.
    * @param version The version of SOCKS protocol.
    * @return The bytes received from SOCKS server.
    * @throws SocksException If any error about SOCKS protocol occurs.
-   * @throws IOException If any I/O error occurs.
+   * @throws IOException    If any I/O error occurs.
    */
-  public CommandReplyMesasge send(Socket socket, SocksCommand command, SocketAddress address,
-      int version) throws SocksException, IOException;
+  public CommandReplyMessage send(Socket socket, SocksCommand command, SocketAddress address, int version) throws SocksException, IOException;
 
 
   /**
    * Send a command to SOCKS server and resolve domain name in SOCKS server.
-   * 
-   * @param socket Socket that has connected SOCKS server.
+   *
+   * @param socket  Socket that has connected SOCKS server.
    * @param command The Command such as CONNECT, BIND, UDP ASSOCIATE.
-   * @param host Remote server host. The host will be resolved in SOCKS server.
-   * @param port Remote server port.
+   * @param host    Remote server host. The host will be resolved in SOCKS server.
+   * @param port    Remote server port.
    * @param version The version of SOCKS protocol.
    * @return The bytes received from SOCKS server.
    * @throws SocksException If any error about SOCKS protocol occurs.
-   * @throws IOException If any I/O error occurs.
+   * @throws IOException    If any I/O error occurs.
    */
-  public CommandReplyMesasge send(Socket socket, SocksCommand command, String host, int port,
-      int version) throws SocksException, IOException;
+  public CommandReplyMessage send(Socket socket, SocksCommand command, String host, int port, int version) throws SocksException, IOException;
 
-  public CommandReplyMesasge checkServerReply(InputStream inputStream) throws SocksException,
-      IOException;
+  public CommandReplyMessage checkServerReply(InputStream inputStream) throws SocksException, IOException;
 
   static final int RESERVED = 0x00;
   static final byte ATYPE_IPV4 = 0x01;

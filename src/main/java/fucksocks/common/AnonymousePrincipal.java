@@ -24,9 +24,8 @@ import com.google.common.hash.Hashing;
  * The class <code>AnonymousePrincipal</code> represents an anonymous principal.
  *
  * @author Youchao Feng
- * @date May 14, 2015 2:36:34 PM
  * @version 1.0
- *
+ * @date May 14, 2015 2:36:34 PM
  */
 public class AnonymousePrincipal implements Principal, Serializable {
 

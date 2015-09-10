@@ -16,10 +16,10 @@ package fucksocks.utils;
 
 /**
  * The class <code>UnsignedByte</code> is a tool to convert signed byte to unsigned byte.<br>
- * 
+ *
  * @author Youchao Feng
- * @date Mar 20, 2015 9:24:58 AM
  * @version 1.0
+ * @date Mar 20, 2015 9:24:58 AM
  */
 public final class UnsignedByte {
 
@@ -30,7 +30,7 @@ public final class UnsignedByte {
 
   /**
    * Constructs a UnsignedByte instance by an integer.
-   * 
+   *
    * @param num an integer.
    */
   public UnsignedByte(int num) {
@@ -39,7 +39,7 @@ public final class UnsignedByte {
 
   /**
    * Constructs a UsingedByte instance by a byte.
-   * 
+   *
    * @param b A byte.
    */
   public UnsignedByte(byte b) {
@@ -48,7 +48,7 @@ public final class UnsignedByte {
 
   /**
    * Gets unsigned value as an integer.
-   * 
+   *
    * @return Unsigned value as an integer.
    */
   public int getUnsignedValue() {
@@ -57,7 +57,7 @@ public final class UnsignedByte {
 
   /**
    * Gets unsigned value as an integer.
-   * 
+   *
    * @return value as a normal Java byte.
    */
   public byte getSignedValue() {
@@ -66,7 +66,7 @@ public final class UnsignedByte {
 
   /**
    * Gets unsigned byte from a signed byte.
-   * 
+   *
    * @param b signed byte.
    * @return unsigned byte as Integer.(0 ~ 255)
    */
@@ -76,7 +76,7 @@ public final class UnsignedByte {
 
   /**
    * Gets hex string of a byte.
-   * 
+   *
    * @param b byte
    * @return Byte as Hex string.
    */
@@ -96,5 +96,5 @@ public final class UnsignedByte {
   public int hashCode() {
     return new Integer(num).hashCode();
   }
-  
+
 }

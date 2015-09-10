@@ -16,16 +16,16 @@ package fucksocks.utils;
 
 /**
  * <code>SocksUtil</code> is a tool class.
- * 
+ *
  * @author Youchao Feng
- * @date Mar 24, 2015 4:16:22 PM
  * @version 1.0
+ * @date Mar 24, 2015 4:16:22 PM
  */
 public class SocksUtil {
 
   /**
    * Get bytes from an Integer.
-   * 
+   *
    * @param num an integer.
    * @return Bytes of an integer.
    */
@@ -38,17 +38,17 @@ public class SocksUtil {
 
   /**
    * Returns the first byte of an integer.
-   * 
+   *
    * @param num an integer.
    * @return The first byte of an integer.
    */
-  public static byte getFisrtByteFromInt(int num) {
+  public static byte getFirstByteFromInt(int num) {
     return (byte) ((num & 0xff00) >> 8);
   }
 
   /**
    * Returns the second byte of an integer.
-   * 
+   *
    * @param num Port.
    * @return The second byte of an integer.
    */
@@ -58,7 +58,7 @@ public class SocksUtil {
 
   /**
    * Get an integer from a byte array.
-   * 
+   *
    * @param bytes A byte array.
    * @return an integer.
    */
@@ -71,7 +71,7 @@ public class SocksUtil {
 
   /**
    * Returns a port.
-   * 
+   *
    * @param b1 First byte.
    * @param b2 Second byte.
    * @return an integer.

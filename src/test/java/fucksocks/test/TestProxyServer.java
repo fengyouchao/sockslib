@@ -14,10 +14,10 @@
 
 package fucksocks.test;
 
-import java.io.IOException;
-
 import fucksocks.server.SocksProxyServer;
 import fucksocks.server.SocksProxyServerFactory;
+
+import java.io.IOException;
 
 /**
  * The class <code>TestProxyServer</code> a test class to start a SOCKS5 proxy server.
@@ -31,7 +31,7 @@ public class TestProxyServer {
 
   public static void main(String[] args) {
 
-    SocksProxyServer proxyServer = SocksProxyServerFactory.newNoAuthenticaionServer();
+    SocksProxyServer proxyServer = SocksProxyServerFactory.newNoAuthenticationServer();
 
     try {
       proxyServer.start();

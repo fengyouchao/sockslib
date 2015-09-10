@@ -15,14 +15,12 @@
 package fucksocks.server.msg;
 
 /**
- * 
  * The enumeration <code>ServerReply</code> represents reply of servers will SOCKS client send a
  * command request to the SOCKS server.
- * 
- * @author Youchao Feng
- * @date May 4, 2015 4:01:14 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date May 4, 2015 4:01:14 AM
  */
 public enum ServerReply {
 
@@ -78,7 +76,7 @@ public enum ServerReply {
 
   /**
    * A private constructor.
-   * 
+   *
    * @param value Reply code.
    */
   private ServerReply(int value) {
@@ -87,7 +85,7 @@ public enum ServerReply {
 
   /**
    * Returns reply code in byte.
-   * 
+   *
    * @return Reply code in byte.
    */
   public byte getValue() {

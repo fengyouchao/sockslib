@@ -22,13 +22,11 @@ import java.util.List;
 import com.google.common.base.Preconditions;
 
 /**
- * 
  * The class <code>IPRange</code> represents an IPrange.
- * 
- * @author Youchao Feng
- * @date May 2, 2015 12:45:25 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date May 2, 2015 12:45:25 AM
  */
 public class IPRange implements Iterable<IP>, Serializable {
 
@@ -49,16 +47,16 @@ public class IPRange implements Iterable<IP>, Serializable {
 
   /**
    * Constructs a <code>IpRange</code> instance by given tow IP.
-   * 
+   *
    * @param startIp IP starts.
-   * @param endIp IP ends.
+   * @param endIp   IP ends.
    */
   public IPRange(IP startIp, IP endIp) {
 
     int result = endIp.compareTo(startIp);
     if (result > 0 || result == 0)
-      Preconditions.checkArgument(result > 0 || result == 0,
-          "maxIP must equal or bigger than minIP");
+      Preconditions.checkArgument(
+          result > 0 || result == 0, "maxIP must equal or bigger than minIP");
 
     this.startIP = startIp;
     this.endIP = endIp;
@@ -66,13 +64,14 @@ public class IPRange implements Iterable<IP>, Serializable {
 
   /**
    * Creates a <code>IpRange</code> instance by a string.
-   * 
+   *
    * @param range a string such as "1.1.1.1-1.1.2.255".
    * @return IP range.
    */
   public static IPRange parseFromString(String range) {
     String[] ips = range.split("-");
-    Preconditions.checkArgument(ips.length == 2,
+    Preconditions.checkArgument(
+        ips.length == 2,
         "IP range string must be fomarted as [minIP-maxIP],error argument:" + range);
     return new IPRange(IP.parseFromString(ips[0]), IP.parseFromString(ips[1]));
   }
@@ -80,7 +79,7 @@ public class IPRange implements Iterable<IP>, Serializable {
 
   /**
    * Creates a {@link IPRange} instance by IP with mask.
-   * 
+   *
    * @param ipWithMask IP/mask, such as 192.168.70.1/24
    * @return {@link IPRange} instance
    */
@@ -96,8 +95,8 @@ public class IPRange implements Iterable<IP>, Serializable {
       minIpAsLong = ip.toLong();
       maxIpAsLong = minIpAsLong | (~maskAsLong);
     } else {
-      throw new IllegalArgumentException("The input String format error. for example"
-          + " 192.168.1.1/24");
+      throw new IllegalArgumentException(
+          "The input String format error. for example" + " 192.168.1.1/24");
     }
     return new IPRange(new IP(minIpAsLong), new IP(maxIpAsLong));
   }
@@ -105,7 +104,7 @@ public class IPRange implements Iterable<IP>, Serializable {
 
   /**
    * Gets A class IP range.
-   * 
+   *
    * @return A class IP range.
    */
   public static IPRange AClassLocalIPRange() {
@@ -115,7 +114,7 @@ public class IPRange implements Iterable<IP>, Serializable {
 
   /**
    * Gets B class IP range.
-   * 
+   *
    * @return B class IP range.
    */
   public static IPRange BClassLocalIPRange() {
@@ -124,7 +123,7 @@ public class IPRange implements Iterable<IP>, Serializable {
 
   /**
    * Gets C class IP range.
-   * 
+   *
    * @return C class IP range.
    */
   public static IPRange CClassLocalIPRange() {
@@ -134,7 +133,7 @@ public class IPRange implements Iterable<IP>, Serializable {
 
   /**
    * Returns <code>true</code> if the given IP is in the IP range.
-   * 
+   *
    * @param ip IP.
    * @return If the IP is in the rang return <code>true</code>.
    */
@@ -147,7 +146,7 @@ public class IPRange implements Iterable<IP>, Serializable {
 
   /**
    * Returns size of IP range.
-   * 
+   *
    * @return Size of IP range.
    */
   public long size() {
@@ -156,7 +155,7 @@ public class IPRange implements Iterable<IP>, Serializable {
 
   /**
    * Returns starting IP address.
-   * 
+   *
    * @return Starting IP address.
    */
   public IP getStartIP() {
@@ -165,7 +164,7 @@ public class IPRange implements Iterable<IP>, Serializable {
 
   /**
    * Returns end IP address.
-   * 
+   *
    * @return End ip address.
    */
   public IP getEndIP() {
@@ -174,7 +173,7 @@ public class IPRange implements Iterable<IP>, Serializable {
 
   /**
    * Split IP address range by a IP address.
-   * 
+   *
    * @param ip IP address. IP address range should contains the IP address.
    * @return List of IP address ranges.
    */

@@ -19,9 +19,8 @@ package fucksocks.server.manager;
  * The class <code>User</code> represents a user in SOCKS5 server.
  *
  * @author Youchao Feng
- * @date Apr 16, 2015 11:29:44 AM
  * @version 1.0
- *
+ * @date Apr 16, 2015 11:29:44 AM
  */
 public class User {
 
@@ -38,11 +37,12 @@ public class User {
   /**
    * Constructs a instance of {@link User}.
    */
-  public User() {}
+  public User() {
+  }
 
   /**
    * Constructs a instance of {@link User} with username and password.
-   * 
+   *
    * @param username Username.
    * @param password Password.
    */
@@ -53,7 +53,7 @@ public class User {
 
   /**
    * Returns username.
-   * 
+   *
    * @return Username.
    */
   public String getUsername() {
@@ -62,7 +62,7 @@ public class User {
 
   /**
    * Sets username.
-   * 
+   *
    * @param username Username.
    */
   public void setUsername(String username) {
@@ -71,7 +71,7 @@ public class User {
 
   /**
    * Returns password.
-   * 
+   *
    * @return Password.
    */
   public String getPassword() {
@@ -80,13 +80,19 @@ public class User {
 
   /**
    * Sets password.
+   *
    * @param password Password.
    */
   public void setPassword(String password) {
     this.password = password;
   }
 
-  @Override public String toString() {
+  public User copy() {
+    return new User(this.username, this.password);
+  }
+
+  @Override
+  public String toString() {
     return "User{" +
         "username='" + username + '\'' +
         ", password='" + password + '\'' +

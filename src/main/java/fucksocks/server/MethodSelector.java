@@ -23,18 +23,17 @@ import fucksocks.server.msg.MethodSelectionMessage;
  * The class <code>MethodSelector</code> represents a method selector.<br>
  * This class will select one method from the methods that client given. If there is no method
  * acceptable, it will select 0xFF.
- * 
- * @author Youchao Feng
- * @date Apr 7, 2015 10:17:12 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 7, 2015 10:17:12 AM
  */
 public interface MethodSelector {
 
 
   /**
    * Selects a method form {@link MethodSelectionMessage}.
-   * 
+   *
    * @param message the message from client.
    * @return The method that server selected.
    */
@@ -42,14 +41,14 @@ public interface MethodSelector {
 
   /**
    * Sets methods that server supported.
-   * 
+   *
    * @param supportMethods methods that server supported.
    */
   public void setSupportMethods(Set<SocksMethod> supportMethods);
 
   /**
    * Gets methods that server supported.
-   * 
+   *
    * @return The methods that server supported.
    */
   public Set<SocksMethod> getSupportMethods();
@@ -61,21 +60,21 @@ public interface MethodSelector {
 
   /**
    * Removes the method from the sets.
-   * 
+   *
    * @param socksMethod The method which will be removed.
    */
   public void removeSupportMethod(SocksMethod socksMethod);
 
   /**
    * Adds a method into a support method list.
-   * 
+   *
    * @param socksMethod The method which will be supported.
    */
   public void addSupportMethod(SocksMethod socksMethod);
 
   /**
    * Sets support methods.
-   * 
+   *
    * @param methods Methods supported.
    */
   public void setSupportMethod(SocksMethod... methods);

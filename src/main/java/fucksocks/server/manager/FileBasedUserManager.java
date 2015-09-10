@@ -1,135 +1,236 @@
 package fucksocks.server.manager;
 
+import com.google.common.base.Strings;
+import fucksocks.utils.PathUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
- * Created by fengyouchao on 8/28/15.
+ * The class <code>FileBasedUserManager</code> represents an user manager which can manage users
+ * in a file.
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Aug 28, 2015
  */
 public class FileBasedUserManager implements UserManager {
 
-    private File storeFile;
-    private StoreType storeType = StoreType.PROPERTIES;
-    private List<User> managedUsers;
-    private boolean autoReload = false;
-    private long reloadAfter = 20000;
-    private AutoReloadService autoReloadService;
+  private static final Logger logger = LoggerFactory.getLogger(FileBasedUserManager.class);
 
-    public FileBasedUserManager(File storeFile, StoreType storeType) throws IOException {
-        this.storeFile = storeFile;
-        this.storeType = storeType;
-        loadFromFile();
+  private File storeFile;
+  private StoreType storeType = StoreType.PROPERTIES;
+  private Map<String, User> managedUsers;
+  private boolean autoReload = false;
+  private long reloadAfter = 20000;
+  private AutoReloadService autoReloadService;
+
+  public FileBasedUserManager(File storeFile, StoreType storeType) throws IOException {
+    this.storeFile = storeFile;
+    this.storeType = storeType;
+    loadFromFile();
+  }
+
+  public FileBasedUserManager(File storeFile) throws IOException {
+    this(storeFile, StoreType.PROPERTIES);
+  }
+
+  public FileBasedUserManager(String storeFile, boolean autoReload, long reloadAfter) throws IOException {
+    storeFile = PathUtil.getAbstractPath(storeFile);
+    this.storeFile = new File(storeFile);
+    this.autoReload = autoReload;
+    this.reloadAfter = reloadAfter;
+    loadFromFile();
+    if (this.autoReload) {
+      autoReloadService = new AutoReloadService(this.reloadAfter);
+      autoReloadService.start();
+    }
+  }
+
+  public FileBasedUserManager(String storeFile) throws IOException {
+    this(storeFile, false, 0);
+  }
+
+  private void synchronizedWithFile() {
+
+  }
+
+  private void loadFromFile() throws IOException {
+    if (managedUsers == null) {
+      managedUsers = new HashMap<>();
+    }
+    Properties properties = new Properties();
+    properties.load(new FileInputStream(storeFile));
+    Enumeration enum1 = properties.propertyNames();
+    while (enum1.hasMoreElements()) {
+      String username = (String) enum1.nextElement();
+      String password = properties.getProperty(username);
+      System.out.println(username + "=" + password);
+      User user = new User();
+      user.setUsername(username);
+      user.setPassword(password);
+      managedUsers.put(username, user);
+    }
+  }
+
+  @Override
+  public void create(User user) {
+    if (user == null || user.getUsername() == null) {
+      throw new IllegalArgumentException("User or username can't be null");
+    }
+    managedUsers.put(user.getUsername(), user);
+    logger.warn("Create a temporary user[{}]", user.getUsername());
+  }
+
+  @Override
+  public UserManager addUser(String username, String password) {
+    if (username == null) {
+      throw new IllegalArgumentException("Username can't be null");
+    }
+    logger.warn("Create a temporary user[{}]", username);
+    managedUsers.put(username, new User(username, password));
+    return this;
+  }
+
+  @Override
+  public User check(String username, String password) {
+    User user = find(username);
+    if (user != null && user.getPassword() != null && user.getPassword().equals(password)) {
+      return user;
+    }
+    return null;
+  }
+
+  @Override
+  public void delete(String username) {
+    managedUsers.remove(username);
+  }
+
+  @Override
+  public List<User> findAll() {
+    return null;
+  }
+
+  @Override
+  public void update(User user) {
+    if (user == null) {
+      throw new IllegalArgumentException("User can't null");
+    }
+    if (Strings.isNullOrEmpty(user.getUsername())) {
+      throw new IllegalArgumentException("Username of the user can't be null or empty");
+    }
+    managedUsers.put(user.getUsername(), user);
+    logger.warn("Update user[{}] temporarily", user.getUsername());
+  }
+
+  @Override
+  public User find(String username) {
+    if (Strings.isNullOrEmpty(username)) {
+      throw new IllegalArgumentException("Username can't be null or empty");
+    }
+    return managedUsers.get(username);
+  }
+
+  public File getStoreFile() {
+    return storeFile;
+  }
+
+  public void setStoreFile(File storeFile) {
+    this.storeFile = storeFile;
+  }
+
+  public StoreType getStoreType() {
+    return storeType;
+  }
+
+  public void setStoreType(StoreType storeType) {
+    this.storeType = storeType;
+  }
+
+  public Map<String, User> getManagedUsers() {
+    return managedUsers;
+  }
+
+  public void setManagedUsers(Map<String, User> managedUsers) {
+    this.managedUsers = managedUsers;
+  }
+
+  public boolean isAutoReload() {
+    return autoReload;
+  }
+
+  public void setAutoReload(boolean autoReload) {
+    this.autoReload = autoReload;
+  }
+
+  public long getReloadAfter() {
+    return reloadAfter;
+  }
+
+  public void setReloadAfter(long reloadAfter) {
+    this.reloadAfter = reloadAfter;
+  }
+
+  public AutoReloadService getAutoReloadService() {
+    return autoReloadService;
+  }
+
+  public void setAutoReloadService(AutoReloadService autoReloadService) {
+    this.autoReloadService = autoReloadService;
+  }
+
+  public enum StoreType {
+    PROPERTIES
+  }
+
+
+  private class AutoReloadService implements Runnable {
+
+    private Thread thread;
+    private long reloadAfter;
+    private boolean stop;
+
+    public AutoReloadService(long reloadAfter) {
+      this.reloadAfter = reloadAfter;
     }
 
-    public FileBasedUserManager(File storeFile) throws IOException {
-        this(storeFile, StoreType.PROPERTIES);
+    public void start() {
+      stop = false;
+      thread = new Thread(this, "AutoReloadService");
+      thread.setDaemon(true);
+      thread.start();
+      ;
     }
 
-    public FileBasedUserManager(String storeFile, boolean autoReload, long reloadAfter) throws IOException {
-        if(storeFile.startsWith("classpath:")) {
-            storeFile = storeFile.split(":")[1];
-            storeFile = this.getClass().getResource("/"+storeFile).getPath();
+    public void stop() {
+      stop = true;
+      if (thread != null) {
+        thread.interrupt();
+      }
+    }
+
+    @Override
+    public void run() {
+      while (!stop) {
+        try {
+          Thread.sleep(reloadAfter);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
         }
-        this.storeFile = new File(storeFile);
-        this.autoReload = autoReload;
-        this.reloadAfter = reloadAfter;
-        loadFromFile();
-        if(this.autoReload){
-            autoReloadService = new AutoReloadService(this.reloadAfter);
-            autoReloadService.start();
+        try {
+          loadFromFile();
+        } catch (IOException e) {
+          e.printStackTrace();
         }
+      }
     }
-
-    public static void main(String[] args) throws IOException, InterruptedException {
-        new FileBasedUserManager("classpath:users.properties", true, 2000);
-        Thread.sleep(800000000);
-    }
-
-    private void synchronizedWithFile() {
-
-    }
-
-    private void loadFromFile() throws IOException {
-        if(managedUsers == null){
-            managedUsers = new ArrayList<>();
-        }
-        Properties properties = new Properties();
-        properties.load(new FileInputStream(storeFile));
-        Enumeration enum1 = properties.propertyNames();
-        while (enum1.hasMoreElements()) {
-            String username = (String) enum1.nextElement();
-            String password = properties.getProperty(username);
-            System.out.println(username + "=" + password);
-            User user = new User();
-            user.setUsername(username);
-            user.setPassword(password);
-            managedUsers.add(user);
-        }
-    }
-
-    @Override public void create(User user) {
-
-    }
-
-    @Override public Void addUser(String username, String password) {
-        return null;
-    }
-
-    @Override public User findUser(String username, String password) {
-        for (User user : managedUsers) {
-            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                return user;
-            }
-        }
-        return null;
-    }
-
-    @Override public User deleteUser(String username) {
-        return null;
-    }
-
-    @Override public List<User> findAll() {
-        return null;
-    }
-
-    public enum StoreType {
-        PROPERTIES
-    }
-
-    private class AutoReloadService implements Runnable {
-
-        private Thread thread;
-        private long reloadAfter;
-
-        public AutoReloadService(long reloadAfter){
-           this.reloadAfter = reloadAfter;
-        }
-
-        public void start(){
-            thread = new Thread(this, "AutoReloadService");
-            thread.setDaemon(true);
-            thread.start();;
-        }
-
-        @Override public void run() {
-            while(true){
-                try {
-                    Thread.sleep(reloadAfter);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    loadFromFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+  }
 }

@@ -23,13 +23,11 @@ import fucksocks.common.IPRange;
 import fucksocks.server.Session;
 
 /**
- * 
  * The class <code>IPSessionFilter</code> represents
- * 
- * @author Youchao Feng
- * @date May 2, 2015 12:42:18 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date May 2, 2015 12:42:18 AM
  */
 public class IPSessionFilter implements SessionFilter {
 
@@ -73,7 +71,7 @@ public class IPSessionFilter implements SessionFilter {
 
   /**
    * Returns all IP address ranges.
-   * 
+   *
    * @return All IP address ranges.
    */
   public List<IPRange> getIPRanges() {
@@ -82,7 +80,7 @@ public class IPSessionFilter implements SessionFilter {
 
   /**
    * Sets IP address ranges.
-   * 
+   *
    * @param ipRanges IP address range.
    */
   public void setIPRanges(List<IPRange> ipRanges) {
@@ -91,7 +89,7 @@ public class IPSessionFilter implements SessionFilter {
 
   /**
    * Returns mode.
-   * 
+   *
    * @return mode.
    */
   public Mode getMode() {
@@ -100,7 +98,7 @@ public class IPSessionFilter implements SessionFilter {
 
   /**
    * Changes mode.
-   * 
+   *
    * @param mode Mode.
    * @return The instance of {@link IPSessionFilter}.
    */
@@ -111,7 +109,7 @@ public class IPSessionFilter implements SessionFilter {
 
   /**
    * Add an IP address range to the List of IP address ranges.
-   * 
+   *
    * @param ipRange IP address range in String such as "192.168.1.1-192.168.255.255".
    * @return The instance of {@link IPSessionFilter}.
    */
@@ -122,7 +120,7 @@ public class IPSessionFilter implements SessionFilter {
 
   /**
    * Add an IP address to the list of IP address ranges.
-   * 
+   *
    * @param ip IP address in String such as "192.168.1.1".
    * @return The instance of {@link IPSessionFilter}.
    */
@@ -133,11 +131,10 @@ public class IPSessionFilter implements SessionFilter {
 
   /**
    * The enumeration <code>Mode</code> represents a Mode of {@link IPSessionFilter}.
-   * 
-   * @author Youchao Feng
-   * @date May 4, 2015 3:44:37 AM
-   * @version 1.0
    *
+   * @author Youchao Feng
+   * @version 1.0
+   * @date May 4, 2015 3:44:37 AM
    */
   public enum Mode {
     /**

@@ -24,16 +24,16 @@ import fucksocks.server.msg.CommandMessage;
 
 /**
  * The interface <code>SocksHandler</code> represents a socket handler.
- * 
+ *
  * @author Youchao Feng
- * @date Mar 25, 2015 11:33:28 AM
  * @version 1.0
+ * @date Mar 25, 2015 11:33:28 AM
  */
 public interface SocksHandler extends Runnable {
 
   /**
    * Handles a session.
-   * 
+   *
    * @param session Session.
    * @throws Exception If any error occurred.
    */
@@ -41,100 +41,97 @@ public interface SocksHandler extends Runnable {
 
   /**
    * Do CONNECTE command.
-   * 
-   * @param session Session
+   *
+   * @param session        Session
    * @param commandMessage {@link CommandMessage} read from SOCKS client.
    * @throws SocksException If a SOCKS protocol error occurred.
-   * @throws IOException If a I/O error occurred.
+   * @throws IOException    If a I/O error occurred.
    */
-  public void doConnect(Session session, CommandMessage commandMessage) throws SocksException,
-      IOException;
+  public void doConnect(Session session, CommandMessage commandMessage) throws SocksException, IOException;
 
   /**
    * Do BIND command.
-   * 
-   * @param session Session.
+   *
+   * @param session        Session.
    * @param commandMessage {@link CommandMessage} read from SOCKS client.
    * @throws SocksException If a SOCKS protocol error occurred.
-   * @throws IOException If a I/O error occurred.
+   * @throws IOException    If a I/O error occurred.
    */
-  public void doBind(Session session, CommandMessage commandMessage) throws SocksException,
-      IOException;
+  public void doBind(Session session, CommandMessage commandMessage) throws SocksException, IOException;
 
   /**
    * Do UDP ASSOCIATE command.
-   * 
-   * @param session Session.
+   *
+   * @param session        Session.
    * @param commandMessage {@link CommandMessage} read from SOCKS client.
    * @throws SocksException If a SOCKS protocol error occurred.
-   * @throws IOException If a I/O error occurred.
+   * @throws IOException    If a I/O error occurred.
    */
-  public void doUDPAssociate(Session session, CommandMessage commandMessage) throws SocksException,
-      IOException;
+  public void doUDPAssociate(Session session, CommandMessage commandMessage) throws SocksException, IOException;
 
   /**
    * Sets session.
-   * 
+   *
    * @param session Session.
    */
   void setSession(Session session);
 
   /**
    * Returns method selector.
-   * 
+   *
    * @return Method selector.
    */
   public MethodSelector getMethodSelector();
 
   /**
    * Sets a method selector.
-   * 
+   *
    * @param methodSelector A {@link MethodSelector} instance.
    */
   public void setMethodSelector(MethodSelector methodSelector);
 
   /**
    * Returns buffer size.
-   * 
+   *
    * @return Buffer size.
    */
   int getBufferSize();
 
   /**
    * Sets buffer size.
-   * 
+   *
    * @param bufferSize buffer size.
    */
   void setBufferSize(int bufferSize);
 
   /**
    * Returns all socks listeners.
-   * 
+   *
    * @return All socks listeners.
    */
   public List<SocksCommandFilter> getSocksCommandFilters();
 
   /**
    * Sets socks listeners.
-   * 
+   *
    * @param socksListeners List of {@link SocksCommandFilter}.
    */
   public void setSocksCommandFilters(List<SocksCommandFilter> socksListeners);
 
   /**
    * Returns idle time.
-   * 
+   *
    * @return idle time.
    */
   public int getIdleTime();
 
   /**
    * Sets idle time.
-   * 
+   *
    * @param idleTime Idle time.
    */
   public void setIdleTime(int idleTime);
-  
+
   public void setProxy(SocksProxy socksProxy);
 
 }

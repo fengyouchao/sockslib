@@ -14,13 +14,6 @@
 
 package fucksocks.common.methods;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import fucksocks.client.Socks5;
 import fucksocks.client.SocksProxy;
 import fucksocks.common.AuthenticationException;
@@ -31,8 +24,14 @@ import fucksocks.server.Session;
 import fucksocks.server.UsernamePasswordAuthenticator;
 import fucksocks.server.msg.UsernamePasswordMessage;
 import fucksocks.server.msg.UsernamePasswordResponseMessage;
-import fucksocks.utils.LogMessage;
-import fucksocks.utils.LogMessage.MsgType;
+import fucksocks.utils.LogMessageBuilder;
+import fucksocks.utils.LogMessageBuilder.MsgType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 
 /**
@@ -40,11 +39,10 @@ import fucksocks.utils.LogMessage.MsgType;
  * authentication.<br>
  * <b>Notice:</b> This method is only supported by SOCKS5 protocol. It will be used in client and
  * server.
- * 
+ *
  * @author Youchao Feng
- * @date Mar 17, 2015 5:09:23 PM
  * @version 1.0
- * 
+ * @date Mar 17, 2015 5:09:23 PM
  * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
  */
 public class UsernamePasswordMethod extends AbstractSocksMethod {
@@ -62,12 +60,13 @@ public class UsernamePasswordMethod extends AbstractSocksMethod {
   /**
    * Constructs an instance of {@link UsernamePasswordMethod}.
    */
-  public UsernamePasswordMethod() {}
+  public UsernamePasswordMethod() {
+  }
 
   /**
    * Constructs an instance of {@link UsernamePasswordMethod} with
    * {@link UsernamePasswordAuthenticator}.
-   * 
+   *
    * @param authenticator Authenticator.
    */
   public UsernamePasswordMethod(UsernamePasswordAuthenticator authenticator) {
@@ -122,12 +121,12 @@ public class UsernamePasswordMethod extends AbstractSocksMethod {
     outputStream.write(bufferSent);
     outputStream.flush();
     // logger send bytes
-    logger.debug("{}", LogMessage.create(bufferSent, MsgType.SEND));
+    logger.debug("{}", LogMessageBuilder.build(bufferSent, MsgType.SEND));
 
     byte[] authenticationResult = new byte[2];
     inputStream.read(authenticationResult);
     // logger
-    logger.debug("{}", LogMessage.create(authenticationResult, MsgType.RECEIVE));
+    logger.debug("{}", LogMessageBuilder.build(authenticationResult, MsgType.RECEIVE));
 
     if (authenticationResult[1] != Socks5.AUTHENTICATION_SUCCEEDED) {
       // Close connection if authentication is failed.
@@ -143,11 +142,9 @@ public class UsernamePasswordMethod extends AbstractSocksMethod {
 
     UsernamePasswordMessage usernamePasswordMessage = new UsernamePasswordMessage();
     session.read(usernamePasswordMessage);
-    logger.debug("SESSION[{}] Receive credentials: {}", session.getId(),
-        usernamePasswordMessage.getUsernamePasswordCredentials());
+    logger.debug("SESSION[{}] Receive credentials: {}", session.getId(), usernamePasswordMessage.getUsernamePasswordCredentials());
     try {
-      authenticator.doAuthenticate(usernamePasswordMessage.getUsernamePasswordCredentials(),
-          session);
+      authenticator.doAuthenticate(usernamePasswordMessage.getUsernamePasswordCredentials(), session);
     } catch (AuthenticationException e) {
       session.write(new UsernamePasswordResponseMessage(false));
       throw e;

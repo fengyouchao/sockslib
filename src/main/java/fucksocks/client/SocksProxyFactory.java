@@ -14,26 +14,24 @@
 
 package fucksocks.client;
 
-import java.io.FileNotFoundException;
-import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
-
 import com.google.common.base.Strings;
-
 import fucksocks.common.Credentials;
 import fucksocks.common.KeyStoreInfo;
 import fucksocks.common.SSLConfiguration;
 import fucksocks.common.UsernamePasswordCredentials;
 import fucksocks.utils.PathUtil;
 
+import java.io.FileNotFoundException;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+
 /**
- * The class <code>SocksFactory</code> represents a factory that can create {@link SocksProxy}
+ * The class <code>SocksFactory</code> represents a factory that can build {@link SocksProxy}
  * instance.
  *
  * @author Youchao Feng
  * @version 1.0
  * @since 1.0
- *
  */
 public class SocksProxyFactory {
 
@@ -43,17 +41,16 @@ public class SocksProxyFactory {
    * <ul>
    * <li>host,1080 = {@link Socks5#Socks5(String, int)}</li>
    * <li>host,1080,root,123456 = {@link Socks5#Socks5(String, int, Credentials)}</li>
-   * <li>host,1080,root,123456,trustKeystorePath,trustKeyStorePassoword = Creates a
+   * <li>host,1080,root,123456,trustKeyStorePath,trustKeyStorePassword = Creates a
    * {@link SSLSocks5} instance</li>
-   * <li>host,1080,root,123456,trustKeystorePath,trustKeyStorePassoword,keystorePath,
+   * <li>host,1080,root,123456,trustKeyStorePath,trustKeyStorePassword,keyStorePath,
    * keystorePathPassword = Creates a {@link SSLSocks5} instance which supports client
    * authentication</li>
    * </ul>
-   * 
-   * 
+   *
    * @param value a string.
    * @return a {@link SocksProxy} instance.
-   * @throws UnknownHostException if the host is unknown.
+   * @throws UnknownHostException  if the host is unknown.
    * @throws FileNotFoundException if file not found.
    */
   public static SocksProxy parse(String value) throws UnknownHostException, FileNotFoundException {
@@ -115,8 +112,7 @@ public class SocksProxyFactory {
           }
           return socks;
         default:
-          throw new IllegalArgumentException(
-              "The input string should be formated as [HOST],[IP],[USERNAME],[PASSWORD],[TRUST_KEY_STORE],[TRUST_KEY_STORE_PASSWORD],[KEY_STORE],[KEY_STORE_PASSWORD]");
+          throw new IllegalArgumentException("The input string should be formatted as [HOST],[IP],[USERNAME],[PASSWORD],[TRUST_KEY_STORE],[TRUST_KEY_STORE_PASSWORD],[KEY_STORE],[KEY_STORE_PASSWORD]");
       }
     } catch (NumberFormatException e) {
       throw new IllegalArgumentException("Port should be a number between 1 and 65535");

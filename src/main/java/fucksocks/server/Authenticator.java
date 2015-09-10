@@ -21,20 +21,18 @@ import fucksocks.common.Credentials;
  * The class <code>Authenticator</code> represents an authenticator.
  *
  * @author Youchao Feng
- * @date Apr 16, 2015 11:29:56 AM
  * @version 1.0
- *
+ * @date Apr 16, 2015 11:29:56 AM
  */
 public interface Authenticator {
 
   /**
    * This method will do authentication work.
-   * 
+   *
    * @param credentials credentials.
-   * @param session Session.
+   * @param session     Session.
    * @throws AuthenticationException If authentication is failed.
    */
-  void doAuthenticate(Credentials credentials, Session session)
-      throws AuthenticationException;
+  void doAuthenticate(Credentials credentials, Session session) throws AuthenticationException;
 
 }

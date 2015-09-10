@@ -20,23 +20,21 @@ import java.net.SocketAddress;
 /**
  * The interface <code>DatagramPacketEncapsulation</code> represents a datagram packet
  * encapsulation.
- * 
- * @author Youchao Feng
- * @date Mar 24, 2015 9:05:23 PM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Mar 24, 2015 9:05:23 PM
  */
 public interface DatagramPacketEncapsulation {
 
   /**
    * Encapsulates a datagram packet.
-   * 
-   * @param packet Datagram packet that need to be encapsulated.
+   *
+   * @param packet      Datagram packet that need to be encapsulated.
    * @param destination Destination address.
    * @return Datagram packet that has encapsulated.
    * @throws SocksException If any error about SOCKS protocol occurs.
    */
-  public DatagramPacket encapsulate(DatagramPacket packet, SocketAddress destination)
-      throws SocksException;
+  public DatagramPacket encapsulate(DatagramPacket packet, SocketAddress destination) throws SocksException;
 
 }

@@ -14,23 +14,21 @@
 
 package fucksocks.server.msg;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import fucksocks.common.AddressType;
 import fucksocks.common.NotImplementException;
 import fucksocks.utils.SocksUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * The class <code>CommandResponseMessage</code> represents a command response message.
- * 
- * @author Youchao Feng
- * @date Apr 6, 2015 11:10:25 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 6, 2015 11:10:25 AM
  */
 public class CommandResponseMessage implements WritableMessage {
 
@@ -68,7 +66,7 @@ public class CommandResponseMessage implements WritableMessage {
 
   /**
    * Constructs a {@link CommandResponseMessage} by {@link ServerReply}.
-   * 
+   *
    * @param reply Reply from server.
    */
   public CommandResponseMessage(ServerReply reply) {
@@ -84,14 +82,13 @@ public class CommandResponseMessage implements WritableMessage {
 
   /**
    * Constructs a {@link CommandResponseMessage}.
-   * 
-   * @param version Version
-   * @param reply Sever reply.
+   *
+   * @param version     Version
+   * @param reply       Sever reply.
    * @param bindAddress Bind IP address.
-   * @param bindPort Bind port.
+   * @param bindPort    Bind port.
    */
-  public CommandResponseMessage(int version, ServerReply reply, InetAddress bindAddress,
-      int bindPort) {
+  public CommandResponseMessage(int version, ServerReply reply, InetAddress bindAddress, int bindPort) {
     this.version = version;
     this.reply = reply;
     this.bindAddress = bindAddress;
@@ -113,7 +110,7 @@ public class CommandResponseMessage implements WritableMessage {
         for (int i = 0; i < bindAddress.getAddress().length; i++) {
           bytes[i + 4] = bindAddress.getAddress()[i];
         }
-        bytes[8] = SocksUtil.getFisrtByteFromInt(bindPort);
+        bytes[8] = SocksUtil.getFirstByteFromInt(bindPort);
         bytes[9] = SocksUtil.getSecondByteFromInt(bindPort);
         break;
       case AddressType.IPV6:
@@ -121,7 +118,7 @@ public class CommandResponseMessage implements WritableMessage {
         for (int i = 0; i < bindAddress.getAddress().length; i++) {
           bytes[i + 4] = bindAddress.getAddress()[i];
         }
-        bytes[20] = SocksUtil.getFisrtByteFromInt(bindPort);
+        bytes[20] = SocksUtil.getFirstByteFromInt(bindPort);
         bytes[21] = SocksUtil.getSecondByteFromInt(bindPort);
         break;
       case AddressType.DOMAINNAME:
@@ -145,7 +142,7 @@ public class CommandResponseMessage implements WritableMessage {
 
   /**
    * Returns version.
-   * 
+   *
    * @return Version.
    */
   public int getVersion() {
@@ -154,7 +151,7 @@ public class CommandResponseMessage implements WritableMessage {
 
   /**
    * Sets version.
-   * 
+   *
    * @param version Version.
    */
   public void setVersion(int version) {
@@ -163,7 +160,7 @@ public class CommandResponseMessage implements WritableMessage {
 
   /**
    * Returns address type.
-   * 
+   *
    * @return Address type.
    */
   public int getAddressType() {
@@ -172,7 +169,7 @@ public class CommandResponseMessage implements WritableMessage {
 
   /**
    * Sets address type.
-   * 
+   *
    * @param addressType Address type.
    */
   public void setAddressType(int addressType) {
@@ -181,7 +178,7 @@ public class CommandResponseMessage implements WritableMessage {
 
   /**
    * Returns bind address.
-   * 
+   *
    * @return Bind address.
    */
   public InetAddress getBindAddress() {
@@ -190,7 +187,7 @@ public class CommandResponseMessage implements WritableMessage {
 
   /**
    * Sets bind address.
-   * 
+   *
    * @param bindAddress Bind address.
    */
   public void setBindAddress(InetAddress bindAddress) {
@@ -199,7 +196,7 @@ public class CommandResponseMessage implements WritableMessage {
 
   /**
    * Returns bind port.
-   * 
+   *
    * @return Bind port.
    */
   public int getBindPort() {
@@ -208,7 +205,7 @@ public class CommandResponseMessage implements WritableMessage {
 
   /**
    * Sets bind port.
-   * 
+   *
    * @param bindPort Bind port.
    */
   public void setBindPort(int bindPort) {
@@ -217,7 +214,7 @@ public class CommandResponseMessage implements WritableMessage {
 
   /**
    * Returns the reply of SOCKS server.
-   * 
+   *
    * @return SOCKS server's reply.
    */
   public ServerReply getReply() {
@@ -226,7 +223,7 @@ public class CommandResponseMessage implements WritableMessage {
 
   /**
    * Sets SOCKS server's reply.
-   * 
+   *
    * @param reply Reply of the SOKS server.
    */
   public void setReply(ServerReply reply) {

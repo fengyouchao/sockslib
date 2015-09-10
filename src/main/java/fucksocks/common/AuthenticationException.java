@@ -18,11 +18,10 @@ import java.net.SocketAddress;
 
 /**
  * The class <code>AuthenticationException</code> represents a authentication exception.
- * 
- * @author Youchao Feng
- * @date Mar 24, 2015 9:11:35 PM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Mar 24, 2015 9:11:35 PM
  */
 public class AuthenticationException extends SocksException {
 
@@ -36,14 +35,14 @@ public class AuthenticationException extends SocksException {
 
   /**
    * Constructs an instance of {@link AuthenticationException} with a message.
-   * 
+   *
    * @param msg Message.
    */
   public AuthenticationException(String msg) {
     super(msg);
   }
-  
-  public AuthenticationException(String msg, SocketAddress clientFrom){
+
+  public AuthenticationException(String msg, SocketAddress clientFrom) {
     super(msg);
     this.clientAddress = clientFrom;
   }

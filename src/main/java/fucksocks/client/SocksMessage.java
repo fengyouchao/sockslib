@@ -17,12 +17,11 @@ package fucksocks.client;
 /**
  * The interface <code>SocksMessage</code> represents the message that will be sent to SOCKS server
  * or received from SOCKS server.
- * 
+ *
  * @author Youchao Feng
- * @date Mar 23, 2015 5:54:54 PM
  * @version 1.0
- * 
- * @see CommandReplyMesasge
+ * @date Mar 23, 2015 5:54:54 PM
+ * @see CommandReplyMessage
  */
 public interface SocksMessage {
 

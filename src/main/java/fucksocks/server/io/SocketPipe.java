@@ -27,9 +27,8 @@ import org.slf4j.LoggerFactory;
  * pipe will close all of them.
  *
  * @author Youchao Feng
- * @date Apr 15, 2015 10:46:03 AM
  * @version 1.0
- *
+ * @date Apr 15, 2015 10:46:03 AM
  */
 public class SocketPipe implements Pipe {
 
@@ -69,7 +68,7 @@ public class SocketPipe implements Pipe {
 
   /**
    * Constructs SocketPipe instance by tow connected sockets.
-   * 
+   *
    * @param socket1 A connected socket.
    * @param socket2 Another connected socket.
    * @throws IOException If an I/O error occurred.
@@ -83,7 +82,8 @@ public class SocketPipe implements Pipe {
     pipe1 = new StreamPipe(socket1.getInputStream(), socket2.getOutputStream());
     ((StreamPipe) pipe1).setName("OUTPUT_PIPE");
     pipe2 = new StreamPipe(socket2.getInputStream(), socket1.getOutputStream());
-    ((StreamPipe) pipe2).setName("INPUT_PIPE");;
+    ((StreamPipe) pipe2).setName("INPUT_PIPE");
+    ;
 
     pipe1.addPipeListener(listener);
     pipe2.addPipeListener(listener);
@@ -174,11 +174,10 @@ public class SocketPipe implements Pipe {
 
   /**
    * The class <code>PipeListenerImp</code> is a pipe listener.
-   * 
-   * @author Youchao Feng
-   * @date Apr 15, 2015 9:05:45 PM
-   * @version 1.0
    *
+   * @author Youchao Feng
+   * @version 1.0
+   * @date Apr 15, 2015 9:05:45 PM
    */
   private class PipeListenerImp implements PipeListener {
 

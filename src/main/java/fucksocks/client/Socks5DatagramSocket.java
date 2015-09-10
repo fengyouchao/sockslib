@@ -14,32 +14,30 @@
 
 package fucksocks.client;
 
+import fucksocks.common.Socks5DatagramPacketHandler;
+import fucksocks.common.SocksException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import fucksocks.common.Socks5DatagramPacketHandler;
-import fucksocks.common.SocksException;
-
 /**
  * The class <code>Socks5DatagramSocket</code> is a DatagramSocket that support SOCKS5 proxy.<br>
  * For example:<br>
- * 
  * <pre>
  * SocksProxy proxy = new Socks5(new InetSocketAddress(&quot;foo.com&quot;, 1080));
  * // Setting proxy...
  * DatagramSocket client = new Socks5DatagramSocket(proxy);
  * // Just use it as normal java.net.DatagramSocket now.
  * </pre>
- * 
+ *
  * @author Youchao Feng
- * @date Mar 23, 2015 5:54:37 PM
  * @version 1.0
+ * @date Mar 23, 2015 5:54:37 PM
  */
 public class Socks5DatagramSocket extends DatagramSocket {
 
@@ -70,11 +68,10 @@ public class Socks5DatagramSocket extends DatagramSocket {
    * <b>Notice:</b> The proxy must be {@link Socks5}, because only SOCKS5 protocol supports UDP
    * ASSOCIATE. It will throw {@link SocksException} if you give other {@link SocksProxy}
    * implementation which not supports SOCKS5 protocol.
-   * 
+   *
    * @param proxy {@link Socks5} instance.
    * @throws SocksException If any error about SOCKS protocol occurs.
-   * @throws IOException If any I/O error occurs.
-   * 
+   * @throws IOException    If any I/O error occurs.
    * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
    */
   public Socks5DatagramSocket(SocksProxy proxy) throws SocksException, IOException {
@@ -87,10 +84,10 @@ public class Socks5DatagramSocket extends DatagramSocket {
       throw new SocksException("Only SOCKS5 protocol support UDP ASSOCIATE");
     }
     this.proxy.buildConnection();
-    CommandReplyMesasge mesasge =
+    CommandReplyMessage mesasge =
         this.proxy.requestUdpAssociat(this.getLocalAddress(), this.getLocalPort());
 
-    logger.debug("create datagram socket at[{}:{}]", this.getLocalAddress(), this.getLocalPort());
+    logger.debug("build datagram socket at[{}:{}]", this.getLocalAddress(), this.getLocalPort());
     this.relayServerInetAddress = mesasge.getIp();
     this.relayServerPort = mesasge.getPort();
 
@@ -100,8 +97,7 @@ public class Socks5DatagramSocket extends DatagramSocket {
 
   @Override
   public void send(DatagramPacket packet) throws SocksException, IOException {
-    super.send(datagramPacketHandler.encapsulate(packet, new InetSocketAddress(
-        relayServerInetAddress, relayServerPort)));
+    super.send(datagramPacketHandler.encapsulate(packet, new InetSocketAddress(relayServerInetAddress, relayServerPort)));
   }
 
   @Override

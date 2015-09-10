@@ -27,11 +27,10 @@ import fucksocks.server.Session;
  * When server replies this method, the client should disconnect SOCKS server and throw
  * {@link SocksException}.
  * </p>
- * 
+ *
  * @author Youchao Feng
- * @date Mar 18, 2015 11:15:46 AM
  * @version 1.0
- * 
+ * @date Mar 18, 2015 11:15:46 AM
  * @see AbstractSocksMethod
  * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
  */

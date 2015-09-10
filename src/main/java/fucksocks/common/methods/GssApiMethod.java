@@ -23,10 +23,10 @@ import fucksocks.server.Session;
 
 /**
  * The class <code>GssApiMethod</code> is represents GSS API method in SOCKS protocol.
- * 
+ *
  * @author Youchao Feng
- * @date Mar 19, 2015 2:45:37 PM
  * @version 1.0
+ * @date Mar 19, 2015 2:45:37 PM
  */
 public class GssApiMethod extends AbstractSocksMethod {
 

@@ -14,6 +14,19 @@
 
 package fucksocks.client;
 
+import fucksocks.common.AnonymousCredentials;
+import fucksocks.common.Credentials;
+import fucksocks.common.SocksCommand;
+import fucksocks.common.SocksException;
+import fucksocks.common.UsernamePasswordCredentials;
+import fucksocks.common.methods.GssApiMethod;
+import fucksocks.common.methods.NoAuthencationRequiredMethod;
+import fucksocks.common.methods.SocksMethod;
+import fucksocks.common.methods.SocksMethodRegistry;
+import fucksocks.common.methods.UsernamePasswordMethod;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,27 +38,12 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import fucksocks.common.AnonymousCredentials;
-import fucksocks.common.Credentials;
-import fucksocks.common.SocksCommand;
-import fucksocks.common.SocksException;
-import fucksocks.common.UsernamePasswordCredentials;
-import fucksocks.common.methods.GssApiMethod;
-import fucksocks.common.methods.NoAuthencationRequiredMethod;
-import fucksocks.common.methods.SocksMethod;
-import fucksocks.common.methods.SocksMethodRegistry;
-import fucksocks.common.methods.UsernamePasswordMethod;
-
 /**
  * The class <code>Socks5</code> has implements SOCKS5 protocol.
- * 
+ *
  * @author Youchao Feng
- * @date Mar 16, 2015 4:57:32 PM
  * @version 1.0
- * 
+ * @date Mar 16, 2015 4:57:32 PM
  * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
  */
 public class Socks5 implements SocksProxy {
@@ -98,7 +96,6 @@ public class Socks5 implements SocksProxy {
 
   /**
    * Constructs a Socks5 instance without any parameter.
-   * 
    */
   private void init() {
     acceptableMethods = new ArrayList<>();
@@ -109,10 +106,10 @@ public class Socks5 implements SocksProxy {
 
   /**
    * Constructs a Socks5 instance.
-   * 
+   *
    * @param socketAddress SOCKS5 server's address.
-   * @param username Username of the authentication.
-   * @param password Password of the authentication.
+   * @param username      Username of the authentication.
+   * @param password      Password of the authentication.
    */
   public Socks5(SocketAddress socketAddress, String username, String password) {
     this(socketAddress);
@@ -121,7 +118,7 @@ public class Socks5 implements SocksProxy {
 
   /**
    * Constructs a Socks5 instance.
-   * 
+   *
    * @param host SOCKS5's server host.
    * @param port SOCKS5's server port.
    * @throws UnknownHostException If the host can't be resolved.
@@ -132,9 +129,9 @@ public class Socks5 implements SocksProxy {
 
   /**
    * Constructs a Socks5 instance.
-   * 
+   *
    * @param inetAddress SOCKS5 server's address.
-   * @param port SOCKS5 server's port.
+   * @param port        SOCKS5 server's port.
    */
   public Socks5(InetAddress inetAddress, int port) {
     this(new InetSocketAddress(inetAddress, port));
@@ -142,7 +139,7 @@ public class Socks5 implements SocksProxy {
 
   /**
    * Constructs a Socks5 instance with a java.net.SocketAddress instance.
-   * 
+   *
    * @param socketAddress SOCKS5 server's address.
    */
   public Socks5(SocketAddress socketAddress) {
@@ -162,14 +159,13 @@ public class Socks5 implements SocksProxy {
 
   /**
    * Constructs a Socks instance.
-   * 
-   * @param host SOCKS5 server's host.
-   * @param port SOCKS5 server's port.
+   *
+   * @param host        SOCKS5 server's host.
+   * @param port        SOCKS5 server's port.
    * @param credentials credentials.
    * @throws UnknownHostException If the host can't be resolved.
    */
-  public Socks5(String host, int port, Credentials credentials)
-      throws UnknownHostException {
+  public Socks5(String host, int port, Credentials credentials) throws UnknownHostException {
     init();
     this.inetAddress = InetAddress.getByName(host);
     this.port = port;
@@ -193,8 +189,7 @@ public class Socks5 implements SocksProxy {
   }
 
   @Override
-  public CommandReplyMesasge requestConnect(String host, int port) throws SocksException,
-      IOException {
+  public CommandReplyMessage requestConnect(String host, int port) throws SocksException, IOException {
     if (!alwaysResolveAddressLocally) {
       // resolve address in SOCKS server
       return socksCmdSender.send(proxySocket, SocksCommand.CONNECT, host, port, SOCKS_VERSION);
@@ -207,47 +202,40 @@ public class Socks5 implements SocksProxy {
   }
 
   @Override
-  public CommandReplyMesasge requestConnect(InetAddress address, int port) throws SocksException,
-      IOException {
+  public CommandReplyMessage requestConnect(InetAddress address, int port) throws SocksException, IOException {
     return socksCmdSender.send(proxySocket, SocksCommand.CONNECT, address, port, SOCKS_VERSION);
   }
 
   @Override
-  public CommandReplyMesasge requestConnect(SocketAddress address) throws SocksException,
-      IOException {
+  public CommandReplyMessage requestConnect(SocketAddress address) throws SocksException, IOException {
     return socksCmdSender.send(proxySocket, SocksCommand.CONNECT, address, SOCKS_VERSION);
   }
 
   @Override
-  public CommandReplyMesasge requestBind(String host, int port) throws SocksException, IOException {
+  public CommandReplyMessage requestBind(String host, int port) throws SocksException, IOException {
     return socksCmdSender.send(proxySocket, SocksCommand.BIND, host, port, SOCKS_VERSION);
   }
 
   @Override
-  public CommandReplyMesasge requestBind(InetAddress inetAddress, int port) throws SocksException,
-      IOException {
+  public CommandReplyMessage requestBind(InetAddress inetAddress, int port) throws SocksException, IOException {
     return socksCmdSender.send(proxySocket, SocksCommand.BIND, inetAddress, port, SOCKS_VERSION);
   }
 
   @Override
   public Socket accept() throws SocksException, IOException {
-    CommandReplyMesasge messge = socksCmdSender.checkServerReply(proxySocket.getInputStream());
+    CommandReplyMessage messge = socksCmdSender.checkServerReply(proxySocket.getInputStream());
     logger.debug("accept a connection from:{}", messge.getSocketAddress());
     return this.proxySocket;
   }
 
   @Override
-  public CommandReplyMesasge requestUdpAssociat(String host, int port) throws SocksException,
-      IOException {
-    return socksCmdSender.send(proxySocket, SocksCommand.UDP_ASSOCIATE, new InetSocketAddress(host,
-        port), SOCKS_VERSION);
+  public CommandReplyMessage requestUdpAssociat(String host, int port) throws SocksException, IOException {
+    return socksCmdSender.send(proxySocket, SocksCommand.UDP_ASSOCIATE, new InetSocketAddress(host, port), SOCKS_VERSION);
   }
 
   @Override
-  public CommandReplyMesasge requestUdpAssociat(InetAddress address, int port)
-      throws SocksException, IOException {
-    return socksCmdSender.send(proxySocket, SocksCommand.UDP_ASSOCIATE, new InetSocketAddress(
-        address, port), SOCKS_VERSION);
+  public CommandReplyMessage requestUdpAssociat(InetAddress address, int port) throws SocksException, IOException {
+    return socksCmdSender.send(proxySocket, SocksCommand.UDP_ASSOCIATE, new InetSocketAddress(address, port), SOCKS_VERSION);
   }
 
   @Override
@@ -319,9 +307,7 @@ public class Socks5 implements SocksProxy {
   @Override
   public SocksProxy copy() {
     Socks5 socks5 = new Socks5(inetAddress, port);
-    socks5.setAcceptableMethods(acceptableMethods)
-        .setAlwaysResolveAddressLocally(alwaysResolveAddressLocally).setCredentials(credentials)
-        .setSocksMethodRequestor(socksMethodRequestor).setChainProxy(chainProxy);
+    socks5.setAcceptableMethods(acceptableMethods).setAlwaysResolveAddressLocally(alwaysResolveAddressLocally).setCredentials(credentials).setSocksMethodRequestor(socksMethodRequestor).setChainProxy(chainProxy);
     return socks5;
   }
 
@@ -380,7 +366,7 @@ public class Socks5 implements SocksProxy {
 
   /**
    * Sets SOCKS5 proxy server's IP address.
-   * 
+   *
    * @param inetAddress IP address of SOCKS5 proxy server.
    * @return The instance of {@link Socks5}.
    */

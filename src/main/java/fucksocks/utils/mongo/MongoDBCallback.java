@@ -12,18 +12,29 @@
  * the License.
  */
 
-package fucksocks.utils;
+package fucksocks.utils.mongo;
 
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 
 /**
- * Created by fengyouchao on 8/23/15.
+ * The interface <code>MongoDBCallback</code> is a callback for
+ * {@link MongoDBUtil#keepConnect(String, MongoDBCallback)}.
  *
- * @author fengyouchao
+ * @author Youchao
+ * @version 1.0
+ * @date Aug 23, 2015
+ * @see MongoDBUtil#keepConnect(String, MongoDBCallback)
+ * @see MongoDBUtil#connect(String, MongoDBCallback)
  */
 public interface MongoDBCallback<T> {
 
-    public T process(MongoCollection<Document> collection);
+  /**
+   * This method is a callback method.
+   *
+   * @param collection The collection of MongoDB
+   * @return The value which you want {@link MongoDBUtil#keepConnect(String, MongoDBCallback)} returned;
+   */
+  T process(MongoCollection<Document> collection);
 
 }

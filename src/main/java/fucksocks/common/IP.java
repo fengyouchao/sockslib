@@ -14,24 +14,21 @@
 
 package fucksocks.common;
 
+import com.google.common.base.Preconditions;
+import com.google.common.hash.Hashing;
+import fucksocks.utils.UnsignedByte;
+
 import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.base.Preconditions;
-import com.google.common.hash.Hashing;
-
-import fucksocks.utils.UnsignedByte;
-
 
 /**
- * 
  * The class <code>IP</code> represents an IP v4 address.
- * 
- * @author Youchao Feng
- * @date May 2, 2015 12:50:28 AM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date May 2, 2015 12:50:28 AM
  */
 public class IP implements Comparable<IP>, Serializable {
 
@@ -65,7 +62,7 @@ public class IP implements Comparable<IP>, Serializable {
 
   /**
    * Constructs IP by four numbers.
-   * 
+   *
    * @param a First number of the IP address.
    * @param b Second number of the IP address.
    * @param c Third number of the IP address.
@@ -73,8 +70,8 @@ public class IP implements Comparable<IP>, Serializable {
    */
   public IP(int a, int b, int c, int d) {
 
-    Preconditions.checkArgument(checkRange(a) && checkRange(b) && checkRange(c) && checkRange(d),
-        "Each number of IP must in 0 ~ 255");
+    Preconditions.checkArgument(checkRange(a) && checkRange(b) && checkRange(c)
+        && checkRange(d), "Each number of IP must in 0 ~ 255");
     this.a = a;
     this.b = b;
     this.c = c;
@@ -84,7 +81,7 @@ public class IP implements Comparable<IP>, Serializable {
 
   /**
    * Constructs IP by a long integer.
-   * 
+   *
    * @param ip IP as Long integer.
    */
   public IP(long ip) {
@@ -98,7 +95,7 @@ public class IP implements Comparable<IP>, Serializable {
 
   /**
    * Constructs IP by bytes.
-   * 
+   *
    * @param address Bytes of address.
    */
   public IP(byte[] address) {
@@ -111,7 +108,7 @@ public class IP implements Comparable<IP>, Serializable {
 
   /**
    * Creates a IP instance by a string.
-   * 
+   *
    * @param ip IP as a string. such as "192.168.1.1".
    * @return Instance of <code>Ip</code>.
    */
@@ -133,7 +130,7 @@ public class IP implements Comparable<IP>, Serializable {
 
   /**
    * Gets max IP which represents <b>255.255.255.255]</b>.
-   * 
+   *
    * @return Max IP address.
    */
   public static IP MAX_IP() {
@@ -142,8 +139,8 @@ public class IP implements Comparable<IP>, Serializable {
 
   /**
    * Gets minimum IP which represents <b>0.0.0.0</b>.
-   * 
-   * @return　Minimum IP address.
+   *
+   * @return Minimum IP address.
    */
   public static IP MIN_IP() {
     return new IP(0L);
@@ -167,7 +164,7 @@ public class IP implements Comparable<IP>, Serializable {
 
   /**
    * Gets next IP address. If the IP address dosen't have next IP then return <code>null</code>.
-   * 
+   *
    * @return　Next IP address.
    */
   public IP nextIP() {
@@ -177,7 +174,7 @@ public class IP implements Comparable<IP>, Serializable {
   /**
    * Gets previous IP address. If the IP address dosen't have previous IP then return
    * <code>null</code>.
-   * 
+   *
    * @return Previous IP adderss.
    */
   public IP preIP() {
@@ -186,7 +183,7 @@ public class IP implements Comparable<IP>, Serializable {
 
   /**
    * Returns <code>true</code> if the IP is local IP address.
-   * 
+   *
    * @return <code>true</code> if the IP is local IP address.
    */
   public boolean isLocalIP() {
@@ -198,7 +195,7 @@ public class IP implements Comparable<IP>, Serializable {
 
   /**
    * Returns <code>true</code> if the IP can be used in Internet.
-   * 
+   *
    * @return <code>true</code> if the IP can be used in Internet.
    */
   public boolean isUseInInteret() {
@@ -207,7 +204,7 @@ public class IP implements Comparable<IP>, Serializable {
 
   /**
    * Returns IP as a long integer.
-   * 
+   *
    * @return IP as a long integer.
    */
   public long toLong() {
@@ -257,14 +254,13 @@ public class IP implements Comparable<IP>, Serializable {
 
   @Override
   public int hashCode() {
-    return Hashing.md5().newHasher().putInt(a).putChar('.').putInt(b).putChar('.').putInt(c)
-        .putChar('.').putInt(d).hash().hashCode();
+    return Hashing.md5().newHasher().putInt(a).putChar('.').putInt(b).putChar('.').putInt(c).putChar('.').putInt(d).hash().hashCode();
   }
 
 
   /**
    * Returns <code>true</code> if the number is in 0~255.
-   * 
+   *
    * @param num a number.
    * @return <code>true</code> if the number is in 0~255.
    */

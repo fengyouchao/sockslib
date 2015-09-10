@@ -18,11 +18,10 @@ package fucksocks.common;
  * The enumeration <code>SocksCommand</code> represents SOCKS command.<br>
  * SOCKS4 protocol support CONNECT and BIND, SOCKS5 protocol supports CONNECT, BIND, and UDP
  * ASSOCIATE.
- * 
+ *
  * @author Youchao Feng
- * @date Mar 19, 2015 11:41:34 AM
  * @version 1.0
- * 
+ * @date Mar 19, 2015 11:41:34 AM
  * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
  */
 public enum SocksCommand {
@@ -48,7 +47,7 @@ public enum SocksCommand {
 
   /**
    * Constructs a SOCKS command.
-   * 
+   *
    * @param value Value of SOCKS command.
    */
   private SocksCommand(int value) {
@@ -57,7 +56,7 @@ public enum SocksCommand {
 
   /**
    * Get value of a command.
-   * 
+   *
    * @return the unsigned byte that represents the command.
    */
   public int getValue() {
