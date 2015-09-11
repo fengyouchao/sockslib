@@ -19,7 +19,7 @@
 		<log4j-core.version>2.3</log4j-core.version>
 		<junit.version>4.9</junit.version>
 		<mongo.verson>3.0.3</mongo.verson>
-		<mysql.version>5.1.9</mysql.version>
+		<h2.version>1.4.188</h2.version>
 	</properties>
 
 	<dependencies>
@@ -55,16 +55,16 @@
 		</dependency>
 
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql.version}</version>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>dbcp</artifactId>
+			<version>6.0.44</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>dbcp</artifactId>
-			<version>6.0.44</version>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${h2.version}</version>
 			<scope>test</scope>
 		</dependency>
 
