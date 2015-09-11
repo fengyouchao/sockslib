@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class JdbcBasedUserManager implements UserManager {
 
-  public static final String USER_TABLE_NAME = "SOCKS_USER";
+  public static final String USER_TABLE_NAME = "SOCKS_USERS";
   private static final Logger logger = LoggerFactory.getLogger(JdbcConfiguration.class);
   private static final String CREATE_USER_SQL =
       "INSERT INTO " + USER_TABLE_NAME + " (`username`,`password`)VALUES(?,?)";
