@@ -58,7 +58,7 @@ public class TestJdbcBasedUserManager {
   }
 
   @After public void after() {
-    jdbcTemplate.deleteAll(JdbcBasedUserManager.USER_TABLE_NAME);
+    jdbcTemplate.update(SQL_DROP_TABLE);
   }
 
   @Test public void createAndFind() {
