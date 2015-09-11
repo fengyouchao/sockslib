@@ -93,7 +93,7 @@ public class TestMongoBasedUserManager {
   public void testDelete(){
     final User user = createTestUser();
     final User result1 = userManager.find(user.getUsername());
-    userManager.deleteUser(user.getUsername());
+    userManager.delete(user.getUsername());
     final User result2 = userManager.find(user.getUsername());
 
     Assert.assertNotNull(result1);
