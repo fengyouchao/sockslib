@@ -4,7 +4,7 @@
 
 	<groupId>io.github.fengyouchao</groupId>
 	<artifactId>fucksocks</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.0-snapshot</version>
 	<packaging>jar</packaging>
 
 	<name>fucksocks</name>
