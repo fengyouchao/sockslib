@@ -14,7 +14,7 @@
 
 package fucksocks.server;
 
-import fucksocks.common.methods.NoAuthencationRequiredMethod;
+import fucksocks.common.methods.NoAuthenticationRequiredMethod;
 import fucksocks.common.methods.UsernamePasswordMethod;
 import fucksocks.server.manager.User;
 
@@ -58,7 +58,7 @@ public class SocksProxyServerFactory {
     SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class, port);
     proxyServer.setBufferSize(BUFFER_SIZE);
     proxyServer.setTimeout(TIMEOUT);
-    proxyServer.setSupportMethods(new NoAuthencationRequiredMethod());
+    proxyServer.setSupportMethods(new NoAuthenticationRequiredMethod());
     return proxyServer;
   }
 

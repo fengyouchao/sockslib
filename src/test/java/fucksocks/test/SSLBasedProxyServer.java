@@ -18,7 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import fucksocks.common.SSLConfiguration;
-import fucksocks.common.methods.NoAuthencationRequiredMethod;
+import fucksocks.common.methods.NoAuthenticationRequiredMethod;
 import fucksocks.server.SSLSocksProxyServer;
 import fucksocks.server.Socks5Handler;
 import fucksocks.server.SocksProxyServer;
@@ -35,7 +35,7 @@ public class SSLBasedProxyServer {
   public static void main(String[] args) throws FileNotFoundException, IOException {
     SSLConfiguration configuration = SSLConfiguration.loadClassPath("/server-ssl.properties");
     SocksProxyServer proxyServer = new SSLSocksProxyServer(Socks5Handler.class, configuration);
-    proxyServer.setSupportMethods(new NoAuthencationRequiredMethod());
+    proxyServer.setSupportMethods(new NoAuthenticationRequiredMethod());
     try {
       proxyServer.start();
     } catch (IOException e) {

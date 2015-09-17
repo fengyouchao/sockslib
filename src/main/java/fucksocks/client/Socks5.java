@@ -20,7 +20,7 @@ import fucksocks.common.SocksCommand;
 import fucksocks.common.SocksException;
 import fucksocks.common.UsernamePasswordCredentials;
 import fucksocks.common.methods.GssApiMethod;
-import fucksocks.common.methods.NoAuthencationRequiredMethod;
+import fucksocks.common.methods.NoAuthenticationRequiredMethod;
 import fucksocks.common.methods.SocksMethod;
 import fucksocks.common.methods.SocksMethodRegistry;
 import fucksocks.common.methods.UsernamePasswordMethod;
@@ -99,7 +99,7 @@ public class Socks5 implements SocksProxy {
    */
   private void init() {
     acceptableMethods = new ArrayList<>();
-    acceptableMethods.add(new NoAuthencationRequiredMethod());
+    acceptableMethods.add(new NoAuthenticationRequiredMethod());
     acceptableMethods.add(new GssApiMethod());
     acceptableMethods.add(new UsernamePasswordMethod());
   }

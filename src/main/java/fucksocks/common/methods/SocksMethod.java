@@ -41,7 +41,7 @@ import fucksocks.server.Session;
  * @see fucksocks.common.methods.AbstractSocksMethod
  * @see fucksocks.common.methods.GssApiMethod
  * @see fucksocks.common.methods.NoAcceptableMethod
- * @see fucksocks.common.methods.NoAuthencationRequiredMethod
+ * @see NoAuthenticationRequiredMethod
  * @see fucksocks.common.methods.UsernamePasswordMethod
  * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
  */

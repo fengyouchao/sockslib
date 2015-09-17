@@ -14,15 +14,15 @@
 
 package fucksocks.common.methods;
 
-import java.io.IOException;
-
 import fucksocks.client.SocksProxy;
 import fucksocks.common.SocksException;
 import fucksocks.server.Session;
 
+import java.io.IOException;
+
 
 /**
- * The class <code>NoAuthencationRequiredMethod</code> represents method which mean NO
+ * The class <code>NoAuthenticationRequiredMethod</code> represents method which mean NO
  * AUTHENTICATION REQUIRED. This indicates that the server does not require the client to provide
  * authentication information.
  *
@@ -31,7 +31,7 @@ import fucksocks.server.Session;
  * @date Mar 17, 2015 11:34:01 AM
  * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
  */
-public class NoAuthencationRequiredMethod extends AbstractSocksMethod {
+public class NoAuthenticationRequiredMethod extends AbstractSocksMethod {
 
   @Override
   public final int getByte() {

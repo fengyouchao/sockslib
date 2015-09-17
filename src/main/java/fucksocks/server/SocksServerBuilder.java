@@ -1,7 +1,7 @@
 package fucksocks.server;
 
 import fucksocks.client.SocksProxy;
-import fucksocks.common.methods.NoAuthencationRequiredMethod;
+import fucksocks.common.methods.NoAuthenticationRequiredMethod;
 import fucksocks.common.methods.SocksMethod;
 import fucksocks.common.methods.UsernamePasswordMethod;
 import fucksocks.server.filters.SessionFilter;
@@ -69,7 +69,7 @@ public class SocksServerBuilder {
    * @return Instance of {@link SocksProxyServer}.
    */
   public static SocksProxyServer buildAnonymousSocks5Server(int bindPort) {
-    return newSocks5ServerBuilder().setSupportedSocksMethod(new NoAuthencationRequiredMethod()).setBindPort(bindPort).build();
+    return newSocks5ServerBuilder().setSupportedSocksMethod(new NoAuthenticationRequiredMethod()).setBindPort(bindPort).build();
   }
 
   /**
@@ -173,7 +173,7 @@ public class SocksServerBuilder {
     proxyServer.setBindPort(bindPort);
     if (supportedSocksMethods == null) {
       supportedSocksMethods = new HashSet<>();
-      supportedSocksMethods.add(new NoAuthencationRequiredMethod());
+      supportedSocksMethods.add(new NoAuthenticationRequiredMethod());
     }
     SocksMethod[] methods = new SocksMethod[supportedSocksMethods.size()];
     int i = 0;
