@@ -45,8 +45,8 @@ public class UsernamePasswordAuthenticator implements Authenticator {
     this.userManager = userManager;
   }
 
-  @Override
-  public void doAuthenticate(Credentials credentials, Session session) throws AuthenticationException {
+  @Override public void doAuthenticate(Credentials credentials, Session session)
+      throws AuthenticationException {
     if (credentials instanceof UsernamePasswordCredentials) {
       String username = credentials.getUserPrincipal().getName();
       String password = credentials.getPassword();
@@ -77,9 +77,9 @@ public class UsernamePasswordAuthenticator implements Authenticator {
    * @param session Current session
    * @throws AuthenticationException {@link AuthenticationException}
    */
-  protected void authenticationFailed(Session session) throws AuthenticationException{
+  protected void authenticationFailed(Session session) throws AuthenticationException {
     throw new AuthenticationException(
-            "Authentication failed, client from " + session.getRemoteAddress());
+        "Authentication failed, client from " + session.getRemoteAddress());
   }
 
   public UserManager getUserManager() {
