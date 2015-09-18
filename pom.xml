@@ -52,6 +52,7 @@
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
 			<version>${mongo.verson}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
