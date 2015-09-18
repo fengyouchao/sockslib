@@ -26,6 +26,7 @@ import java.sql.Date;
 import java.sql.NClob;
 import java.sql.Ref;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.RowId;
 import java.sql.SQLException;
 import java.sql.SQLXML;
@@ -297,6 +298,14 @@ public final class ReadOnlyResultSet {
 
   public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
     return resultSet.getObject(columnLabel, type);
+  }
+
+  public ResultSetMetaData getMetaData() throws SQLException {
+    return resultSet.getMetaData();
+  }
+
+  public int getRow() throws SQLException {
+    return resultSet.getRow();
   }
 
 }
