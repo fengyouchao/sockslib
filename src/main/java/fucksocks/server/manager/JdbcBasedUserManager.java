@@ -53,7 +53,7 @@ public class JdbcBasedUserManager implements UserManager {
   public void create(User user) {
     user.setPassword(generateEncryptPassword(user));
     Object[] args = {user.getUsername(), user.getPassword()};
-    jdbcTemplate.update(createUserSql, args);
+    jdbcTemplate.execute(createUserSql, args);
   }
 
   @Override
@@ -100,7 +100,7 @@ public class JdbcBasedUserManager implements UserManager {
       user.setPassword(newEncryptPassword);
     }
     Object[] args = {user.getPassword(), user.getUsername()};
-    jdbcTemplate.update(updateUserSql, args);
+    jdbcTemplate.execute(updateUserSql, args);
   }
 
   @Override

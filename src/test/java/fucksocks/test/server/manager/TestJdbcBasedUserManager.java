@@ -53,12 +53,12 @@ public class TestJdbcBasedUserManager {
     dataSource.setPassword(configuration.getPassword());
     userManager = new JdbcBasedUserManager(dataSource);
     jdbcTemplate = userManager.getJdbcTemplate();
-    jdbcTemplate.update(SQL_DROP_TABLE);
-    jdbcTemplate.update(SQL_CREATE_TABLE);
+    jdbcTemplate.execute(SQL_DROP_TABLE);
+    jdbcTemplate.execute(SQL_CREATE_TABLE);
   }
 
   @After public void after() {
-    jdbcTemplate.update(SQL_DROP_TABLE);
+    jdbcTemplate.execute(SQL_DROP_TABLE);
   }
 
   @Test public void createAndFind() {

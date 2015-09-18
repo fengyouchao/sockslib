@@ -60,14 +60,14 @@ public class JdbcTemplate {
 
   public int deleteAll(final String tableName) {
     String sql = "delete from " + tableName;
-    return update(sql);
+    return execute(sql);
   }
 
-  public int update(final String sql) {
-    return update(sql, null);
+  public int execute(final String sql) {
+    return execute(sql, null);
   }
 
-  public int update(final String sql, final Object[] args) {
+  public int execute(final String sql, final Object[] args) {
     Connection connection = null;
     PreparedStatement preparedStatement = null;
     try {
