@@ -52,15 +52,13 @@ public class UsernamePasswordAuthenticator implements Authenticator {
       String password = credentials.getPassword();
       User user = userManager.check(username, password);
       if (user == null) {
-        throw new AuthenticationException(
-            "Authentication failed, client from " + session.getRemoteAddress());
+        authenticationFailed(session);
       }
-      authenticateSuccess(session, user);
+      authenticationSuccess(session, user);
 
     } else {
       throw new AuthenticationException("Only support Username/Password Authentication");
     }
-
   }
 
   /**
@@ -69,8 +67,19 @@ public class UsernamePasswordAuthenticator implements Authenticator {
    * @param session Current session.
    * @param user    user.
    */
-  protected void authenticateSuccess(Session session, User user) {
+  protected void authenticationSuccess(Session session, User user) {
     session.setAttribute(USER_KEY, user);
+  }
+
+  /**
+   * This method will throw a {@link AuthenticationException}
+   *
+   * @param session Current session
+   * @throws AuthenticationException {@link AuthenticationException}
+   */
+  protected void authenticationFailed(Session session) throws AuthenticationException{
+    throw new AuthenticationException(
+            "Authentication failed, client from " + session.getRemoteAddress());
   }
 
   public UserManager getUserManager() {
