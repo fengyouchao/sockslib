@@ -14,11 +14,13 @@
 
 package fucksocks.common.methods;
 
-import java.io.IOException;
-
 import fucksocks.client.SocksProxy;
 import fucksocks.common.SocksException;
 import fucksocks.server.Session;
+
+import java.io.IOException;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The class <code>NoAcceptableMethod</code> represents a method which indicates none of the methods
@@ -43,6 +45,7 @@ public class NoAcceptableMethod extends AbstractSocksMethod {
 
   @Override
   public void doMethod(SocksProxy socksProxy) throws SocksException, IOException {
+    checkNotNull(socksProxy, "Argument [socksProxy] may not be null");
     // Close socket and throw SocksException.
     if (!socksProxy.getProxySocket().isClosed()) {
       socksProxy.getProxySocket().close();
@@ -52,6 +55,7 @@ public class NoAcceptableMethod extends AbstractSocksMethod {
 
   @Override
   public void doMethod(Session session) throws SocksException, IOException {
+    checkNotNull(session, "Argument [session] may not be null");
     session.close(); // close session
     throw SocksException.noAcceptableMethods();
   }

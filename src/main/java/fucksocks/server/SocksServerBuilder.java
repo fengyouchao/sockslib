@@ -16,6 +16,8 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * The class <code>SocksServerBuilder</code> is a tool class to build an {@link SocksProxyServer}.
  *
@@ -27,28 +29,28 @@ import java.util.concurrent.TimeUnit;
 public class SocksServerBuilder {
 
   private static final Logger logger = LoggerFactory.getLogger(SocksServerBuilder.class);
-
   private static final int DEFAULT_PORT = 1080;
 
   private Class<? extends SocksHandler> socksHandlerClass;
-  private Set<SocksMethod> supportedSocksMethods;
+  private Set<SocksMethod> socksMethods;
   private UserManager userManager;
   private SocksProxy proxy;
   private int timeout;
   private int bindPort = DEFAULT_PORT;
+  private boolean daemon = false;
   private ExecutorService executorService;
 
   /**
-   * Creates a <code>SocksServerBuilder</code> with a <code>Class<? extends {@link SocksHandler}</code>
+   * Creates a <code>SocksServerBuilder</code> with a <code>Class<? extends {@link
+   * SocksHandler}</code>
    * instance.
    *
    * @param socksHandlerClass <code>java.lang.Class<? extends {@link SocksHandler}</code> instance.
    */
   private SocksServerBuilder(Class<? extends SocksHandler> socksHandlerClass) {
-    if (socksHandlerClass == null) {
-      throw new IllegalArgumentException("socksHandlerClass can't be null");
-    }
-    this.socksHandlerClass = socksHandlerClass;
+    this.socksHandlerClass =
+        checkNotNull(socksHandlerClass, "Argument [socksHandlerClass] may " + "not be null");
+    userManager = new MemoryBasedUserManager();
   }
 
   /**
@@ -69,11 +71,13 @@ public class SocksServerBuilder {
    * @return Instance of {@link SocksProxyServer}.
    */
   public static SocksProxyServer buildAnonymousSocks5Server(int bindPort) {
-    return newSocks5ServerBuilder().setSupportedSocksMethod(new NoAuthenticationRequiredMethod()).setBindPort(bindPort).build();
+    return newSocks5ServerBuilder().setSocksMethods(new NoAuthenticationRequiredMethod())
+        .setBindPort(bindPort).build();
   }
 
   /**
-   * Creates a <code>SocksServerBuilder</code> instance with specified Class instance of {@link SocksHandler}.
+   * Creates a <code>SocksServerBuilder</code> instance with specified Class instance of {@link
+   * SocksHandler}.
    *
    * @param socksHandlerClass Class instance of {@link SocksHandler}.
    * @return Instance of {@link SocksServerBuilder}.
@@ -100,11 +104,11 @@ public class SocksServerBuilder {
    * @param methods Instance of {@link SocksMethod}.
    * @return Instance of {@link SocksServerBuilder}.
    */
-  public SocksServerBuilder addSupportedSocksMethods(SocksMethod... methods) {
-    if (supportedSocksMethods == null) {
-      supportedSocksMethods = new HashSet<>();
+  public SocksServerBuilder addSocksMethods(SocksMethod... methods) {
+    if (socksMethods == null) {
+      socksMethods = new HashSet<>();
     }
-    Collections.addAll(supportedSocksMethods, methods);
+    Collections.addAll(socksMethods, methods);
     return this;
   }
 
@@ -114,27 +118,21 @@ public class SocksServerBuilder {
    * @param methods Instance of {@link SocksMethod}.
    * @return Instance of {@link SocksServerBuilder}.
    */
-  public SocksServerBuilder setSupportedSocksMethod(SocksMethod... methods) {
-    if (supportedSocksMethods == null) {
-      supportedSocksMethods = new HashSet<>();
+  public SocksServerBuilder setSocksMethods(SocksMethod... methods) {
+    if (socksMethods == null) {
+      socksMethods = new HashSet<>();
     }
-    Collections.addAll(supportedSocksMethods, methods);
+    Collections.addAll(socksMethods, methods);
     return this;
   }
 
-  public SocksServerBuilder setSupportedSocksMethod(Set<SocksMethod> methods) {
-    if (methods == null) {
-      throw new IllegalArgumentException("methods can't be null");
-    }
-    supportedSocksMethods = methods;
+  public SocksServerBuilder setSocksMethods(Set<SocksMethod> methods) {
+    socksMethods = checkNotNull(methods, "Argument [methods] may not be null");
     return this;
   }
 
   public SocksServerBuilder setUserManager(UserManager userManager) {
-    if (userManager == null) {
-      throw new IllegalArgumentException("userManager can't be null");
-    }
-    this.userManager = userManager;
+    this.userManager = checkNotNull(userManager, "Argument [userManager] may not be null");
     return this;
   }
 
@@ -167,23 +165,30 @@ public class SocksServerBuilder {
     return this;
   }
 
+  public SocksServerBuilder setDaemon(boolean daemon) {
+    this.daemon = daemon;
+    return this;
+  }
+
   public SocksProxyServer build() {
     SocksProxyServer proxyServer = new GenericSocksProxyServer(socksHandlerClass);
     proxyServer.setTimeout(timeout);
     proxyServer.setBindPort(bindPort);
-    if (supportedSocksMethods == null) {
-      supportedSocksMethods = new HashSet<>();
-      supportedSocksMethods.add(new NoAuthenticationRequiredMethod());
+    proxyServer.setDaemon(daemon);
+    if (socksMethods == null) {
+      socksMethods = new HashSet<>();
+      socksMethods.add(new NoAuthenticationRequiredMethod());
     }
-    SocksMethod[] methods = new SocksMethod[supportedSocksMethods.size()];
+    SocksMethod[] methods = new SocksMethod[socksMethods.size()];
     int i = 0;
-    for (SocksMethod method : supportedSocksMethods) {
+    for (SocksMethod method : socksMethods) {
       if (method instanceof UsernamePasswordMethod) {
         if (userManager == null) {
           userManager = new MemoryBasedUserManager();
           userManager.addUser("fucksocks", "fucksocks");
         }
-        ((UsernamePasswordMethod) method).setAuthenticator(new UsernamePasswordAuthenticator(userManager));
+        ((UsernamePasswordMethod) method).setAuthenticator(new UsernamePasswordAuthenticator
+            (userManager));
       }
       methods[i] = method;
       i++;

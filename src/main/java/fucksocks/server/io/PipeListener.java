@@ -31,14 +31,14 @@ public interface PipeListener {
    *
    * @param pipe The started {@link Pipe} instance.
    */
-  public void onStart(Pipe pipe);
+  void onStart(Pipe pipe);
 
   /**
    * This method will be called when the {@link Pipe} stopped.
    *
    * @param pipe The stopped {@link Pipe} instance.
    */
-  public void onStop(Pipe pipe);
+  void onStop(Pipe pipe);
 
   /**
    * This method will be called when the {@link Pipe} transferring data.
@@ -47,7 +47,7 @@ public interface PipeListener {
    * @param buffer       Data which is transferring.
    * @param bufferLength length of data.
    */
-  public void onTransfer(Pipe pipe, byte[] buffer, int bufferLength);
+  void onTransfer(Pipe pipe, byte[] buffer, int bufferLength);
 
   /**
    * This method will be called when an error occurred.
@@ -55,6 +55,6 @@ public interface PipeListener {
    * @param pipe      {@link Pipe} instance.
    * @param exception The error that occurred in {@link Pipe}..
    */
-  public void onError(Pipe pipe, Exception exception);
+  void onError(Pipe pipe, Exception exception);
 
 }

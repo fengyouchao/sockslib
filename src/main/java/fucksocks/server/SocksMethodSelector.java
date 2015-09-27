@@ -14,12 +14,12 @@
 
 package fucksocks.server;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import fucksocks.common.methods.NoAcceptableMethod;
 import fucksocks.common.methods.SocksMethod;
 import fucksocks.server.msg.MethodSelectionMessage;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The class <code>SocksMethodSelector</code> implements the {@link MethodSelector}.

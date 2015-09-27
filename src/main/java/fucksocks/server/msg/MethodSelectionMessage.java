@@ -14,10 +14,10 @@
 
 package fucksocks.server.msg;
 
+import fucksocks.common.SocksException;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import fucksocks.common.SocksException;
 
 /**
  * The class <code>MethodSelectionMessage</code> represents a method selection message.
@@ -30,16 +30,16 @@ public class MethodSelectionMessage implements ReadableMessage, WritableMessage 
 
   private int version;
 
-  private int nMethod;
+  private int methodNum;
 
   private int[] methods;
 
   @Override
   public byte[] getBytes() {
-    byte[] bytes = new byte[2 + nMethod];
+    byte[] bytes = new byte[2 + methodNum];
 
     bytes[0] = (byte) version;
-    bytes[1] = (byte) nMethod;
+    bytes[1] = (byte) methodNum;
     for (int i = 0; i < methods.length; i++) {
       bytes[i + 2] = (byte) methods[i];
     }
@@ -56,11 +56,11 @@ public class MethodSelectionMessage implements ReadableMessage, WritableMessage 
   public void read(InputStream inputStream) throws SocksException, IOException {
 
     version = inputStream.read();
-    nMethod = inputStream.read();
+    methodNum = inputStream.read();
 
-    methods = new int[nMethod];
+    methods = new int[methodNum];
 
-    for (int i = 0; i < nMethod; i++) {
+    for (int i = 0; i < methodNum; i++) {
       methods[i] = inputStream.read();
     }
 
@@ -74,12 +74,12 @@ public class MethodSelectionMessage implements ReadableMessage, WritableMessage 
     this.version = version;
   }
 
-  public int getnMethod() {
-    return nMethod;
+  public int getMethodNum() {
+    return methodNum;
   }
 
-  public void setnMethod(int nMethod) {
-    this.nMethod = nMethod;
+  public void setMethodNum(int methodNum) {
+    this.methodNum = methodNum;
   }
 
   public int[] getMethods() {

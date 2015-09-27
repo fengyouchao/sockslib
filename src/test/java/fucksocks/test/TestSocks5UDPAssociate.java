@@ -14,13 +14,16 @@
 
 package fucksocks.test;
 
+import fucksocks.client.Socks5;
+import fucksocks.client.Socks5DatagramSocket;
+import fucksocks.common.net.MonitorDatagramSocketWrapper;
+import fucksocks.common.net.NetworkMonitor;
+import fucksocks.utils.ResourceUtil;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
-
-import fucksocks.client.Socks5;
-import fucksocks.client.Socks5DatagramSocket;
 
 public class TestSocks5UDPAssociate {
 
@@ -30,16 +33,28 @@ public class TestSocks5UDPAssociate {
     Socks5 proxy = new Socks5(new InetSocketAddress("localhost", 1080));
 
     try {
+      NetworkMonitor networkMonitor = new NetworkMonitor();
       clientSocket = new Socks5DatagramSocket(proxy);
-      String message = "Are you UDP server?";
-      byte[] buffer = message.getBytes();
-      clientSocket.send(new DatagramPacket(buffer, buffer.length, new InetSocketAddress(
-          "localhost", 5050)));
-      byte[] recvBuf = new byte[100];
-      DatagramPacket recvPacket = new DatagramPacket(recvBuf, recvBuf.length);
-      clientSocket.receive(recvPacket);
-      String recvStr = new String(recvPacket.getData(), 0, recvPacket.getLength());
-      System.out.println("received:" + recvStr);
+      clientSocket = new MonitorDatagramSocketWrapper(clientSocket, networkMonitor);
+      String message = "I am client using SOCKS proxy";
+      byte[] sendBuffer = message.getBytes();
+      DatagramPacket packet =
+          new DatagramPacket(sendBuffer, sendBuffer.length, new InetSocketAddress("localhost",
+              5050));
+      clientSocket.send(packet);
+
+
+      //Received response message from UDP server.
+      byte[] receiveBuf = new byte[100];
+      DatagramPacket receivedPacket = new DatagramPacket(receiveBuf, receiveBuf.length);
+      clientSocket.receive(receivedPacket);
+      String receiveStr = new String(receivedPacket.getData(), 0, receivedPacket.getLength());
+      System.out.println("received:" + receiveStr);
+
+      System.out.println("UDP client information:");
+      System.out.println("Total Sent:     " + networkMonitor.getTotalSend() + " bytes");
+      System.out.println("Total Received: " + networkMonitor.getTotalReceive() + " bytes");
+      System.out.println("Total:          " + networkMonitor.getTotal() + " bytes");
 
     } catch (IOException e) {
       e.printStackTrace();

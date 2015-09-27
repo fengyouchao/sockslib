@@ -14,9 +14,9 @@
 
 package fucksocks.common;
 
-import java.io.IOException;
-
 import fucksocks.server.msg.ServerReply;
+
+import java.io.IOException;
 
 /**
  * The class <code>SocksException</code> represents an exception about SOCKS protocol.
@@ -33,17 +33,17 @@ public class SocksException extends IOException {
   private static final long serialVersionUID = 1L;
 
   private static final String NO_ACCEPTABLE_METHODS = "NO ACCEPTABLE METHODS";
-
-  /**
-   * Reply from SOCKS server.
-   */
-  private ServerReply serverReply;
-
   /**
    * Messages that server will reply.
    */
   private static final String serverReplyMessage[] =
-      {"General SOCKS server failure", "Connection not allowed by ruleset", "Network unreachable", "Host unreachable", "Connection refused", "TTL expired", "Command not supported", "Address type not supported"};
+      {"General SOCKS server failure", "Connection not allowed by ruleset",
+          "Network " + "unreachable", "Host unreachable", "Connection refused", "TTL expired",
+          "Command not " + "supported", "Address type not supported"};
+  /**
+   * Reply from SOCKS server.
+   */
+  private ServerReply serverReply;
 
   /**
    * Constructs an instance of {@link SocksException} with a message.
@@ -68,7 +68,7 @@ public class SocksException extends IOException {
    *
    * @return An instance of {@link SocksException}.
    */
-  public static final SocksException noAcceptableMethods() {
+  public static SocksException noAcceptableMethods() {
     return new SocksException(NO_ACCEPTABLE_METHODS);
   }
 
@@ -77,7 +77,7 @@ public class SocksException extends IOException {
    *
    * @return An instance of {@link SocksException}.
    */
-  public static final SocksException protocolNotSupported() {
+  public static SocksException protocolNotSupported() {
     return new SocksException("Protocol not supported");
   }
 
@@ -87,7 +87,7 @@ public class SocksException extends IOException {
    * @param reply Server's reply.
    * @return An instance of {@link SocksException}.
    */
-  public static final SocksException serverReplyException(ServerReply reply) {
+  public static SocksException serverReplyException(ServerReply reply) {
     SocksException ex = serverReplyException(reply.getValue());
     ex.setServerReply(reply);
     return ex;
@@ -99,7 +99,7 @@ public class SocksException extends IOException {
    * @param reply Code of server's reply.
    * @return An instance of {@link SocksException}.
    */
-  public static final SocksException serverReplyException(byte reply) {
+  public static SocksException serverReplyException(byte reply) {
     int code = reply;
     code = code & 0xff;
     if (code < 0 || code > 0x08) {

@@ -56,7 +56,8 @@ public class HashPasswordProtector implements PasswordProtector {
     this.algorithm = algorithm;
     this.hashTime = hashTime;
     cache =
-        CacheBuilder.newBuilder().maximumSize(1000).expireAfterAccess(5, TimeUnit.MINUTES).build(new CacheLoader<String, String>() {
+        CacheBuilder.newBuilder().maximumSize(1000).expireAfterAccess(5, TimeUnit.MINUTES).build
+            (new CacheLoader<String, String>() {
           @Override
           public String load(String key) throws Exception {
             return encryptNow(key);

@@ -14,11 +14,11 @@
 
 package fucksocks.server.msg;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import fucksocks.common.SocksException;
 import fucksocks.common.UsernamePasswordCredentials;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 
 /**

@@ -31,6 +31,6 @@ public interface WritableMessage extends Message {
    *
    * @return The byte array of the message.
    */
-  public byte[] getBytes();
+  byte[] getBytes();
 
 }

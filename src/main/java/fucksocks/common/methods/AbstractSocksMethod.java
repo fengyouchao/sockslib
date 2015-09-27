@@ -37,11 +37,7 @@ public abstract class AbstractSocksMethod implements SocksMethod {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof SocksMethod && ((SocksMethod) obj).getByte() == this.getByte()) {
-      return true;
-    }
-    return false;
+    return obj instanceof SocksMethod && ((SocksMethod) obj).getByte() == this.getByte();
   }
-
 
 }

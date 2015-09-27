@@ -14,10 +14,10 @@
 
 package fucksocks.server.filters;
 
-import java.io.IOException;
-
 import fucksocks.server.Session;
 import fucksocks.server.msg.CommandMessage;
+
+import java.io.IOException;
 
 /**
  * The class <code>SocksCommandFilter</code> represents a SOCKS command filter. When a client sends

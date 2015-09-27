@@ -19,13 +19,13 @@ package fucksocks.utils.jdbc;
 import java.sql.SQLException;
 
 /**
- * The interface <code>Mapper</code> is a ORM mapper.
+ * The interface <code>RowMapper</code> is a ORM mapper.
  *
  * @author Youchao Feng
  * @version 1.0
  * @date Sep 07, 2015
  */
-public interface Mapper<T> {
+public interface RowMapper<T> {
 
   /**
    * This method can read a {@link ReadOnlyResultSet} to create an object.

@@ -14,26 +14,26 @@
 
 package fucksocks.test;
 
+import fucksocks.client.Socks5;
+import fucksocks.client.SocksProxy;
+import fucksocks.client.SocksSocket;
+import fucksocks.common.UsernamePasswordCredentials;
+import fucksocks.utils.ResourceUtil;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import fucksocks.client.Socks5;
-import fucksocks.client.SocksProxy;
-import fucksocks.client.SocksSocket;
-import fucksocks.common.UsernamePasswordCredentials;
 
 /**
- * 
  * <code>TestSocks5Connect</code> is a test class. It use SOCKS5's CONNECT command to query WHOIS
  * from a WHOIS server.
- * 
- * @author Youchao Feng
- * @date Mar 24, 2015 10:22:42 PM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Mar 24, 2015 10:22:42 PM
  */
 public class TestSocks5ProxyChainConnect {
 
@@ -55,8 +55,8 @@ public class TestSocks5ProxyChainConnect {
     proxy3.setCredentials(new UsernamePasswordCredentials("socks", "1234"));
 
     proxy1.setChainProxy(proxy2.setChainProxy(proxy3));
-    
-    System.out.println("USE proxy:"+proxy1);
+
+    System.out.println("USE proxy:" + proxy1);
 
     try {
 

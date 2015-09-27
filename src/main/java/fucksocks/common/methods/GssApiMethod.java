@@ -14,12 +14,12 @@
 
 package fucksocks.common.methods;
 
-import java.io.IOException;
-
 import fucksocks.client.SocksProxy;
 import fucksocks.common.NotImplementException;
 import fucksocks.common.SocksException;
 import fucksocks.server.Session;
+
+import java.io.IOException;
 
 /**
  * The class <code>GssApiMethod</code> is represents GSS API method in SOCKS protocol.
@@ -51,6 +51,5 @@ public class GssApiMethod extends AbstractSocksMethod {
   public String getMethodName() {
     return "GSS API";
   }
-
 
 }

@@ -88,7 +88,8 @@ public class CommandResponseMessage implements WritableMessage {
    * @param bindAddress Bind IP address.
    * @param bindPort    Bind port.
    */
-  public CommandResponseMessage(int version, ServerReply reply, InetAddress bindAddress, int bindPort) {
+  public CommandResponseMessage(int version, ServerReply reply, InetAddress bindAddress, int
+      bindPort) {
     this.version = version;
     this.reply = reply;
     this.bindAddress = bindAddress;
@@ -121,7 +122,7 @@ public class CommandResponseMessage implements WritableMessage {
         bytes[20] = SocksUtil.getFirstByteFromInt(bindPort);
         bytes[21] = SocksUtil.getSecondByteFromInt(bindPort);
         break;
-      case AddressType.DOMAINNAME:
+      case AddressType.DOMAIN_NAME:
         throw new NotImplementException();
       default:
         break;
@@ -224,7 +225,7 @@ public class CommandResponseMessage implements WritableMessage {
   /**
    * Sets SOCKS server's reply.
    *
-   * @param reply Reply of the SOKS server.
+   * @param reply Reply of the SOCKS server.
    */
   public void setReply(ServerReply reply) {
     this.reply = reply;

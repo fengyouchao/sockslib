@@ -22,8 +22,7 @@ import java.net.InetSocketAddress;
 public class UDPTestClient {
 
   public static void main(String[] args) throws IOException {
-    @SuppressWarnings("resource")
-    DatagramSocket clientSocket = new DatagramSocket();
+    @SuppressWarnings("resource") DatagramSocket clientSocket = new DatagramSocket();
     String message = "Hello, UDP server";
     DatagramPacket buffer =
         new DatagramPacket(message.getBytes(), message.length(), new InetSocketAddress("0.0.0.0",

@@ -112,7 +112,9 @@ public class SocksProxyFactory {
           }
           return socks;
         default:
-          throw new IllegalArgumentException("The input string should be formatted as [HOST],[IP],[USERNAME],[PASSWORD],[TRUST_KEY_STORE],[TRUST_KEY_STORE_PASSWORD],[KEY_STORE],[KEY_STORE_PASSWORD]");
+          throw new IllegalArgumentException("The input string should be formatted as [HOST],"
+              + "[IP],[USERNAME],[PASSWORD],[TRUST_KEY_STORE],[TRUST_KEY_STORE_PASSWORD],"
+              + "[KEY_STORE],[KEY_STORE_PASSWORD]");
       }
     } catch (NumberFormatException e) {
       throw new IllegalArgumentException("Port should be a number between 1 and 65535");

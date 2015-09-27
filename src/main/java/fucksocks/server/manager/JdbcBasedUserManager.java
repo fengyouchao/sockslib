@@ -3,12 +3,14 @@ package fucksocks.server.manager;
 import com.google.common.base.Strings;
 import fucksocks.common.NotImplementException;
 import fucksocks.utils.jdbc.JdbcTemplate;
-import fucksocks.utils.jdbc.Mapper;
+import fucksocks.utils.jdbc.RowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The class <code>JdbcBasedUserManager</code> is JDBC based user manager.
@@ -39,13 +41,14 @@ public class JdbcBasedUserManager implements UserManager {
 
   private JdbcTemplate jdbcTemplate;
   private DataSource dataSource;
-  private Mapper<User> mapper = new UserMapper();
+  private RowMapper<User> rowMapper = new UserRowMapper();
   private PasswordProtector passwordProtector = new NonePasswordProtector();
 
   public JdbcBasedUserManager() {
   }
 
   public JdbcBasedUserManager(DataSource dataSource) {
+    this.dataSource = checkNotNull(dataSource, "Argument [dataSource] may not be null");
     jdbcTemplate = new JdbcTemplate(dataSource);
   }
 
@@ -83,7 +86,7 @@ public class JdbcBasedUserManager implements UserManager {
 
   @Override
   public List<User> findAll() {
-    return jdbcTemplate.query(queryAllUserSql, mapper);
+    return jdbcTemplate.query(queryAllUserSql, rowMapper);
   }
 
   @Override
@@ -106,7 +109,7 @@ public class JdbcBasedUserManager implements UserManager {
   @Override
   public User find(final String username) {
     Object[] args = {username};
-    List<User> users = jdbcTemplate.query(queryByUsernameSql, args, mapper);
+    List<User> users = jdbcTemplate.query(queryByUsernameSql, args, rowMapper);
     if (users.size() >= 1) {
       return users.get(0);
     }
@@ -130,12 +133,12 @@ public class JdbcBasedUserManager implements UserManager {
     this.jdbcTemplate = jdbcTemplate;
   }
 
-  public Mapper<User> getMapper() {
-    return mapper;
+  public RowMapper<User> getRowMapper() {
+    return rowMapper;
   }
 
-  public void setMapper(Mapper<User> mapper) {
-    this.mapper = mapper;
+  public void setRowMapper(RowMapper<User> rowMapper) {
+    this.rowMapper = rowMapper;
   }
 
   private String generateEncryptPassword(final User user, String newPassword) {

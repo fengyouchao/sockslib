@@ -14,15 +14,15 @@
 
 package fucksocks.server;
 
-import java.util.Set;
-
 import fucksocks.common.methods.SocksMethod;
 import fucksocks.server.msg.MethodSelectionMessage;
+
+import java.util.Set;
 
 /**
  * The class <code>MethodSelector</code> represents a method selector.<br>
  * This class will select one method from the methods that client given. If there is no method
- * acceptable, it will select 0xFF.
+ * acceptable, it will select {@link fucksocks.common.methods.NoAcceptableMethod}.
  *
  * @author Youchao Feng
  * @version 1.0
@@ -32,52 +32,53 @@ public interface MethodSelector {
 
 
   /**
-   * Selects a method form {@link MethodSelectionMessage}.
+   * Selects a method form {@link MethodSelectionMessage}.It returns
+   * {@link fucksocks.common.methods.NoAcceptableMethod} if there is no acceptable method.
    *
    * @param message the message from client.
    * @return The method that server selected.
    */
-  public SocksMethod select(MethodSelectionMessage message);
+  SocksMethod select(MethodSelectionMessage message);
+
+  /**
+   * Returns methods that server supported.
+   *
+   * @return The methods that server supported.
+   */
+  Set<SocksMethod> getSupportMethods();
 
   /**
    * Sets methods that server supported.
    *
    * @param supportMethods methods that server supported.
    */
-  public void setSupportMethods(Set<SocksMethod> supportMethods);
-
-  /**
-   * Gets methods that server supported.
-   *
-   * @return The methods that server supported.
-   */
-  public Set<SocksMethod> getSupportMethods();
+  void setSupportMethods(Set<SocksMethod> supportMethods);
 
   /**
    * Clears all methods that server supported.
    */
-  public void clearAllSupportMethods();
+  void clearAllSupportMethods();
 
   /**
    * Removes the method from the sets.
    *
    * @param socksMethod The method which will be removed.
    */
-  public void removeSupportMethod(SocksMethod socksMethod);
+  void removeSupportMethod(SocksMethod socksMethod);
 
   /**
    * Adds a method into a support method list.
    *
    * @param socksMethod The method which will be supported.
    */
-  public void addSupportMethod(SocksMethod socksMethod);
+  void addSupportMethod(SocksMethod socksMethod);
 
   /**
    * Sets support methods.
    *
    * @param methods Methods supported.
    */
-  public void setSupportMethod(SocksMethod... methods);
+  void setSupportMethod(SocksMethod... methods);
 
 
 }

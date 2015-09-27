@@ -14,11 +14,12 @@
 
 package fucksocks.server.io;
 
-import java.io.IOException;
-import java.net.Socket;
-
+import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.Socket;
 
 
 /**
@@ -74,11 +75,8 @@ public class SocketPipe implements Pipe {
    * @throws IOException If an I/O error occurred.
    */
   public SocketPipe(Socket socket1, Socket socket2) throws IOException {
-    if (socket1.isClosed() || socket2.isClosed()) {
-      throw new IllegalArgumentException("socket should be connected");
-    }
-    this.socket1 = socket1;
-    this.socket2 = socket2;
+    this.socket1 = Preconditions.checkNotNull(socket1, "Argument [socks1] may not be null");
+    this.socket2 = Preconditions.checkNotNull(socket2, "Argument [socks1] may not be null");
     pipe1 = new StreamPipe(socket1.getInputStream(), socket2.getOutputStream());
     ((StreamPipe) pipe1).setName("OUTPUT_PIPE");
     pipe2 = new StreamPipe(socket2.getInputStream(), socket1.getOutputStream());
@@ -91,9 +89,7 @@ public class SocketPipe implements Pipe {
 
   @Override
   public boolean start() {
-    pipe1.start();
-    pipe2.start();
-    running = true;
+    running = pipe1.start() && pipe2.start();
     return running;
   }
 
@@ -184,7 +180,7 @@ public class SocketPipe implements Pipe {
     @Override
     public void onStop(Pipe pipe) {
       StreamPipe streamPipe = (StreamPipe) pipe;
-      logger.debug("Pipe[{}] stoped", streamPipe.getName());
+      logger.debug("Pipe[{}] stopped", streamPipe.getName());
       close();
     }
 

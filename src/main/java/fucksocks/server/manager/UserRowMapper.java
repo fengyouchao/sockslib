@@ -16,19 +16,19 @@
 
 package fucksocks.server.manager;
 
-import fucksocks.utils.jdbc.Mapper;
 import fucksocks.utils.jdbc.ReadOnlyResultSet;
+import fucksocks.utils.jdbc.RowMapper;
 
 import java.sql.SQLException;
 
 /**
- * The class <code>UserMapper</code> is a mapper for {@link User}.
+ * The class <code>UserRowMapper</code> is a mapper for {@link User}.
  *
  * @author Youchao Feng
  * @version 1.0
  * @date Sep 07, 2015
  */
-public class UserMapper implements Mapper<User> {
+public class UserRowMapper implements RowMapper<User> {
 
   private static final String USERNAME_COL = "username";
   private static final String PASSWORD_COL = "password";

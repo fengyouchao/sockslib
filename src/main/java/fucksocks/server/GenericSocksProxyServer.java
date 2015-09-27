@@ -16,6 +16,7 @@ package fucksocks.server;
 
 import fucksocks.client.SocksProxy;
 import fucksocks.common.methods.SocksMethod;
+import fucksocks.common.net.MonitorSocketWrapper;
 import fucksocks.server.filters.SessionFilter;
 import fucksocks.server.filters.SessionFilterChain;
 import fucksocks.server.filters.SocksCommandFilter;
@@ -32,9 +33,12 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * The class <code>GenericSocksProxyServer</code> is a implementation of {@link SocksProxyServer}.<br>
- * You can build a SOKCS5 server easily by following codes:<br>
+ * The class <code>GenericSocksProxyServer</code> is a implementation of {@link SocksProxyServer}
+ * .<br>
+ * You can build a SOCKS5 server easily by following codes:<br>
  * <pre>
  * ProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class);
  * proxyServer.start(); // Create a SOCKS5 server bind at 1080.
@@ -104,6 +108,8 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
    */
   private int timeout = 10000;
 
+  private boolean daemon = false;
+
   /**
    * Method selector.
    */
@@ -151,7 +157,8 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
    * @param socketHandlerClass {@link SocksHandler} class.
    * @param executorService    Thread pool.
    */
-  public GenericSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, ExecutorService executorService) {
+  public GenericSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass,
+                                 ExecutorService executorService) {
     this(socketHandlerClass, DEFAULT_SOCKS_PORT, executorService);
   }
 
@@ -163,22 +170,27 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
    * @param port               The port that SOCKS server will listen.
    * @param executorService    Thread pool.
    */
-  public GenericSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, int port, ExecutorService executorService) {
-    this.socksHandlerClass = socketHandlerClass;
-    this.executorService = executorService;
+  public GenericSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, int port,
+                                 ExecutorService executorService) {
+    this.socksHandlerClass =
+        checkNotNull(socketHandlerClass, "Argument [socksHandlerClass] may not be null");
+    this.executorService =
+        checkNotNull(executorService, "Argument [executorService] may not be null");
     this.bindPort = port;
     sessions = new HashMap<>();
   }
 
   @Override
   public void run() {
+    logger.info("Start proxy server at port:{}", bindPort);
     while (!stop) {
       try {
         Socket socket = serverSocket.accept();
+        socket = new MonitorSocketWrapper(socket);
         socket.setSoTimeout(timeout);
         Session session = new SocksSession(getNextSessionId(), socket, sessions);
         sessions.put(session.getId(), session);
-        logger.info("Create SESSION[{}] for {}", session.getId(), session.getRemoteAddress());
+        logger.info("Create SESSION[{}] for {}", session.getId(), session.getClientAddress());
 
         try {
           sessionFilterChain.doFilterChain(session);
@@ -207,10 +219,6 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
     }
   }
 
-  public void setExecutorService(ExecutorService executorService) {
-    this.executorService = executorService;
-  }
-
   @Override
   public void shutdown() {
     stop = true;
@@ -235,11 +243,12 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
 
   @Override
   public void start(int bindPort) throws IOException {
-    serverSocket = createServerSocket(bindPort);
+    this.bindPort = bindPort;
+    serverSocket = createServerSocket(this.bindPort);
     thread = new Thread(this);
+    thread.setName("fs-boot-thread");
+    thread.setDaemon(daemon);
     thread.start();
-
-    logger.info("Start proxy server at port:{}", bindPort);
   }
 
   protected ServerSocket createServerSocket(int bindPort) throws IOException {
@@ -276,6 +285,10 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
 
   public ExecutorService getExecutorService() {
     return executorService;
+  }
+
+  public void setExecutorService(ExecutorService executorService) {
+    this.executorService = executorService;
   }
 
   private synchronized long getNextSessionId() {
@@ -359,6 +372,16 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
   @Override
   public void setBindPort(int bindPort) {
     this.bindPort = bindPort;
+  }
+
+  @Override
+  public boolean isDaemon() {
+    return daemon;
+  }
+
+  @Override
+  public void setDaemon(boolean daemon) {
+    this.daemon = daemon;
   }
 
   public SessionFilterChain getSessionFilterChain() {

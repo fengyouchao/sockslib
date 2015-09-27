@@ -18,14 +18,15 @@ import java.io.IOException;
  */
 public class TestSocksServerBuilder {
 
-    public static void main(String[] args) {
-        UserManager userManager = MongoDBBasedUserManager.newDefaultUserManager();
-        SocksProxyServer server = SocksServerBuilder.newSocks5ServerBuilder()
-            .setUserManager(userManager).setSupportedSocksMethod(new UsernamePasswordMethod()).build();
-        try {
-            server.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+  public static void main(String[] args) {
+    UserManager userManager = MongoDBBasedUserManager.newDefaultUserManager();
+    SocksProxyServer server =
+        SocksServerBuilder.newSocks5ServerBuilder().setUserManager(userManager).setSocksMethods
+            (new UsernamePasswordMethod()).build();
+    try {
+      server.start();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 }

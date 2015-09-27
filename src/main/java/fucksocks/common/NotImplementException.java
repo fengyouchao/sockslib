@@ -35,7 +35,8 @@ public class NotImplementException extends RuntimeException {
     // TODO Auto-generated constructor stub
   }
 
-  public NotImplementException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+  public NotImplementException(String message, Throwable cause, boolean enableSuppression,
+                               boolean writableStackTrace) {
     super(message, cause, enableSuppression, writableStackTrace);
     // TODO Auto-generated constructor stub
   }

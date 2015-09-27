@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The class <code>MemoryBasedUserManager</code> represents a user manager that manage users in memory.
+ * The class <code>MemoryBasedUserManager</code> represents a user manager that manage users in
+ * memory.
  *
  * @author Youchao Feng
  * @version 1.0

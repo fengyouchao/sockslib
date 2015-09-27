@@ -22,8 +22,7 @@ import java.net.Socket;
 public class TCPTestServer {
 
   public static void main(String[] args) throws Exception {
-    @SuppressWarnings("resource")
-    ServerSocket serverSocket = new ServerSocket(9997);
+    @SuppressWarnings("resource") ServerSocket serverSocket = new ServerSocket(9997);
     Socket socket = serverSocket.accept();
     InputStream inputStream = socket.getInputStream();
     OutputStream outputStream = socket.getOutputStream();

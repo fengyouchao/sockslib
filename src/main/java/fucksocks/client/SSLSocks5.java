@@ -77,7 +77,9 @@ public class SSLSocks5 extends Socks5 {
   @Override
   public SocksProxy copyWithoutChainProxy() {
     SSLSocks5 socks5 = new SSLSocks5(getInetAddress(), getPort(), configuration);
-    socks5.setAcceptableMethods(getAcceptableMethods()).setAlwaysResolveAddressLocally(isAlwaysResolveAddressLocally()).setCredentials(getCredentials()).setInetAddress(getInetAddress()).setPort(getPort()).setSocksMethodRequestor(getSocksMethodRequestor());
+    socks5.setAcceptableMethods(getAcceptableMethods()).setAlwaysResolveAddressLocally
+        (isAlwaysResolveAddressLocally()).setCredentials(getCredentials()).setInetAddress
+        (getInetAddress()).setPort(getPort()).setSocksMethodRequester(getSocksMethodRequester());
     return socks5;
   }
 

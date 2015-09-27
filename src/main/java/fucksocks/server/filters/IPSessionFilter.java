@@ -14,13 +14,13 @@
 
 package fucksocks.server.filters;
 
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-
 import fucksocks.common.IP;
 import fucksocks.common.IPRange;
 import fucksocks.server.Session;
+
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The class <code>IPSessionFilter</code> represents
@@ -43,7 +43,7 @@ public class IPSessionFilter implements SessionFilter {
 
   @Override
   public boolean doFilter(Session session) {
-    IP ip = new IP(((InetSocketAddress) session.getRemoteAddress()).getAddress().getAddress());
+    IP ip = new IP(((InetSocketAddress) session.getClientAddress()).getAddress().getAddress());
     switch (mode) {
 
       case BLACK_LIST:

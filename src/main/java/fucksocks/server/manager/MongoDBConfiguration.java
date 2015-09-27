@@ -70,7 +70,8 @@ public class MongoDBConfiguration {
    */
   private String database;
 
-  public MongoDBConfiguration(String host, int port, String database, String username, String password) {
+  public MongoDBConfiguration(String host, int port, String database, String username, String
+      password) {
     this.host = host;
     this.port = port;
     this.database = database;

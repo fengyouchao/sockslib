@@ -14,12 +14,13 @@
 
 package fucksocks.common;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
+
 import java.io.Serializable;
 import java.security.Principal;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Preconditions;
-import com.google.common.hash.Hashing;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The class <code>Socks5UserPrincipal</code> represents a SOKCS5 user principal.
@@ -37,8 +38,7 @@ public class Socks5UserPrincipal implements Principal, Serializable {
   private String username;
 
   public Socks5UserPrincipal(String username) {
-    Preconditions.checkArgument(username != null, "User name may not be null");
-    this.username = username;
+    this.username = checkNotNull(username, "Argument [username] may not be null");
   }
 
   @Override

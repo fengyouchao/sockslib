@@ -14,27 +14,15 @@
 
 package fucksocks.client;
 
-import fucksocks.common.AnonymousCredentials;
-import fucksocks.common.Credentials;
-import fucksocks.common.SocksCommand;
-import fucksocks.common.SocksException;
-import fucksocks.common.UsernamePasswordCredentials;
-import fucksocks.common.methods.GssApiMethod;
-import fucksocks.common.methods.NoAuthenticationRequiredMethod;
-import fucksocks.common.methods.SocksMethod;
-import fucksocks.common.methods.SocksMethodRegistry;
-import fucksocks.common.methods.UsernamePasswordMethod;
+import fucksocks.common.*;
+import fucksocks.common.methods.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,17 +37,35 @@ import java.util.List;
 public class Socks5 implements SocksProxy {
 
   /**
+   * Version of SOCKS protocol.
+   */
+  public static final byte SOCKS_VERSION = 0x05;
+  /**
+   * Reserved field.
+   */
+  public static final byte RESERVED = 0x00;
+  public static final int REP_SUCCEEDED = 0x00;
+  public static final int REP_GENERAL_SOCKS_SERVER_FAILURE = 0x01;
+  public static final int REP_CONNECTION_NOT_ALLOWED_BY_RULESET = 0x02;
+  public static final int REP_NETWORK_UNREACHABLE = 0x03;
+  public static final int REP_HOST_UNREACHABLE = 0x04;
+  public static final int REP_CONNECTION_REFUSED = 0x05;
+  public static final int REP_TTL_EXPIRED = 0x06;
+  public static final int REP_COMMAND_NOT_SUPPORTED = 0x07;
+  public static final int REP_ADDRESS_TYPE_NOT_SUPPORTED = 0x08;
+  /**
+   * Authentication succeeded code.
+   */
+  public static final byte AUTHENTICATION_SUCCEEDED = 0x00;
+  /**
    * Logger.
    */
   protected static final Logger logger = LoggerFactory.getLogger(Socks5.class);
-
   private SocksProxy chainProxy;
-
   /**
    * Authentication.
    */
   private Credentials credentials = new AnonymousCredentials();
-
   /**
    * SOCKS5 server's address. IPv4 or IPv6 address.
    */
@@ -68,41 +74,26 @@ public class Socks5 implements SocksProxy {
    * SOCKS5 server's port;
    */
   private int port = SOCKS_DEFAULT_PORT;
-
   /**
    * The socket that will connect to SOCKS5 server.
    */
   private Socket proxySocket;
-
   /**
    * SOCKS5 client acceptable methods.
    */
   private List<SocksMethod> acceptableMethods;
-
   /**
    * Use to send a request to SOCKS server and receive a method that SOCKS server selected .
    */
-  private SocksMethodRequestor socksMethodRequestor = new GenericSocksMethodRequestor();
-
+  private SocksMethodRequester socksMethodRequester = new GenericSocksMethodRequester();
   /**
    * Use to send command to SOCKS5 sever
    */
   private SocksCommandSender socksCmdSender = new GenericSocksCommandSender();
-
   /**
    * Resolve remote server's domain name in SOCKS server if it's false. It's default false.
    */
   private boolean alwaysResolveAddressLocally = false;
-
-  /**
-   * Constructs a Socks5 instance without any parameter.
-   */
-  private void init() {
-    acceptableMethods = new ArrayList<>();
-    acceptableMethods.add(new NoAuthenticationRequiredMethod());
-    acceptableMethods.add(new GssApiMethod());
-    acceptableMethods.add(new UsernamePasswordMethod());
-  }
 
   /**
    * Constructs a Socks5 instance.
@@ -172,6 +163,16 @@ public class Socks5 implements SocksProxy {
     this.credentials = credentials;
   }
 
+  /**
+   * Constructs a Socks5 instance without any parameter.
+   */
+  private void init() {
+    acceptableMethods = new ArrayList<>();
+    acceptableMethods.add(new NoAuthenticationRequiredMethod());
+    acceptableMethods.add(new GssApiMethod());
+    acceptableMethods.add(new UsernamePasswordMethod());
+  }
+
   @Override
   public void buildConnection() throws SocksException, IOException {
     if (inetAddress == null) {
@@ -184,12 +185,13 @@ public class Socks5 implements SocksProxy {
     }
 
     SocksMethod method =
-        socksMethodRequestor.doRequest(acceptableMethods, proxySocket, SOCKS_VERSION);
+        socksMethodRequester.doRequest(acceptableMethods, proxySocket, SOCKS_VERSION);
     method.doMethod(this);
   }
 
   @Override
-  public CommandReplyMessage requestConnect(String host, int port) throws SocksException, IOException {
+  public CommandReplyMessage requestConnect(String host, int port) throws SocksException,
+      IOException {
     if (!alwaysResolveAddressLocally) {
       // resolve address in SOCKS server
       return socksCmdSender.send(proxySocket, SocksCommand.CONNECT, host, port, SOCKS_VERSION);
@@ -202,12 +204,14 @@ public class Socks5 implements SocksProxy {
   }
 
   @Override
-  public CommandReplyMessage requestConnect(InetAddress address, int port) throws SocksException, IOException {
+  public CommandReplyMessage requestConnect(InetAddress address, int port) throws SocksException,
+      IOException {
     return socksCmdSender.send(proxySocket, SocksCommand.CONNECT, address, port, SOCKS_VERSION);
   }
 
   @Override
-  public CommandReplyMessage requestConnect(SocketAddress address) throws SocksException, IOException {
+  public CommandReplyMessage requestConnect(SocketAddress address) throws SocksException,
+      IOException {
     return socksCmdSender.send(proxySocket, SocksCommand.CONNECT, address, SOCKS_VERSION);
   }
 
@@ -217,7 +221,8 @@ public class Socks5 implements SocksProxy {
   }
 
   @Override
-  public CommandReplyMessage requestBind(InetAddress inetAddress, int port) throws SocksException, IOException {
+  public CommandReplyMessage requestBind(InetAddress inetAddress, int port) throws
+      SocksException, IOException {
     return socksCmdSender.send(proxySocket, SocksCommand.BIND, inetAddress, port, SOCKS_VERSION);
   }
 
@@ -229,13 +234,17 @@ public class Socks5 implements SocksProxy {
   }
 
   @Override
-  public CommandReplyMessage requestUdpAssociat(String host, int port) throws SocksException, IOException {
-    return socksCmdSender.send(proxySocket, SocksCommand.UDP_ASSOCIATE, new InetSocketAddress(host, port), SOCKS_VERSION);
+  public CommandReplyMessage requestUmpAssociate(String host, int port) throws SocksException,
+      IOException {
+    return socksCmdSender.send(proxySocket, SocksCommand.UDP_ASSOCIATE, new InetSocketAddress
+        (host, port), SOCKS_VERSION);
   }
 
   @Override
-  public CommandReplyMessage requestUdpAssociat(InetAddress address, int port) throws SocksException, IOException {
-    return socksCmdSender.send(proxySocket, SocksCommand.UDP_ASSOCIATE, new InetSocketAddress(address, port), SOCKS_VERSION);
+  public CommandReplyMessage requestUmpAssociate(InetAddress address, int port) throws
+      SocksException, IOException {
+    return socksCmdSender.send(proxySocket, SocksCommand.UDP_ASSOCIATE, new InetSocketAddress
+        (address, port), SOCKS_VERSION);
   }
 
   @Override
@@ -271,20 +280,14 @@ public class Socks5 implements SocksProxy {
   }
 
   @Override
-  public Socks5 setAcceptableMethods(List<SocksMethod> acceptableMethods) {
-    this.acceptableMethods = acceptableMethods;
-    SocksMethodRegistry.overWriteReistry(acceptableMethods);
-    return this;
-  }
-
-  @Override
   public List<SocksMethod> getAcceptableMethods() {
     return acceptableMethods;
   }
 
   @Override
-  public Socks5 setCredentials(Credentials credentials) {
-    this.credentials = credentials;
+  public Socks5 setAcceptableMethods(List<SocksMethod> acceptableMethods) {
+    this.acceptableMethods = acceptableMethods;
+    SocksMethodRegistry.overWriteRegistry(acceptableMethods);
     return this;
   }
 
@@ -294,20 +297,28 @@ public class Socks5 implements SocksProxy {
   }
 
   @Override
-  public Socks5 setSocksMethodRequestor(SocksMethodRequestor requestor) {
-    this.socksMethodRequestor = requestor;
+  public Socks5 setCredentials(Credentials credentials) {
+    this.credentials = credentials;
     return this;
   }
 
   @Override
-  public SocksMethodRequestor getSocksMethodRequestor() {
-    return socksMethodRequestor;
+  public SocksMethodRequester getSocksMethodRequester() {
+    return socksMethodRequester;
+  }
+
+  @Override
+  public Socks5 setSocksMethodRequester(SocksMethodRequester requester) {
+    this.socksMethodRequester = requester;
+    return this;
   }
 
   @Override
   public SocksProxy copy() {
     Socks5 socks5 = new Socks5(inetAddress, port);
-    socks5.setAcceptableMethods(acceptableMethods).setAlwaysResolveAddressLocally(alwaysResolveAddressLocally).setCredentials(credentials).setSocksMethodRequestor(socksMethodRequestor).setChainProxy(chainProxy);
+    socks5.setAcceptableMethods(acceptableMethods).setAlwaysResolveAddressLocally
+        (alwaysResolveAddressLocally).setCredentials(credentials).setSocksMethodRequester
+        (socksMethodRequester).setChainProxy(chainProxy);
     return socks5;
   }
 
@@ -315,7 +326,6 @@ public class Socks5 implements SocksProxy {
   public SocksProxy copyWithoutChainProxy() {
     return copy().setChainProxy(null);
   }
-
 
   @Override
   public int getSocksVersion() {
@@ -344,9 +354,20 @@ public class Socks5 implements SocksProxy {
     return inetAddress;
   }
 
+  /**
+   * Sets SOCKS5 proxy server's IP address.
+   *
+   * @param inetAddress IP address of SOCKS5 proxy server.
+   * @return The instance of {@link Socks5}.
+   */
+  public Socks5 setInetAddress(InetAddress inetAddress) {
+    this.inetAddress = inetAddress;
+    return this;
+  }
+
   @Override
   public String toString() {
-    StringBuffer stringBuffer = new StringBuffer("[SOCKS5:");
+    StringBuilder stringBuffer = new StringBuilder("[SOCKS5:");
     stringBuffer.append(new InetSocketAddress(inetAddress, port)).append("]");
     if (getChainProxy() != null) {
       return stringBuffer.append(" --> ").append(getChainProxy().toString()).toString();
@@ -364,17 +385,6 @@ public class Socks5 implements SocksProxy {
     return new Socket();
   }
 
-  /**
-   * Sets SOCKS5 proxy server's IP address.
-   *
-   * @param inetAddress IP address of SOCKS5 proxy server.
-   * @return The instance of {@link Socks5}.
-   */
-  public Socks5 setInetAddress(InetAddress inetAddress) {
-    this.inetAddress = inetAddress;
-    return this;
-  }
-
   public boolean isAlwaysResolveAddressLocally() {
     return alwaysResolveAddressLocally;
   }
@@ -383,29 +393,5 @@ public class Socks5 implements SocksProxy {
     this.alwaysResolveAddressLocally = alwaysResolveAddressLocally;
     return this;
   }
-
-  /**
-   * Version of SOCKS protocol.
-   */
-  public static final byte SOCKS_VERSION = 0x05;
-  /**
-   * Reserved field.
-   */
-  public static final byte RESERVED = 0x00;
-
-  public static final int REP_SUCCEEDED = 0x00;
-  public static final int REP_GENERAL_SOCKS_SERVER_FAILURE = 0x01;
-  public static final int REP_CONNECTION_NOT_ALLOWED_BY_RULESET = 0x02;
-  public static final int REP_NETWORK_UNREACHABLE = 0x03;
-  public static final int REP_HOST_UNREACHABLE = 0x04;
-  public static final int REP_CONNECTION_REFUSED = 0x05;
-  public static final int REP_TTL_EXPIRED = 0x06;
-  public static final int REP_COMMAND_NOT_SUPPORTED = 0x07;
-  public static final int REP_ADDRESS_TYPE_NOT_SUPPORTED = 0x08;
-
-  /**
-   * Authentication succeeded code.
-   */
-  public static final byte AUTHENTICATION_SUCCEEDED = 0x00;
 
 }

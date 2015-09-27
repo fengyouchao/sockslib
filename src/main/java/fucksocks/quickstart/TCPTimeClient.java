@@ -1,0 +1,125 @@
+package fucksocks.quickstart;
+
+import fucksocks.client.Socks5;
+import fucksocks.client.SocksSocket;
+import fucksocks.common.UsernamePasswordCredentials;
+import fucksocks.common.net.MonitorSocketWrapper;
+import fucksocks.common.net.NetworkMonitor;
+import fucksocks.utils.ArgUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
+/**
+ * The class <code>TCPTimeClient</code> is client for {@link TCPTimeServer}.
+ *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Sep 24, 2015 2:45 PM
+ */
+public class TCPTimeClient {
+
+  private static final Logger logger = LoggerFactory.getLogger(TCPTimeClient.class);
+
+  public static void main(@Nullable String[] args) {
+    new TCPTimeClient().start(args);
+  }
+
+  public void start(@Nullable String[] args) {
+    String host = "localhost";
+    int port = 5051;
+    String proxyHost = null;
+    int proxyPort = 1080;
+    boolean useProxy = false;
+    String username = null;
+    String password = null;
+    String message = "Hi, I am UDP client";
+
+    if (args != null) {
+      for (String arg : args) {
+        if (arg.equals("-h") || arg.equals("--help")) {
+          showHelp();
+          System.exit(0);
+        } else if (arg.startsWith("--proxy-host=")) {
+          proxyHost = ArgUtil.valueOf(arg);
+          useProxy = true;
+        } else if (arg.startsWith("--proxy-port=")) {
+          proxyPort = ArgUtil.intValueOf(arg);
+        } else if (arg.startsWith("--proxy-user=")) {
+          username = ArgUtil.valueOf(arg);
+        } else if (arg.startsWith("--proxy-password=")) {
+          password = ArgUtil.valueOf(arg);
+        } else if (arg.startsWith("--host=")) {
+          host = ArgUtil.valueOf(arg);
+        } else if (arg.startsWith("--port=")) {
+          port = ArgUtil.intValueOf(arg);
+        } else if (arg.startsWith("--message=")) {
+          message = ArgUtil.valueOf(arg);
+        } else {
+          logger.error("Unknown argument [{}]", arg);
+          System.exit(-1);
+        }
+      }
+    }
+    if (useProxy && proxyHost == null) {
+      logger.error("Please use [--proxy-host] to set proxy server's hostname if you want to use "
+          + "SOCKS proxy");
+      System.exit(-1);
+    }
+    try {
+      Socket socket = null;
+      if (useProxy) {
+        Socks5 proxy = new Socks5(new InetSocketAddress(proxyHost, proxyPort));
+        if (username != null && password != null) {
+          proxy.setCredentials(new UsernamePasswordCredentials(username, password));
+        }
+        logger.info("Connect server [{}:{}] by proxy:{}", host, port, proxy);
+        socket = new SocksSocket(proxy, host, port);
+      } else {
+        socket = new Socket(host, port);
+      }
+      NetworkMonitor monitor = new NetworkMonitor();
+      socket = new MonitorSocketWrapper(socket, monitor);
+      InputStream inputStream = socket.getInputStream();
+      OutputStream outputStream = socket.getOutputStream();
+      String sendMessage = "Hi, I am TCP time client";
+      if (message != null) {
+        sendMessage = message;
+      }
+      sendMessage += "\n";
+      outputStream.write(sendMessage.getBytes());
+      outputStream.flush();
+      byte[] buffer = new byte[1045 * 5];
+      int length = inputStream.read(buffer);
+      String receiveMessage = new String(buffer, 0, length);
+      logger.info("Server response:{}", receiveMessage);
+      inputStream.close();
+      outputStream.close();
+      socket.close();
+      logger.info("Total send:{}, Total receive:{}, Total:{}", monitor.getTotalSend(), monitor
+          .getTotalReceive(), monitor.getTotal());
+    } catch (IOException e) {
+      logger.error(e.getMessage(), e);
+    }
+
+  }
+
+  public void showHelp() {
+    String a = "1";
+    System.out.println("Usage: [Options]");
+    System.out.println("\t--host=<val>\tTCP time server host, default \"localhost\"");
+    System.out.println("\t--port=<val>\tTCP time server port, default \"5051\"");
+    System.out.println("\t--proxy-host=<val>\tHost of SOCKS5 proxy server");
+    System.out.println("\t--proxy-port=<val>\tPort of SOCKS5 proxy server, default \"1080\"");
+    System.out.println("\t--proxy-user=<val>\tUsername of SOCKS5 proxy server");
+    System.out.println("\t--proxy-password=<val>\tPassword of SOCKS5 proxy server");
+    System.out.println("\t--message=<val>\tThe message which will send to server");
+    System.out.println("\t-h or --help\tShow help");
+  }
+}

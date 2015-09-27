@@ -14,6 +14,12 @@
 
 package fucksocks.common;
 
+import com.google.common.base.Strings;
+import fucksocks.utils.PathUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,19 +27,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.KeyStore;
 import java.util.Properties;
-
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManagerFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Strings;
-
-import fucksocks.utils.PathUtil;
 
 /**
  * The class <code>SSLConfiguration</code> represents a configuration of SSL.
@@ -49,6 +42,17 @@ public class SSLConfiguration {
   private KeyStoreInfo keyStoreInfo;
   private KeyStoreInfo trustKeyStoreInfo;
   private boolean needClientAuth = false;
+
+  public SSLConfiguration(KeyStoreInfo keyStoreInfo, KeyStoreInfo trustKeyStoreInfo) {
+    this(keyStoreInfo, trustKeyStoreInfo, false);
+  }
+
+  public SSLConfiguration(KeyStoreInfo keyStoreInfo, KeyStoreInfo trustKeyStoreInfo, boolean
+      clientAuth) {
+    this.keyStoreInfo = keyStoreInfo;
+    this.trustKeyStoreInfo = trustKeyStoreInfo;
+    this.needClientAuth = clientAuth;
+  }
 
   /**
    * Creates a {@link SSLConfiguration} instance with a string.<br>
@@ -75,16 +79,6 @@ public class SSLConfiguration {
       return new SSLConfiguration(keyStoreInfo, trustKeyStoreInfo, strings[4].equals("true"));
     }
     return null;
-  }
-
-  public SSLConfiguration(KeyStoreInfo keyStoreInfo, KeyStoreInfo trustKeyStoreInfo) {
-    this(keyStoreInfo, trustKeyStoreInfo, false);
-  }
-
-  public SSLConfiguration(KeyStoreInfo keyStoreInfo, KeyStoreInfo trustKeyStoreInfo, boolean clientAuth) {
-    this.keyStoreInfo = keyStoreInfo;
-    this.trustKeyStoreInfo = trustKeyStoreInfo;
-    this.needClientAuth = clientAuth;
   }
 
   public static SSLConfiguration load(String filePath) throws FileNotFoundException, IOException {
@@ -120,7 +114,8 @@ public class SSLConfiguration {
     return new SSLConfiguration(keyStoreInfo, trustKeyStoreInfo, clientAuth);
   }
 
-  public static SSLConfiguration loadClassPath(String filePath) throws FileNotFoundException, IOException {
+  public static SSLConfiguration loadClassPath(String filePath) throws FileNotFoundException,
+      IOException {
 
     if (!filePath.startsWith(File.separator)) {
       filePath = File.separator + filePath;
@@ -144,16 +139,19 @@ public class SSLConfiguration {
 
       TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
       trustKeyStore = KeyStore.getInstance("JKS");
-      trustKeyStore.load(new FileInputStream(trustKeyStoreInfo.getKeyStorePath()), trustKeyStoreInfo.getPassword().toCharArray());
+      trustKeyStore.load(new FileInputStream(trustKeyStoreInfo.getKeyStorePath()),
+          trustKeyStoreInfo.getPassword().toCharArray());
       trustManagerFactory.init(trustKeyStore);
 
       if (keyStoreInfo != null && keyStoreInfo.getKeyStorePath() != null) {
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
         keyStore = KeyStore.getInstance("JKS");
-        keyStore.load(new FileInputStream(keyStoreInfo.getKeyStorePath()), keyStoreInfo.getPassword().toCharArray());
+        keyStore.load(new FileInputStream(keyStoreInfo.getKeyStorePath()), keyStoreInfo
+            .getPassword().toCharArray());
         keyManagerFactory.init(keyStore, keyStoreInfo.getPassword().toCharArray());
 
-        context.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
+        context.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(),
+            null);
       } else {
         context.init(null, trustManagerFactory.getTrustManagers(), null);
       }
@@ -194,7 +192,8 @@ public class SSLConfiguration {
         String TRUST_KEY_STORE_PASSWORD = getTrustKeyStoreInfo().getPassword();
         TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
         trustKeyStore = KeyStore.getInstance("JKS");
-        trustKeyStore.load(new FileInputStream(TRUST_KEY_STORE_PATH), TRUST_KEY_STORE_PASSWORD.toCharArray());
+        trustKeyStore.load(new FileInputStream(TRUST_KEY_STORE_PATH), TRUST_KEY_STORE_PASSWORD
+            .toCharArray());
         trustManagerFactory.init(trustKeyStore);
         ctx.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
       } else {

@@ -14,16 +14,16 @@
 
 package fucksocks.server;
 
+import fucksocks.common.SocksException;
+import fucksocks.server.msg.ReadableMessage;
+import fucksocks.server.msg.WritableMessage;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.Map;
-
-import fucksocks.common.SocksException;
-import fucksocks.server.msg.WritableMessage;
-import fucksocks.server.msg.ReadableMessage;
 
 /**
  * The class <code>Session</code> represents a session between client with SOCKS server.
@@ -36,11 +36,11 @@ import fucksocks.server.msg.ReadableMessage;
 public interface Session {
 
   /**
-   * Gets socket.
+   * Returns socket.
    *
    * @return socket that connected remote host.
    */
-  public Socket getSocket();
+  Socket getSocket();
 
   /**
    * Writes bytes in output stream.
@@ -49,7 +49,7 @@ public interface Session {
    * @throws SocksException If a SOCKS protocol error occurred.
    * @throws IOException    If an I/O error occurred.
    */
-  public void write(byte[] bytes) throws SocksException, IOException;
+  void write(byte[] bytes) throws SocksException, IOException;
 
   /**
    * Writes bytes in output stream.
@@ -60,7 +60,7 @@ public interface Session {
    * @throws SocksException If a SOCKS protocol error occurred.
    * @throws IOException    If an I/O error occurred.
    */
-  public void write(byte[] bytes, int offset, int length) throws SocksException, IOException;
+  void write(byte[] bytes, int offset, int length) throws SocksException, IOException;
 
   /**
    * Writes <code>Message</code> in output stream.
@@ -69,17 +69,17 @@ public interface Session {
    * @throws SocksException If a SOCKS protocol error occurred.
    * @throws IOException    If an I/O error occurred.
    */
-  public void write(WritableMessage message) throws SocksException, IOException;
+  void write(WritableMessage message) throws SocksException, IOException;
 
   /**
    * Read a buffer.
    *
-   * @param byetes Buffer which read in.
+   * @param bytes Buffer which read in.
    * @return Read length
    * @throws SocksException If a SOCKS protocol error occurred.
    * @throws IOException    If an I/O error occurred.
    */
-  public int read(byte[] byetes) throws SocksException, IOException;
+  int read(byte[] bytes) throws SocksException, IOException;
 
   /**
    * Reads a message.
@@ -89,34 +89,34 @@ public interface Session {
    * @throws SocksException If a SOCKS protocol error occurred.
    * @throws IOException    If an I/O error occurred.
    */
-  public int read(ReadableMessage message) throws SocksException, IOException;
+  int read(ReadableMessage message) throws SocksException, IOException;
 
   /**
    * Gets session ID.
    *
    * @return session ID.
    */
-  public long getId();
+  long getId();
 
 
   /**
-   * Closes connection.
+   * Closes connection and removes itself from managed sessions.
    */
-  public void close();
+  void close();
 
   /**
    * Gets input stream.
    *
    * @return Input stream.
    */
-  public InputStream getInputStream();
+  InputStream getInputStream();
 
   /**
    * Gets output stream.
    *
    * @return Output stream.
    */
-  public OutputStream getOutputStream();
+  OutputStream getOutputStream();
 
 
   /**
@@ -124,43 +124,43 @@ public interface Session {
    *
    * @return All sessions.
    */
-  public Map<Long, Session> getManagedSessions();
+  Map<Long, Session> getManagedSessions();
 
   /**
    * Get remote host's IP address and port.
    *
    * @return Remote host's IP address and port.
    */
-  public SocketAddress getRemoteAddress();
+  SocketAddress getClientAddress();
 
-  public void setAttribute(Object key, Object value);
+  void setAttribute(Object key, Object value);
 
-  public Object getAttribute(Object key);
+  Object getAttribute(Object key);
 
   /**
    * Returns all attributes.
    *
    * @return All attributes.
    */
-  public Map<Object, Object> getAttributes();
+  Map<Object, Object> getAttributes();
 
   /**
    * Clear all attributes in session.
    */
-  public void clearAllAttributes();
+  void clearAllAttributes();
 
   /**
    * Returns <code>true</code> if the session is closed.
    *
    * @return If the session is closed, it returns <code>true</code>.
    */
-  public boolean isClose();
+  boolean isClose();
 
   /**
    * Returns <code>true</code> if the session is connected.
    *
    * @return If the session is connected returns <code>true</code>.
    */
-  public boolean isConnected();
+  boolean isConnected();
 
 }

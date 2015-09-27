@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 
 /**
  * The class <code>UsernamePasswordMethod</code> represents the method that need USERNAME/PASSWORD
@@ -83,7 +85,7 @@ public class UsernamePasswordMethod extends AbstractSocksMethod {
    */
   @Override
   public void doMethod(SocksProxy socksProxy) throws SocksException, IOException {
-
+    checkNotNull(socksProxy, "Argument [socksProxy] may not be null");
     Credentials credentials = socksProxy.getCredentials();
     if (credentials == null || !(credentials instanceof UsernamePasswordCredentials)) {
       throw new SocksException("Need Username/Password authentication");
@@ -139,12 +141,15 @@ public class UsernamePasswordMethod extends AbstractSocksMethod {
 
   @Override
   public void doMethod(Session session) throws SocksException, IOException {
-
+    checkNotNull(session, "Argument [session] may not be null");
+    checkNotNull(authenticator, "Please set an authenticator");
     UsernamePasswordMessage usernamePasswordMessage = new UsernamePasswordMessage();
     session.read(usernamePasswordMessage);
-    logger.debug("SESSION[{}] Receive credentials: {}", session.getId(), usernamePasswordMessage.getUsernamePasswordCredentials());
+    logger.debug("SESSION[{}] Receive credentials: {}", session.getId(), usernamePasswordMessage
+        .getUsernamePasswordCredentials());
     try {
-      authenticator.doAuthenticate(usernamePasswordMessage.getUsernamePasswordCredentials(), session);
+      authenticator.doAuthenticate(usernamePasswordMessage.getUsernamePasswordCredentials(),
+          session);
     } catch (AuthenticationException e) {
       session.write(new UsernamePasswordResponseMessage(false));
       throw e;

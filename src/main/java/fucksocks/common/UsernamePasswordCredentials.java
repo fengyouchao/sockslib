@@ -16,8 +16,7 @@ package fucksocks.common;
 
 import java.security.Principal;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The class <code>UsernamePasswordCredentials</code> represents an USERNAME/PASSWORD credentials.
@@ -34,9 +33,8 @@ public class UsernamePasswordCredentials implements Credentials {
   private String password;
 
   public UsernamePasswordCredentials(String username, String password) {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "Username may not be null or empty");
-    this.principal = new Socks5UserPrincipal(username);
-    this.password = password;
+    this.principal = new Socks5UserPrincipal(checkNotNull(username, "Username may not be null"));
+    this.password = checkNotNull(password, "Argument [password] may not be null");
   }
 
   @Override

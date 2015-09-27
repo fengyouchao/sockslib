@@ -94,7 +94,7 @@ public class Socks5Handler implements SocksHandler {
     session.read(commandMessage); // Read command request.
 
     logger.info("SESSION[{}] request:{}  {}:{}", session.getId(), commandMessage.getCommand(),
-        commandMessage.getAddressType() != AddressType.DOMAINNAME ?
+        commandMessage.getAddressType() != AddressType.DOMAIN_NAME ?
             commandMessage.getInetAddress() :
             commandMessage.getHost(), commandMessage.getPort());
 
@@ -130,7 +130,8 @@ public class Socks5Handler implements SocksHandler {
   }
 
   @Override
-  public void doConnect(Session session, CommandMessage commandMessage) throws SocksException, IOException {
+  public void doConnect(Session session, CommandMessage commandMessage) throws SocksException,
+      IOException {
 
     ServerReply reply = null;
     Socket socket = null;
@@ -166,7 +167,8 @@ public class Socks5Handler implements SocksHandler {
       } else {
         reply = ServerReply.GENERAL_SOCKS_SERVER_FAILURE;
       }
-      logger.info("SESSION[{}] connect {} [{}] exception:{}", session.getId(), new InetSocketAddress(remoteServerAddress, remoteServerPort), reply, e.getMessage());
+      logger.info("SESSION[{}] connect {} [{}] exception:{}", session.getId(), new
+          InetSocketAddress(remoteServerAddress, remoteServerPort), reply, e.getMessage());
     }
 
     session.write(new CommandResponseMessage(VERSION, reply, bindAddress, bindPort));
@@ -195,16 +197,20 @@ public class Socks5Handler implements SocksHandler {
   }
 
   @Override
-  public void doBind(Session session, CommandMessage commandMessage) throws SocksException, IOException {
+  public void doBind(Session session, CommandMessage commandMessage) throws SocksException,
+      IOException {
 
     ServerSocket serverSocket = new ServerSocket(commandMessage.getPort());
     int bindPort = serverSocket.getLocalPort();
     Socket socket = null;
-    logger.info("Create TCP server bind at {} for session[{}]", serverSocket.getLocalSocketAddress(), session.getId());
-    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, serverSocket.getInetAddress(), bindPort));
+    logger.info("Create TCP server bind at {} for session[{}]", serverSocket
+        .getLocalSocketAddress(), session.getId());
+    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, serverSocket
+        .getInetAddress(), bindPort));
 
     socket = serverSocket.accept();
-    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, socket.getLocalAddress(), socket.getLocalPort()));
+    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, socket
+        .getLocalAddress(), socket.getLocalPort()));
 
     Pipe pipe = new SocketPipe(session.getSocket(), socket);
     pipe.setBufferSize(bufferSize);
@@ -225,12 +231,16 @@ public class Socks5Handler implements SocksHandler {
   }
 
   @Override
-  public void doUDPAssociate(Session session, CommandMessage commandMessage) throws SocksException, IOException {
+  public void doUDPAssociate(Session session, CommandMessage commandMessage) throws
+      SocksException, IOException {
     UDPRelayServer udpRelayServer =
-        new UDPRelayServer(((InetSocketAddress) session.getRemoteAddress()).getAddress(), commandMessage.getPort());
+        new UDPRelayServer(((InetSocketAddress) session.getClientAddress()).getAddress(),
+            commandMessage.getPort());
     InetSocketAddress socketAddress = (InetSocketAddress) udpRelayServer.start();
-    logger.info("Create UDP relay server at[{}] for {}", socketAddress, commandMessage.getSocketAddress());
-    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, InetAddress.getLocalHost(), socketAddress.getPort()));
+    logger.info("Create UDP relay server at[{}] for {}", socketAddress, commandMessage
+        .getSocketAddress());
+    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, InetAddress
+        .getLocalHost(), socketAddress.getPort()));
     while (udpRelayServer.isRunning()) {
       try {
         Thread.sleep(idleTime);
@@ -309,16 +319,14 @@ public class Socks5Handler implements SocksHandler {
     this.idleTime = idleTime;
   }
 
-  @Override
-  public void setProxy(SocksProxy proxy) {
-    this.proxy = proxy;
-  }
-
   public SocksProxy getProxy() {
     return proxy;
   }
 
-
+  @Override
+  public void setProxy(SocksProxy proxy) {
+    this.proxy = proxy;
+  }
 
   protected void doSocksCommandFilter(Session session, CommandMessage message) throws Exception {
 

@@ -16,24 +16,18 @@
 
 package fucksocks.utils.jdbc;
 
-import fucksocks.utils.TypeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.NClob;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static fucksocks.utils.TypeUtil.*;
 
 /**
  * The class <code>JdbcTemplate</code> is a template for JDBC operation. This class provides some
@@ -55,7 +49,7 @@ public class JdbcTemplate {
    * @param dataSource DataSource
    */
   public JdbcTemplate(DataSource dataSource) {
-    this.dataSource = dataSource;
+    this.dataSource = checkNotNull(dataSource, "Argument [dataSource] may not null");
   }
 
   public int deleteAll(final String tableName) {
@@ -90,11 +84,11 @@ public class JdbcTemplate {
     return 0;
   }
 
-  public <T> List<T> query(final String sql, Mapper<T> mapper) {
-    return query(sql, null, mapper);
+  public <T> List<T> query(final String sql, RowMapper<T> rowMapper) {
+    return query(sql, null, rowMapper);
   }
 
-  public <T> List<T> query(final String sql, final Object[] args, Mapper<T> mapper) {
+  public <T> List<T> query(final String sql, final Object[] args, RowMapper<T> rowMapper) {
     List<T> entities = new ArrayList<>();
     Connection connection = null;
     PreparedStatement preparedStatement = null;
@@ -107,7 +101,7 @@ public class JdbcTemplate {
       setParameter(preparedStatement, args);
       resultSet = preparedStatement.executeQuery();
       while (resultSet.next()) {
-        entities.add(mapper.map(new ReadOnlyResultSet(resultSet)));
+        entities.add(rowMapper.map(new ReadOnlyResultSet(resultSet)));
       }
       connection.commit();
     } catch (SQLException e) {
@@ -121,43 +115,44 @@ public class JdbcTemplate {
     return entities;
   }
 
-  private void setParameter(PreparedStatement preparedStatement, Object[] args) throws SQLException {
+  private void setParameter(PreparedStatement preparedStatement, Object[] args) throws
+      SQLException {
     if (args == null || args.length == 0) {
       return;
     }
     for (int i = 0; i < args.length; i++) {
       Object arg = args[i];
-      if (TypeUtil.isInt(arg)) {
+      if (isInt(arg)) {
         preparedStatement.setInt(i + 1, (Integer) arg);
-      } else if (TypeUtil.isString(arg)) {
+      } else if (isString(arg)) {
         preparedStatement.setString(i + 1, (String) arg);
-      } else if (TypeUtil.isLong(arg)) {
+      } else if (isLong(arg)) {
         preparedStatement.setLong(i + 1, (Long) arg);
-      } else if (TypeUtil.isDouble(arg)) {
+      } else if (isDouble(arg)) {
         preparedStatement.setDouble(i + 1, (Double) arg);
-      } else if (TypeUtil.isFloat(arg)) {
+      } else if (isFloat(arg)) {
         preparedStatement.setFloat(i + 1, (Float) arg);
-      } else if (TypeUtil.isBoolean(arg)) {
+      } else if (isBoolean(arg)) {
         preparedStatement.setBoolean(i + 1, (Boolean) arg);
-      } else if (TypeUtil.isByte(arg)) {
+      } else if (isByte(arg)) {
         preparedStatement.setByte(i + 1, (Byte) arg);
-      } else if (TypeUtil.isDate(arg)) {
+      } else if (isDate(arg)) {
         preparedStatement.setDate(i + 1, (Date) arg);
-      } else if (TypeUtil.isShort(arg)) {
+      } else if (isShort(arg)) {
         preparedStatement.setShort(i + 1, (Short) arg);
-      } else if (TypeUtil.isArray(arg)) {
+      } else if (isArray(arg)) {
         preparedStatement.setArray(i + 1, (Array) arg);
-      } else if (TypeUtil.isInputStream(arg)) {
+      } else if (isInputStream(arg)) {
         preparedStatement.setAsciiStream(i + 1, (InputStream) arg);
-      } else if (TypeUtil.isBigDecimal(arg)) {
+      } else if (isBigDecimal(arg)) {
         preparedStatement.setBigDecimal(i + 1, (BigDecimal) arg);
-      } else if (TypeUtil.isBlob(arg)) {
+      } else if (isBlob(arg)) {
         preparedStatement.setBlob(i + 1, (Blob) arg);
-      } else if (TypeUtil.isBytes(arg)) {
+      } else if (isBytes(arg)) {
         preparedStatement.setBytes(i + 1, (byte[]) arg);
-      } else if (TypeUtil.isClob(arg)) {
+      } else if (isClob(arg)) {
         preparedStatement.setClob(i + 1, (Clob) arg);
-      } else if (TypeUtil.isNClob(arg)) {
+      } else if (isNClob(arg)) {
         preparedStatement.setNClob(i + 1, (NClob) arg);
         ;
       } else {

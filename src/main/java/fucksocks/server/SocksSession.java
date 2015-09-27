@@ -14,6 +14,7 @@
 
 package fucksocks.server;
 
+import fucksocks.common.Credentials;
 import fucksocks.common.SocksException;
 import fucksocks.server.msg.ReadableMessage;
 import fucksocks.server.msg.WritableMessage;
@@ -49,9 +50,11 @@ public class SocksSession implements Session {
 
   private Map<Long, Session> sessions;
 
-  private SocketAddress remoteSocketAddress;
+  private SocketAddress clientAddress;
 
   private Map<Object, Object> attributes;
+
+  private Credentials credentials;
 
   public SocksSession() {
   }
@@ -68,12 +71,12 @@ public class SocksSession implements Session {
     this.socket = socket;
     this.sessions = sessions;
     try {
-      this.inputStream = socket.getInputStream();
-      this.outputStream = socket.getOutputStream();
+      this.inputStream = this.socket.getInputStream();
+      this.outputStream = this.socket.getOutputStream();
     } catch (IOException e) {
       logger.error(e.getMessage(), e);
     }
-    remoteSocketAddress = socket.getRemoteSocketAddress();
+    clientAddress = socket.getRemoteSocketAddress();
 
     attributes = new HashMap<Object, Object>();
 
@@ -86,8 +89,7 @@ public class SocksSession implements Session {
 
   @Override
   public void write(byte[] bytes) throws SocksException, IOException {
-    outputStream.write(bytes);
-    outputStream.flush();
+    write(bytes, 0, bytes.length);
   }
 
   @Override
@@ -152,8 +154,8 @@ public class SocksSession implements Session {
   }
 
   @Override
-  public SocketAddress getRemoteAddress() {
-    return remoteSocketAddress;
+  public SocketAddress getClientAddress() {
+    return clientAddress;
   }
 
   @Override
@@ -193,7 +195,7 @@ public class SocksSession implements Session {
 
   @Override
   public String toString() {
-    return "SESSION[" + id + "]" + "@" + remoteSocketAddress;
+    return "SESSION[" + id + "]" + "@" + clientAddress;
   }
 
 }

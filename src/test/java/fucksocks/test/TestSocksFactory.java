@@ -14,16 +14,17 @@
 
 package fucksocks.test;
 
+import fucksocks.client.SocksProxy;
+import fucksocks.client.SocksProxyFactory;
+import fucksocks.client.SocksSocket;
+import fucksocks.utils.ResourceUtil;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-
-import fucksocks.client.SocksProxy;
-import fucksocks.client.SocksProxyFactory;
-import fucksocks.client.SocksSocket;
 
 public class TestSocksFactory {
 
@@ -38,8 +39,8 @@ public class TestSocksFactory {
 
     try {
       SocksProxy proxy =
-          SocksProxyFactory
-              .parse("localhost,1080,,,classpath:client-ssl-config/clientTrust.jks,123456,classpath:client-ssl-config/client.jks,123456");
+          SocksProxyFactory.parse("localhost,1080,,,classpath:client-ssl-config/clientTrust.jks,"
+              + "123456,classpath:client-ssl-config/client.jks,123456");
 
       socket = new SocksSocket(proxy);
       socket.connect(new InetSocketAddress("whois.internic.net", 43));

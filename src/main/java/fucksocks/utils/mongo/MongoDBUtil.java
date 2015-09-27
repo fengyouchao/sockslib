@@ -58,7 +58,7 @@ public class MongoDBUtil {
   }
 
   public DeleteResult deleteAll(String collectionName) {
-    return keepConnect(collectionName, new MongoDBCallback<DeleteResult>() {
+    return keepConnect(collectionName, new CollectionCallback<DeleteResult>() {
       @Override
       public DeleteResult process(MongoCollection<Document> collection) {
         return collection.deleteMany(new Document());
@@ -67,7 +67,7 @@ public class MongoDBUtil {
   }
 
   public void dropCollection(String collectionName) {
-    keepConnect(collectionName, new MongoDBCallback<Void>() {
+    keepConnect(collectionName, new CollectionCallback<Void>() {
       @Override
       public Void process(MongoCollection<Document> collection) {
         collection.drop();
@@ -76,7 +76,7 @@ public class MongoDBUtil {
     });
   }
 
-  public <T> T keepConnect(String collectionName, MongoDBCallback<T> callback) {
+  public <T> T keepConnect(String collectionName, CollectionCallback<T> callback) {
     MongoDatabase database = null;
     if (mongoClient == null) {
       mongoClient = getConnectedClient();
@@ -98,7 +98,7 @@ public class MongoDBUtil {
    * @param <T>            The type of value which you want to return.
    * @return The value which callback returned.
    */
-  public <T> T connect(String collectionName, MongoDBCallback<T> callback) {
+  public <T> T connect(String collectionName, CollectionCallback<T> callback) {
     MongoClient client = null;
     T t = null;
     try {

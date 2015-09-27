@@ -14,17 +14,21 @@
 
 package fucksocks.server.io;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * The class <code>StreamPipe</code> represents a pipe the can transfer data from a input stream to
+ * The class <code>StreamPipe</code> represents a pipe the can transfer data source a input
+ * stream destination
  * a output stream.
  *
  * @author Youchao Feng
@@ -51,12 +55,12 @@ public class StreamPipe implements Runnable, Pipe {
   /**
    * Input stream.
    */
-  private InputStream from;
+  private InputStream source;
 
   /**
    * Output stream.
    */
-  private OutputStream to;
+  private OutputStream destination;
 
   /**
    * Buffer size.
@@ -82,25 +86,25 @@ public class StreamPipe implements Runnable, Pipe {
   /**
    * Constructs a Pipe instance with a input stream and a output stream.
    *
-   * @param from stream where it comes from.
-   * @param to   stream where it will be transfered to.
+   * @param source      stream where it comes source.
+   * @param destination stream where it will be transferred destination.
    */
-  public StreamPipe(InputStream from, OutputStream to) {
-    this.from = from;
-    this.to = to;
+  public StreamPipe(InputStream source, OutputStream destination) {
+    this.source = checkNotNull(source, "Argument [source] may not be null");
+    this.destination = checkNotNull(destination, "Argument [destination] may not be null");
     pipeListeners = new ArrayList<>();
   }
 
   /**
    * Constructs an instance of {@link StreamPipe}.
    *
-   * @param from stream where it comes from.
-   * @param to   stream where it will be transfered to.
-   * @param name Name of {@link StreamPipe}.
+   * @param source      stream where it comes source.
+   * @param destination stream where it will be transferred destination.
+   * @param name        Name of {@link StreamPipe}.
    */
-  public StreamPipe(InputStream from, OutputStream to, String name) {
-    this.from = from;
-    this.to = to;
+  public StreamPipe(InputStream source, OutputStream destination, @Nullable String name) {
+    this.source = checkNotNull(source, "Argument [source] may not be null");
+    this.destination = checkNotNull(destination, "Argument [destination] may not be null");
     pipeListeners = new ArrayList<>();
     this.name = name;
   }
@@ -152,16 +156,16 @@ public class StreamPipe implements Runnable, Pipe {
    * Transfer a buffer.
    *
    * @param buffer Buffer that transfer once.
-   * @return number of byte that transfered.
+   * @return number of byte that transferred.
    */
   protected int doTransfer(byte[] buffer) {
 
     int length = -1;
     try {
-      length = from.read(buffer);
-      if (length > 0) { // transfer the buffer to output stream.
-        to.write(buffer, 0, length);
-        to.flush();
+      length = source.read(buffer);
+      if (length > 0) { // transfer the buffer destination output stream.
+        destination.write(buffer, 0, length);
+        destination.flush();
         for (PipeListener listener : pipeListeners) {
           listener.onTransfer(this, buffer, length);
         }
@@ -182,8 +186,8 @@ public class StreamPipe implements Runnable, Pipe {
     stop();
 
     try {
-      from.close();
-      to.close();
+      source.close();
+      destination.close();
       return true;
     } catch (IOException e) {
       logger.error(e.getMessage(), e);

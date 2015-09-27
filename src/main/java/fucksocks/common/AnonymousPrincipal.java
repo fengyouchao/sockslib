@@ -14,29 +14,36 @@
 
 package fucksocks.common;
 
-import java.io.Serializable;
-import java.security.Principal;
-
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 
+import java.io.Serializable;
+import java.security.Principal;
+
 /**
- * The class <code>AnonymousePrincipal</code> represents an anonymous principal.
+ * The class <code>AnonymousPrincipal</code> represents an anonymous principal.
  *
  * @author Youchao Feng
  * @version 1.0
  * @date May 14, 2015 2:36:34 PM
  */
-public class AnonymousePrincipal implements Principal, Serializable {
+public class AnonymousPrincipal implements Principal, Serializable {
 
   /**
    * Serial version UID.
    */
   private static final long serialVersionUID = 1L;
+  private static long count = 0;
+  private final String name;
+
+  public AnonymousPrincipal() {
+    count++;
+    this.name = "Anonymous-" + count;
+  }
 
   @Override
   public String getName() {
-    return "Anonymouse";
+    return name;
   }
 
   @Override
@@ -54,9 +61,7 @@ public class AnonymousePrincipal implements Principal, Serializable {
 
   @Override
   public String toString() {
-    return "Principal[Anonymouse]";
+    return "Principal[" + name + "]";
   }
-
-
 
 }

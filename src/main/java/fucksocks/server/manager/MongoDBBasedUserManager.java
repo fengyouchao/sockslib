@@ -20,7 +20,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import fucksocks.utils.mongo.MongoDBCallback;
+import fucksocks.utils.mongo.CollectionCallback;
 import fucksocks.utils.mongo.MongoDBUtil;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -68,17 +68,6 @@ public class MongoDBBasedUserManager implements UserManager {
   }
 
   /**
-   * Creates a {@link MongoDBBasedUserManager} instance with no parameters.
-   * This method is same as <code>new MongoDBBasedUserManager("classpath:mongo.properties")</code>.
-   * It will read a configuration file in class path named "mongo.properties".
-   *
-   * @return Instance of <code>MongoDBBasedUserManager</code>
-   */
-  public static MongoDBBasedUserManager newDefaultUserManager() {
-    return new MongoDBBasedUserManager(MONGO_CONFIG_FILE);
-  }
-
-  /**
    * Constructs a {@link MongoDBBasedUserManager} instance with configuration file path.
    * This constructor will read a specified file.
    *
@@ -105,7 +94,8 @@ public class MongoDBBasedUserManager implements UserManager {
    * @param configuration Instance of {@link MongoDBConfiguration}.
    */
   public MongoDBBasedUserManager(MongoDBConfiguration configuration) {
-    this(configuration.getHost(), configuration.getPort(), configuration.getDatabase(), configuration.getUsername(), configuration.getPassword());
+    this(configuration.getHost(), configuration.getPort(), configuration.getDatabase(),
+        configuration.getUsername(), configuration.getPassword());
   }
 
   /**
@@ -117,13 +107,15 @@ public class MongoDBBasedUserManager implements UserManager {
    * @param username     Username.
    * @param password     Password.
    */
-  public MongoDBBasedUserManager(String host, int port, String databaseName, String username, String password) {
+  public MongoDBBasedUserManager(String host, int port, String databaseName, String username,
+                                 String password) {
     this(new MongoDBUtil(host, port, databaseName, username, password));
   }
 
   public MongoDBBasedUserManager(MongoDBUtil mongoDBUtil) {
     cache =
-        CacheBuilder.newBuilder().maximumSize(1000).expireAfterAccess(5, TimeUnit.MINUTES).build(new CacheLoader<String, User>() {
+        CacheBuilder.newBuilder().maximumSize(1000).expireAfterAccess(5, TimeUnit.MINUTES).build
+            (new CacheLoader<String, User>() {
           @Override
           public User load(String key) throws Exception {
             User user = null;
@@ -140,8 +132,19 @@ public class MongoDBBasedUserManager implements UserManager {
     passwordProtector = new NonePasswordProtector();
   }
 
+  /**
+   * Creates a {@link MongoDBBasedUserManager} instance with no parameters.
+   * This method is same as <code>new MongoDBBasedUserManager("classpath:mongo.properties")</code>.
+   * It will read a configuration file in class path named "mongo.properties".
+   *
+   * @return Instance of <code>MongoDBBasedUserManager</code>
+   */
+  public static MongoDBBasedUserManager newDefaultUserManager() {
+    return new MongoDBBasedUserManager(MONGO_CONFIG_FILE);
+  }
+
   public User fetchUserFromMongoDB(final String username) {
-    return mongoDBUtil.keepConnect(userCollectionName, new MongoDBCallback<User>() {
+    return mongoDBUtil.keepConnect(userCollectionName, new CollectionCallback<User>() {
       @Override
       public User process(MongoCollection<Document> collection) {
         FindIterable<Document> result = collection.find(new Document(usernameKey, username));
@@ -157,10 +160,11 @@ public class MongoDBBasedUserManager implements UserManager {
   @Override
   public void create(final User user) {
     user.setPassword(generateEncryptPassword(user));
-    mongoDBUtil.keepConnect(userCollectionName, new MongoDBCallback<Void>() {
+    mongoDBUtil.keepConnect(userCollectionName, new CollectionCallback<Void>() {
       @Override
       public Void process(MongoCollection<Document> collection) {
-        collection.insertOne(new Document().append(usernameKey, user.getUsername()).append(passwordKey, user.getPassword()));
+        collection.insertOne(new Document().append(usernameKey, user.getUsername()).append
+            (passwordKey, user.getPassword()));
         return null;
       }
     });
@@ -170,10 +174,11 @@ public class MongoDBBasedUserManager implements UserManager {
   public UserManager addUser(final String username, final String password) {
     final User user = new User(username, password);
     user.setPassword(generateEncryptPassword(user));
-    mongoDBUtil.keepConnect(userCollectionName, new MongoDBCallback<Void>() {
+    mongoDBUtil.keepConnect(userCollectionName, new CollectionCallback<Void>() {
       @Override
       public Void process(MongoCollection<Document> collection) {
-        collection.insertOne(new Document().append(usernameKey, user.getUsername()).append(passwordKey, user.getPassword()));
+        collection.insertOne(new Document().append(usernameKey, user.getUsername()).append
+            (passwordKey, user.getPassword()));
         return null;
       }
     });
@@ -198,7 +203,7 @@ public class MongoDBBasedUserManager implements UserManager {
 
   @Override
   public void delete(final String username) {
-    mongoDBUtil.keepConnect(userCollectionName, new MongoDBCallback<Void>() {
+    mongoDBUtil.keepConnect(userCollectionName, new CollectionCallback<Void>() {
       @Override
       public Void process(MongoCollection<Document> collection) {
         collection.deleteOne(new Document(usernameKey, username));
@@ -210,7 +215,7 @@ public class MongoDBBasedUserManager implements UserManager {
 
   @Override
   public List<User> findAll() {
-    return mongoDBUtil.keepConnect(userCollectionName, new MongoDBCallback<List<User>>() {
+    return mongoDBUtil.keepConnect(userCollectionName, new CollectionCallback<List<User>>() {
       @Override
       public List<User> process(MongoCollection<Document> collection) {
         FindIterable<Document> result = collection.find();
@@ -236,10 +241,11 @@ public class MongoDBBasedUserManager implements UserManager {
     if (!old.getPassword().equals(newEncryptPassword)) {
       user.setPassword(newEncryptPassword);
     }
-    mongoDBUtil.keepConnect(userCollectionName, new MongoDBCallback<Void>() {
+    mongoDBUtil.keepConnect(userCollectionName, new CollectionCallback<Void>() {
       @Override
       public Void process(MongoCollection<Document> collection) {
-        collection.updateOne(new Document(usernameKey, user.getUsername()), new Document("$set", new Document(usernameKey, user.getPassword())));
+        collection.updateOne(new Document(usernameKey, user.getUsername()), new Document("$set",
+            new Document(usernameKey, user.getPassword())));
         return null;
       }
     });

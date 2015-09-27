@@ -84,12 +84,12 @@ public class Socks5DatagramSocket extends DatagramSocket {
       throw new SocksException("Only SOCKS5 protocol support UDP ASSOCIATE");
     }
     this.proxy.buildConnection();
-    CommandReplyMessage mesasge =
-        this.proxy.requestUdpAssociat(this.getLocalAddress(), this.getLocalPort());
+    CommandReplyMessage message =
+        this.proxy.requestUmpAssociate(this.getLocalAddress(), this.getLocalPort());
 
     logger.debug("build datagram socket at[{}:{}]", this.getLocalAddress(), this.getLocalPort());
-    this.relayServerInetAddress = mesasge.getIp();
-    this.relayServerPort = mesasge.getPort();
+    this.relayServerInetAddress = message.getIp();
+    this.relayServerPort = message.getPort();
 
     logger.info("relay server's address[{}:{}]", relayServerInetAddress, relayServerPort);
   }
@@ -97,7 +97,8 @@ public class Socks5DatagramSocket extends DatagramSocket {
 
   @Override
   public void send(DatagramPacket packet) throws SocksException, IOException {
-    super.send(datagramPacketHandler.encapsulate(packet, new InetSocketAddress(relayServerInetAddress, relayServerPort)));
+    super.send(datagramPacketHandler.encapsulate(packet, new InetSocketAddress
+        (relayServerInetAddress, relayServerPort)));
   }
 
   @Override

@@ -14,11 +14,11 @@
 
 package fucksocks.common.methods;
 
-import java.io.IOException;
-
 import fucksocks.client.SocksProxy;
 import fucksocks.common.SocksException;
 import fucksocks.server.Session;
+
+import java.io.IOException;
 
 
 /**

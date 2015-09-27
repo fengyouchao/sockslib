@@ -19,15 +19,15 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 /**
- * The class <code>UDPTestServer</code> is a UDP server used to test SOCKS protocol.
+ * The class <code>UDPTimeServer</code> is a UDP server used to test SOCKS protocol.
  * <p>
  * It's a very simple UDP server, it listen at 5050 port, and outputs the message that sent by
  * client, then sends "Yes, I am UDP server" to client.
  * </p>
- * 
+ *
  * @author Youchao Feng
- * @date Mar 24, 2015 2:15:24 PM
  * @version 1.0
+ * @date Mar 24, 2015 2:15:24 PM
  */
 public class UDPTestServer {
 
@@ -38,21 +38,25 @@ public class UDPTestServer {
     }
 
     DatagramSocket server = new DatagramSocket(port);
-    System.out.println("Listenning port at:" + server.getLocalPort());
-    byte[] recvBuf = new byte[1024];
-    DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
-    String reponseMsg = "Yes, I am UDP server";
+    System.out.println("Listening port at:" + server.getLocalPort());
+    byte[] receiveBuffer = new byte[1024];
+    DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
+    final String responseMsg = "Yes, I am UDP server";
 
     while (true) {
-      server.receive(packet);
-      String msg = new String(packet.getData(), 0, packet.getLength());
+      server.receive(receivePacket);
+      String msg = new String(receivePacket.getData(), 0, receivePacket.getLength());
       System.out.println("received message:" + msg);
       if (msg.equals("quit")) {
         break;
       }
 
-      server.send(new DatagramPacket(reponseMsg.getBytes(), reponseMsg.getBytes().length, packet
-          .getAddress(), packet.getPort()));
+      System.out.println("Response:" + responseMsg);
+      byte[] data = responseMsg.getBytes();
+      DatagramPacket packet =
+          new DatagramPacket(data, data.length, receivePacket.getAddress(), receivePacket.getPort
+              ());
+      server.send(packet);
     }
     server.close();
   }

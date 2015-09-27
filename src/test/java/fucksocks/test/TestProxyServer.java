@@ -21,11 +21,10 @@ import java.io.IOException;
 
 /**
  * The class <code>TestProxyServer</code> a test class to start a SOCKS5 proxy server.
- * 
- * @author Youchao Feng
- * @date Apr 19, 2015 11:43:22 PM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Apr 19, 2015 11:43:22 PM
  */
 public class TestProxyServer {
 

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fucksocks.test;
+package fucksocks.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,11 +23,10 @@ import java.net.Socket;
 
 /**
  * The class <code>ResourceUtil</code> is used to close resources.
- * 
+ *
  * @author Youchao Feng
  * @version 1.0
  * @since 1.0
- *
  */
 public class ResourceUtil {
 
@@ -36,7 +35,7 @@ public class ResourceUtil {
   }
 
   public static void close(InputStream inputStream, OutputStream outputStream, Socket socket,
-      ServerSocket serverSocket) {
+                           ServerSocket serverSocket) {
     close(inputStream);
     close(outputStream);
     close(socket);

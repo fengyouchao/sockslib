@@ -14,18 +14,19 @@
 
 package fucksocks.test;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import fucksocks.common.SSLConfiguration;
 import fucksocks.common.methods.NoAuthenticationRequiredMethod;
 import fucksocks.server.SSLSocksProxyServer;
 import fucksocks.server.Socks5Handler;
 import fucksocks.server.SocksProxyServer;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 /**
- * The class <code>SSLBasedProxyServer</code> is a test class to start a SSL based SOCKS5 proxy server.
- * 
+ * The class <code>SSLBasedProxyServer</code> is a test class to start a SSL based SOCKS5 proxy
+ * server.
+ *
  * @author Youchao Feng
  * @version 1.0
  * @since 1.0

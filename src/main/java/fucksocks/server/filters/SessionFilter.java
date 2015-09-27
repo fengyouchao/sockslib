@@ -34,6 +34,6 @@ public interface SessionFilter {
    * @param session Session between client and server.
    * @return <code>false</code> to break the process or <code>true</code> to continue.
    */
-  public boolean doFilter(Session session);
+  boolean doFilter(Session session);
 
 }

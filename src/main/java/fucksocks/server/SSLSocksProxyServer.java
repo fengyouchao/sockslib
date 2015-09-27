@@ -14,15 +14,14 @@
 
 package fucksocks.server;
 
+import fucksocks.common.SSLConfiguration;
+import fucksocks.common.SocksException;
+
+import javax.net.ssl.SSLServerSocket;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import javax.net.ssl.SSLServerSocket;
-
-import fucksocks.common.SSLConfiguration;
-import fucksocks.common.SocksException;
 
 
 /**
@@ -36,21 +35,26 @@ public class SSLSocksProxyServer extends GenericSocksProxyServer {
 
   private SSLConfiguration configuration;
 
-  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, ExecutorService executorService, SSLConfiguration configuration) {
+  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, ExecutorService
+      executorService, SSLConfiguration configuration) {
     this(socketHandlerClass, DEFAULT_SOCKS_PORT, executorService, configuration);
   }
 
-  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, int port, ExecutorService executorService, SSLConfiguration configuration) {
+  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, int port,
+                             ExecutorService executorService, SSLConfiguration configuration) {
     super(socketHandlerClass, port, executorService);
     this.configuration = configuration;
   }
 
-  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, int port, SSLConfiguration configuration) {
+  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, int port,
+                             SSLConfiguration configuration) {
     this(socketHandlerClass, port, Executors.newFixedThreadPool(THREAD_NUMBER), configuration);
   }
 
-  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, SSLConfiguration configuration) {
-    this(socketHandlerClass, DEFAULT_SOCKS_PORT, Executors.newFixedThreadPool(THREAD_NUMBER), configuration);
+  public SSLSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, SSLConfiguration
+      configuration) {
+    this(socketHandlerClass, DEFAULT_SOCKS_PORT, Executors.newFixedThreadPool(THREAD_NUMBER),
+        configuration);
   }
 
   @Override

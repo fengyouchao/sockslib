@@ -19,11 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketAddress;
+import java.net.*;
 
 /**
  * The class <code>SocksServerSocket</code> is server socket that can bind a port at SOCKS server
@@ -97,7 +93,8 @@ public class SocksServerSocket extends ServerSocket {
    * @throws SocksException If any error about SOCKS protocol occurs.
    * @throws IOException    If any I/O error occurs.
    */
-  public SocksServerSocket(SocksProxy proxy, InetAddress inetAddress, int port) throws SocksException, IOException {
+  public SocksServerSocket(SocksProxy proxy, InetAddress inetAddress, int port) throws
+      SocksException, IOException {
     this.proxy = proxy.copy();
     this.incomePort = port;
     this.incomeAddress = inetAddress;

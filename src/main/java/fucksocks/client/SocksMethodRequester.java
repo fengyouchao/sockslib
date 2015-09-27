@@ -14,23 +14,23 @@
 
 package fucksocks.client;
 
+import fucksocks.common.SocksException;
+import fucksocks.common.methods.SocksMethod;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
 
-import fucksocks.common.SocksException;
-import fucksocks.common.methods.SocksMethod;
-
 /**
- * The interface <code>SocksMethodRequestor</code> is a tool that can send request message from
+ * The interface <code>SocksMethodRequester</code> is a tool that can send request message from
  * SOCKS server and get a method that server accepted.
  *
  * @author Youchao Feng
  * @version 1.0
  * @date Mar 19, 2015 10:43:41 AM
- * @see fucksocks.client.GenericSocksMethodRequestor
+ * @see GenericSocksMethodRequester
  */
-public interface SocksMethodRequestor {
+public interface SocksMethodRequester {
 
   /**
    * Send request message to server.<br>
@@ -46,5 +46,6 @@ public interface SocksMethodRequestor {
    * @throws SocksException If any errors about SOCKS protocol occurred.
    * @throws IOException    if any IO errors occurred.
    */
-  public SocksMethod doRequest(List<SocksMethod> acceptableMethods, Socket socket, int socksVersion) throws SocksException, IOException;
+  public SocksMethod doRequest(List<SocksMethod> acceptableMethods, Socket socket, int
+      socksVersion) throws SocksException, IOException;
 }

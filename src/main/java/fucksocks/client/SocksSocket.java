@@ -14,23 +14,20 @@
 
 package fucksocks.client;
 
+import fucksocks.common.SocksException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import fucksocks.common.SocksException;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The class <code>SocksSocket</code> is proxy class that help developers use {@link SocksProxy} as
@@ -39,7 +36,8 @@ import fucksocks.common.SocksException;
  * <pre>
  * SocksProxy proxy = new Socks5(new InetSocketAddress(&quot;127.0.0.1&quot;, 1080));
  * // Setting proxy...
- * Socket socket = new SocksSocket(proxy, new InetSocketAddress(&quot;whois.internic.net&quot;, 43));
+ * Socket socket = new SocksSocket(proxy, new InetSocketAddress(&quot;whois.internic.net&quot;,
+ * 43));
  * InputStream inputStream = socket.getInputStream();
  * OutputStream outStream = socket.getOutputStream();
  * // Just use the socket as normal java.net.Socket now.
@@ -73,12 +71,13 @@ public class SocksSocket extends Socket {
    * @throws SocksException If any errors about SOCKS protocol occurred.
    * @throws IOException    If any IO errors occurred.
    */
-  public SocksSocket(SocksProxy proxy, String remoteServerHost, int remoteServerPort) throws SocksException, IOException {
-    this.proxy = proxy.copy();
+  public SocksSocket(SocksProxy proxy, String remoteServerHost, int remoteServerPort) throws
+      SocksException, IOException {
+    this.proxy = checkNotNull(proxy, "Argument [proxy] may not be null").copy();
     this.proxy.setProxySocket(proxySocket);
-    this.remoteServerHost = remoteServerHost;
+    this.remoteServerHost =
+        checkNotNull(remoteServerHost, "Argument [remoteServerHost] may not be null");
     this.remoteServerPort = remoteServerPort;
-
     this.proxy.buildConnection();
     proxySocket = this.proxy.getProxySocket();
     initProxyChain();
@@ -94,15 +93,16 @@ public class SocksSocket extends Socket {
    * @throws SocksException If any error about SOCKS protocol occurs.
    * @throws IOException    If I/O error occurs.
    */
-  public SocksSocket(SocksProxy proxy, InetAddress address, int port) throws SocksException, IOException {
+  public SocksSocket(SocksProxy proxy, InetAddress address, int port) throws SocksException,
+      IOException {
     this(proxy, new InetSocketAddress(address, port));
   }
 
-  public SocksSocket(SocksProxy proxy, SocketAddress socketAddress) throws SocksException, IOException {
-
-    if (!(socketAddress instanceof InetSocketAddress)) {
-      throw new IllegalArgumentException("Unsupported address type");
-    }
+  public SocksSocket(SocksProxy proxy, SocketAddress socketAddress) throws SocksException,
+      IOException {
+    checkNotNull(proxy, "Argument [proxy] may not be null");
+    checkNotNull(socketAddress, "Argument [socketAddress] may not be null");
+    checkArgument(socketAddress instanceof InetSocketAddress, "Unsupported address type");
     InetSocketAddress address = (InetSocketAddress) socketAddress;
     this.proxy = proxy.copy();
     this.remoteServerHost = address.getHostString();
@@ -131,12 +131,9 @@ public class SocksSocket extends Socket {
    * @param proxySocket a unconnected socket. it will connect SOCKS server later.
    */
   public SocksSocket(SocksProxy proxy, Socket proxySocket) {
-    if (proxySocket == null) {
-      throw new IllegalArgumentException("Proxy socket can't be null");
-    }
-    if (proxySocket.isConnected()) {
-      throw new IllegalArgumentException("Proxy socket should be unconnected");
-    }
+    checkNotNull(proxy, "Argument [proxy] may not be null");
+    checkNotNull(proxySocket, "Argument [proxySocket] may not be null");
+    checkArgument(!proxySocket.isConnected(), "Proxy socket should be unconnected");
     this.proxySocket = proxySocket;
     this.proxy = proxy.copy();
     this.proxy.setProxySocket(proxySocket);
@@ -178,8 +175,8 @@ public class SocksSocket extends Socket {
    * @throws IOException    If I/O error occurs.
    */
   public void connect(String host, int port) throws SocksException, IOException {
-    this.remoteServerHost = host;
-    this.remoteServerPort = port;
+    this.remoteServerHost = checkNotNull(host, "Argument [host] may not be null");
+    this.remoteServerPort = checkNotNull(port, "Argument [port] may not be null");
     proxy.buildConnection();
     initProxyChain();
     proxy.requestConnect(remoteServerHost, remoteServerPort);
@@ -264,13 +261,13 @@ public class SocksSocket extends Socket {
   }
 
   @Override
-  public void setTcpNoDelay(boolean on) throws SocketException {
-    proxy.getProxySocket().setTcpNoDelay(on);
+  public boolean getTcpNoDelay() throws SocketException {
+    return proxy.getProxySocket().getTcpNoDelay();
   }
 
   @Override
-  public boolean getTcpNoDelay() throws SocketException {
-    return proxy.getProxySocket().getTcpNoDelay();
+  public void setTcpNoDelay(boolean on) throws SocketException {
+    proxy.getProxySocket().setTcpNoDelay(on);
   }
 
   @Override
@@ -289,18 +286,13 @@ public class SocksSocket extends Socket {
   }
 
   @Override
-  public void setOOBInline(boolean on) throws SocketException {
-    proxy.getProxySocket().setOOBInline(on);
-  }
-
-  @Override
   public boolean getOOBInline() throws SocketException {
     return proxy.getProxySocket().getOOBInline();
   }
 
   @Override
-  public synchronized void setSoTimeout(int timeout) throws SocketException {
-    proxy.getProxySocket().setSoTimeout(timeout);
+  public void setOOBInline(boolean on) throws SocketException {
+    proxy.getProxySocket().setOOBInline(on);
   }
 
   @Override
@@ -309,8 +301,8 @@ public class SocksSocket extends Socket {
   }
 
   @Override
-  public synchronized void setSendBufferSize(int size) throws SocketException {
-    proxy.getProxySocket().setSendBufferSize(size);
+  public synchronized void setSoTimeout(int timeout) throws SocketException {
+    proxy.getProxySocket().setSoTimeout(timeout);
   }
 
   @Override
@@ -319,8 +311,8 @@ public class SocksSocket extends Socket {
   }
 
   @Override
-  public synchronized void setReceiveBufferSize(int size) throws SocketException {
-    proxy.getProxySocket().setReceiveBufferSize(size);
+  public synchronized void setSendBufferSize(int size) throws SocketException {
+    proxy.getProxySocket().setSendBufferSize(size);
   }
 
   @Override
@@ -329,8 +321,8 @@ public class SocksSocket extends Socket {
   }
 
   @Override
-  public void setKeepAlive(boolean on) throws SocketException {
-    proxy.getProxySocket().setKeepAlive(on);
+  public synchronized void setReceiveBufferSize(int size) throws SocketException {
+    proxy.getProxySocket().setReceiveBufferSize(size);
   }
 
   @Override
@@ -339,8 +331,8 @@ public class SocksSocket extends Socket {
   }
 
   @Override
-  public void setTrafficClass(int tc) throws SocketException {
-    proxy.getProxySocket().setTrafficClass(tc);
+  public void setKeepAlive(boolean on) throws SocketException {
+    proxy.getProxySocket().setKeepAlive(on);
   }
 
   @Override
@@ -349,13 +341,18 @@ public class SocksSocket extends Socket {
   }
 
   @Override
-  public void setReuseAddress(boolean on) throws SocketException {
-    proxy.getProxySocket().setReuseAddress(on);
+  public void setTrafficClass(int tc) throws SocketException {
+    proxy.getProxySocket().setTrafficClass(tc);
   }
 
   @Override
   public boolean getReuseAddress() throws SocketException {
     return proxy.getProxySocket().getReuseAddress();
+  }
+
+  @Override
+  public void setReuseAddress(boolean on) throws SocketException {
+    proxy.getProxySocket().setReuseAddress(on);
   }
 
   @Override

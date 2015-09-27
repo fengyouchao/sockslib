@@ -44,7 +44,8 @@ public class TestJdbcBasedUserManager {
   private JdbcTemplate jdbcTemplate;
   private JdbcBasedUserManager userManager;
 
-  @Before public void before() {
+  @Before
+  public void before() {
     JdbcConfiguration configuration = JdbcConfiguration.load(JDBC_CONFIG_FILE);
     BasicDataSource dataSource = new BasicDataSource();
     assert configuration != null;
@@ -57,11 +58,13 @@ public class TestJdbcBasedUserManager {
     jdbcTemplate.execute(SQL_CREATE_TABLE);
   }
 
-  @After public void after() {
+  @After
+  public void after() {
     jdbcTemplate.execute(SQL_DROP_TABLE);
   }
 
-  @Test public void createAndFind() {
+  @Test
+  public void createAndFind() {
     User user = new User(DEFAULT_USERNAME, DEFAULT_PASSWORD);
     userManager.create(user);
     final User result = userManager.find(DEFAULT_USERNAME);

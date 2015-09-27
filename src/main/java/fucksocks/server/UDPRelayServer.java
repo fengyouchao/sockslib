@@ -133,16 +133,21 @@ public class UDPRelayServer implements Runnable {
   @Override
   public void run() {
     try {
-      byte[] recvBuf = new byte[bufferSize];
-      DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
+      byte[] buffer = new byte[bufferSize];
       while (running) {
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
         server.receive(packet);
         if (isFromClient(packet)) {
+          logger.debug("Receive message from client:{}", new String(packet.getData(), 0, packet
+              .getLength()));
           datagramPacketHandler.decapsulate(packet);
           server.send(packet);
         } else {
+          logger.debug("Receive message from server:{}", new String(packet.getData(), 0, packet
+              .getLength()));
           packet =
-              datagramPacketHandler.encapsulate(packet, new InetSocketAddress(clientAddress, clientPort));
+              datagramPacketHandler.encapsulate(packet, new InetSocketAddress(clientAddress,
+                  clientPort));
           server.send(packet);
         }
       }

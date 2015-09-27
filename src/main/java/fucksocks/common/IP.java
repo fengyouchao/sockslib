@@ -14,13 +14,14 @@
 
 package fucksocks.common;
 
-import com.google.common.base.Preconditions;
 import com.google.common.hash.Hashing;
 import fucksocks.utils.UnsignedByte;
 
 import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 
 /**
@@ -70,7 +71,7 @@ public class IP implements Comparable<IP>, Serializable {
    */
   public IP(int a, int b, int c, int d) {
 
-    Preconditions.checkArgument(checkRange(a) && checkRange(b) && checkRange(c)
+    checkArgument(checkRange(a) && checkRange(b) && checkRange(c)
         && checkRange(d), "Each number of IP must in 0 ~ 255");
     this.a = a;
     this.b = b;
@@ -85,7 +86,7 @@ public class IP implements Comparable<IP>, Serializable {
    * @param ip IP as Long integer.
    */
   public IP(long ip) {
-    Preconditions.checkArgument(ip <= 0xffffffffL && ip >= 0, "Unvalid IP");
+    checkArgument(ip <= 0xffffffffL && ip >= 0, "Invalid IP");
     value = ip;
     a = (int) (ip >>> 24);
     b = (int) ((ip & 0x00ffffff) >>> 16);
@@ -118,7 +119,7 @@ public class IP implements Comparable<IP>, Serializable {
     Pattern pattern = Pattern.compile(regex);
     Matcher m = pattern.matcher(ip);
 
-    Preconditions.checkArgument(m.find(), "IP string should match the regex:%s", regex);
+    checkArgument(m.find(), "IP string should match the regex:%s", regex);
 
     int a = Integer.parseInt(m.group(1));
     int b = Integer.parseInt(m.group(2));
@@ -146,6 +147,15 @@ public class IP implements Comparable<IP>, Serializable {
     return new IP(0L);
   }
 
+  public static boolean isValid(String ip) {
+    try {
+      IP.parseFromString(ip);
+    } catch (Exception e) {
+      return false;
+    }
+    return true;
+  }
+
   public int getA() {
     return a;
   }
@@ -163,19 +173,19 @@ public class IP implements Comparable<IP>, Serializable {
   }
 
   /**
-   * Gets next IP address. If the IP address dosen't have next IP then return <code>null</code>.
+   * Gets next IP address. If the IP address doesn't have next IP then return <code>null</code>.
    *
-   * @return　Next IP address.
+   * @return Next IP address.
    */
   public IP nextIP() {
     return new IP(value + 1);
   }
 
   /**
-   * Gets previous IP address. If the IP address dosen't have previous IP then return
+   * Gets previous IP address. If the IP address doesn't have previous IP then return
    * <code>null</code>.
    *
-   * @return Previous IP adderss.
+   * @return Previous IP address.
    */
   public IP preIP() {
     return new IP(value - 1);
@@ -198,7 +208,7 @@ public class IP implements Comparable<IP>, Serializable {
    *
    * @return <code>true</code> if the IP can be used in Internet.
    */
-  public boolean isUseInInteret() {
+  public boolean isUseInInternet() {
     return !isLocalIP();
   }
 
@@ -213,15 +223,6 @@ public class IP implements Comparable<IP>, Serializable {
     long c = this.c;
     long d = this.d;
     return ((a << 24) | (b << 16) | (c << 8) | d);
-  }
-
-  public static boolean isValid(String ip) {
-    try {
-      IP.parseFromString(ip);
-    } catch (Exception e) {
-      return false;
-    }
-    return true;
   }
 
   @Override
@@ -254,7 +255,8 @@ public class IP implements Comparable<IP>, Serializable {
 
   @Override
   public int hashCode() {
-    return Hashing.md5().newHasher().putInt(a).putChar('.').putInt(b).putChar('.').putInt(c).putChar('.').putInt(d).hash().hashCode();
+    return Hashing.md5().newHasher().putInt(a).putChar('.').putInt(b).putChar('.').putInt(c)
+        .putChar('.').putInt(d).hash().hashCode();
   }
 
 

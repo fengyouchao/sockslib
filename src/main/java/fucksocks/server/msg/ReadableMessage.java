@@ -14,11 +14,11 @@
 
 package fucksocks.server.msg;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import fucksocks.common.SocksException;
 import fucksocks.server.Session;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * The interface <code>ReadableMessage</code> represents a message that can be read by
@@ -37,6 +37,6 @@ public interface ReadableMessage extends Message {
    * @throws SocksException If a SOCKS protocol error occurred.
    * @throws IOException    If an I/O error occurred.
    */
-  public void read(InputStream inputStream) throws SocksException, IOException;
+  void read(InputStream inputStream) throws SocksException, IOException;
 
 }

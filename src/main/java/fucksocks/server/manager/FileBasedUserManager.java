@@ -8,11 +8,10 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The class <code>FileBasedUserManager</code> represents an user manager which can manage users
@@ -34,8 +33,8 @@ public class FileBasedUserManager implements UserManager {
   private AutoReloadService autoReloadService;
 
   public FileBasedUserManager(File storeFile, StoreType storeType) throws IOException {
-    this.storeFile = storeFile;
-    this.storeType = storeType;
+    this.storeFile = checkNotNull(storeFile, "Argument [storeFile] may not be null");
+    this.storeType = checkNotNull(storeType, "Argument [storeType] may not be null");
     loadFromFile();
   }
 
@@ -43,7 +42,8 @@ public class FileBasedUserManager implements UserManager {
     this(storeFile, StoreType.PROPERTIES);
   }
 
-  public FileBasedUserManager(String storeFile, boolean autoReload, long reloadAfter) throws IOException {
+  public FileBasedUserManager(String storeFile, boolean autoReload, long reloadAfter) throws
+      IOException {
     storeFile = PathUtil.getAbstractPath(storeFile);
     this.storeFile = new File(storeFile);
     this.autoReload = autoReload;
@@ -83,9 +83,7 @@ public class FileBasedUserManager implements UserManager {
 
   @Override
   public void create(User user) {
-    if (user == null || user.getUsername() == null) {
-      throw new IllegalArgumentException("User or username can't be null");
-    }
+    checkArgument(!(user == null || user.getUsername() == null), "User or username can't be null");
     managedUsers.put(user.getUsername(), user);
     logger.warn("Create a temporary user[{}]", user.getUsername());
   }

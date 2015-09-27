@@ -14,12 +14,14 @@
 
 package fucksocks.common.methods;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The class <code>SocksMethodRegistry</code> represents a socks method registry.
@@ -55,13 +57,15 @@ public class SocksMethodRegistry {
    * @param socksMethod The instance of {@link SocksMethod}.
    */
   public static void putMethod(SocksMethod socksMethod) {
+    checkNotNull(socksMethod, "Argument [socksMethod] may not be null");
     logger.debug("Register {}[{}]", socksMethod.getMethodName(), socksMethod.getByte());
     methods.put((byte) socksMethod.getByte(), socksMethod);
   }
 
-  public static void overWriteReistry(List<SocksMethod> socksMethods) {
-    for (int i = 0; i < socksMethods.size(); i++) {
-      putMethod(socksMethods.get(i));
+  public static void overWriteRegistry(List<SocksMethod> socksMethods) {
+    checkNotNull(socksMethods, "Argument [socksMethods] may not be null");
+    for (SocksMethod socksMethod : socksMethods) {
+      putMethod(socksMethod);
     }
   }
 

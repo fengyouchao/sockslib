@@ -29,22 +29,23 @@ import java.net.Socket;
 import java.util.List;
 
 /**
- * The class <code>GenericSocksMethodRequestor</code> implements {@link SocksMethodRequestor}.
+ * The class <code>GenericSocksMethodRequester</code> implements {@link SocksMethodRequester}.
  *
  * @author Youchao Feng
  * @version 1.0
  * @date Mar 19, 2015 10:48:42 AM
  * @see <a href="http://www.ietf.org/rfc/rfc1928.txt">SOCKS Protocol Version 5</a>
  */
-public class GenericSocksMethodRequestor implements SocksMethodRequestor {
+public class GenericSocksMethodRequester implements SocksMethodRequester {
 
   /**
    * Logger that subclasses also can use.
    */
-  protected static final Logger logger = LoggerFactory.getLogger(GenericSocksMethodRequestor.class);
+  protected static final Logger logger = LoggerFactory.getLogger(GenericSocksMethodRequester.class);
 
   @Override
-  public SocksMethod doRequest(List<SocksMethod> acceptableMethods, Socket socket, int socksVersion) throws SocksException, IOException {
+  public SocksMethod doRequest(List<SocksMethod> acceptableMethods, Socket socket, int
+      socksVersion) throws SocksException, IOException {
     InputStream inputStream = socket.getInputStream();
     OutputStream outputStream = socket.getOutputStream();
     byte[] bufferSent = new byte[2 + acceptableMethods.size()];

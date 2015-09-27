@@ -40,7 +40,7 @@ import java.net.SocketAddress;
  */
 public class GenericSocksCommandSender implements SocksCommandSender {
 
-  protected static final Logger logger = LoggerFactory.getLogger(GenericSocksMethodRequestor.class);
+  protected static final Logger logger = LoggerFactory.getLogger(GenericSocksMethodRequester.class);
 
 
   /**
@@ -54,12 +54,14 @@ public class GenericSocksCommandSender implements SocksCommandSender {
   protected static final int LENGTH_OF_IPV6 = 16;
 
   @Override
-  public CommandReplyMessage send(Socket socket, SocksCommand command, InetAddress address, int port, int version) throws SocksException, IOException {
+  public CommandReplyMessage send(Socket socket, SocksCommand command, InetAddress address, int
+      port, int version) throws SocksException, IOException {
     return send(socket, command, new InetSocketAddress(address, port), version);
   }
 
   @Override
-  public CommandReplyMessage send(Socket socket, SocksCommand command, SocketAddress socketAddress, int version) throws SocksException, IOException {
+  public CommandReplyMessage send(Socket socket, SocksCommand command, SocketAddress
+      socketAddress, int version) throws SocksException, IOException {
     if (!(socketAddress instanceof InetSocketAddress)) {
       throw new IllegalArgumentException("Unsupported address type");
     }
@@ -99,7 +101,8 @@ public class GenericSocksCommandSender implements SocksCommandSender {
   }
 
   @Override
-  public CommandReplyMessage send(Socket socket, SocksCommand command, String host, int port, int version) throws SocksException, IOException {
+  public CommandReplyMessage send(Socket socket, SocksCommand command, String host, int port, int
+      version) throws SocksException, IOException {
     final InputStream inputStream = socket.getInputStream();
     final OutputStream outputStream = socket.getOutputStream();
     final int lengthOfHost = host.getBytes().length;
@@ -123,12 +126,14 @@ public class GenericSocksCommandSender implements SocksCommandSender {
   }
 
   @Override
-  public CommandReplyMessage checkServerReply(InputStream inputStream) throws SocksException, IOException {
+  public CommandReplyMessage checkServerReply(InputStream inputStream) throws SocksException,
+      IOException {
     byte serverReply = -1;
     final byte[] bufferReceived = new byte[1024];
     int bufferReceivedSize = inputStream.read(bufferReceived);
 
-    logger.debug("{}", LogMessageBuilder.build(bufferReceived, bufferReceivedSize, MsgType.RECEIVE));
+    logger.debug("{}", LogMessageBuilder.build(bufferReceived, bufferReceivedSize, MsgType
+        .RECEIVE));
 
     byte[] addressBytes = null;
     byte[] portBytes = new byte[2];
@@ -148,7 +153,7 @@ public class GenericSocksCommandSender implements SocksCommandSender {
       logger.debug("Server replied:Address as IPv4:{}.{}.{}.{}, port:{}", a, b, c, d,
           (UnsignedByte.toInt(portBytes[0]) << 8) | (UnsignedByte.toInt(portBytes[1])));
 
-    } else if (bufferReceived[3] == AddressType.DOMAINNAME) {
+    } else if (bufferReceived[3] == AddressType.DOMAIN_NAME) {
       int size = bufferReceived[4];
       size = size & 0xFF;
       addressBytes = new byte[size];

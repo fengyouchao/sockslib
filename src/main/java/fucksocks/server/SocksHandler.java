@@ -14,13 +14,13 @@
 
 package fucksocks.server;
 
-import java.io.IOException;
-import java.util.List;
-
 import fucksocks.client.SocksProxy;
 import fucksocks.common.SocksException;
 import fucksocks.server.filters.SocksCommandFilter;
 import fucksocks.server.msg.CommandMessage;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * The interface <code>SocksHandler</code> represents a socket handler.
@@ -47,7 +47,7 @@ public interface SocksHandler extends Runnable {
    * @throws SocksException If a SOCKS protocol error occurred.
    * @throws IOException    If a I/O error occurred.
    */
-  public void doConnect(Session session, CommandMessage commandMessage) throws SocksException, IOException;
+  void doConnect(Session session, CommandMessage commandMessage) throws SocksException, IOException;
 
   /**
    * Do BIND command.
@@ -57,7 +57,7 @@ public interface SocksHandler extends Runnable {
    * @throws SocksException If a SOCKS protocol error occurred.
    * @throws IOException    If a I/O error occurred.
    */
-  public void doBind(Session session, CommandMessage commandMessage) throws SocksException, IOException;
+  void doBind(Session session, CommandMessage commandMessage) throws SocksException, IOException;
 
   /**
    * Do UDP ASSOCIATE command.
@@ -67,7 +67,8 @@ public interface SocksHandler extends Runnable {
    * @throws SocksException If a SOCKS protocol error occurred.
    * @throws IOException    If a I/O error occurred.
    */
-  public void doUDPAssociate(Session session, CommandMessage commandMessage) throws SocksException, IOException;
+  void doUDPAssociate(Session session, CommandMessage commandMessage) throws SocksException,
+      IOException;
 
   /**
    * Sets session.
@@ -81,14 +82,14 @@ public interface SocksHandler extends Runnable {
    *
    * @return Method selector.
    */
-  public MethodSelector getMethodSelector();
+  MethodSelector getMethodSelector();
 
   /**
    * Sets a method selector.
    *
    * @param methodSelector A {@link MethodSelector} instance.
    */
-  public void setMethodSelector(MethodSelector methodSelector);
+  void setMethodSelector(MethodSelector methodSelector);
 
   /**
    * Returns buffer size.
@@ -109,29 +110,29 @@ public interface SocksHandler extends Runnable {
    *
    * @return All socks listeners.
    */
-  public List<SocksCommandFilter> getSocksCommandFilters();
+  List<SocksCommandFilter> getSocksCommandFilters();
 
   /**
    * Sets socks listeners.
    *
    * @param socksListeners List of {@link SocksCommandFilter}.
    */
-  public void setSocksCommandFilters(List<SocksCommandFilter> socksListeners);
+  void setSocksCommandFilters(List<SocksCommandFilter> socksListeners);
 
   /**
    * Returns idle time.
    *
    * @return idle time.
    */
-  public int getIdleTime();
+  int getIdleTime();
 
   /**
    * Sets idle time.
    *
    * @param idleTime Idle time.
    */
-  public void setIdleTime(int idleTime);
+  void setIdleTime(int idleTime);
 
-  public void setProxy(SocksProxy socksProxy);
+  void setProxy(SocksProxy socksProxy);
 
 }

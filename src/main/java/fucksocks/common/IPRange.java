@@ -14,12 +14,12 @@
 
 package fucksocks.common;
 
+import com.google.common.base.Preconditions;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.google.common.base.Preconditions;
 
 /**
  * The class <code>IPRange</code> represents an IPrange.

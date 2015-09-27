@@ -35,6 +35,7 @@ public interface DatagramPacketEncapsulation {
    * @return Datagram packet that has encapsulated.
    * @throws SocksException If any error about SOCKS protocol occurs.
    */
-  public DatagramPacket encapsulate(DatagramPacket packet, SocketAddress destination) throws SocksException;
+  public DatagramPacket encapsulate(DatagramPacket packet, SocketAddress destination) throws
+      SocksException;
 
 }

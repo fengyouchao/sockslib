@@ -17,6 +17,9 @@ package fucksocks.test;
 import fucksocks.client.Socks5;
 import fucksocks.client.SocksProxy;
 import fucksocks.client.SocksSocket;
+import fucksocks.common.net.MonitorSocketWrapper;
+import fucksocks.common.net.NetworkMonitor;
+import fucksocks.utils.ResourceUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,19 +29,18 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
- * 
  * <code>TestSocks5Connect</code> is a test class. It use SOCKS5's CONNECT command to query WHOIS
  * from a WHOIS server.
- * 
- * @author Youchao Feng
- * @date Mar 24, 2015 10:22:42 PM
- * @version 1.0
  *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Mar 24, 2015 10:22:42 PM
  */
 public class TestSocks5Connect {
 
   public static void main(String[] args) {
 
+    long start = System.currentTimeMillis();
     InputStream inputStream = null;
     OutputStream outputStream = null;
     Socket socket = null;
@@ -49,12 +51,15 @@ public class TestSocks5Connect {
     try {
       SocksProxy proxy = new Socks5(new InetSocketAddress("localhost", 1080));
       socket = new SocksSocket(proxy, new InetSocketAddress("whois.internic.net", 43));
-
+      //      socket = new Socket("whois.internic.net", 43);
+      NetworkMonitor networkMonitor = new NetworkMonitor();
+      socket = new MonitorSocketWrapper(socket, networkMonitor);
       inputStream = socket.getInputStream();
       outputStream = socket.getOutputStream();
       PrintWriter printWriter = new PrintWriter(outputStream);
       printWriter.print("domain google.com\r\n"); // query google.com WHOIS.
       printWriter.flush();
+      System.out.println("Send success");
 
       response = new StringBuffer();
       while ((length = inputStream.read(buffer)) > 0) {
@@ -63,10 +68,14 @@ public class TestSocks5Connect {
 
       System.out.println(response.toString());
 
+      System.out.println("Total Sent:     " + networkMonitor.getTotalSend() + " bytes");
+      System.out.println("Total Received: " + networkMonitor.getTotalReceive() + " bytes");
+      System.out.println("Total:          " + networkMonitor.getTotal() + " bytes");
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
       ResourceUtil.close(inputStream, outputStream, socket);
     }
+    System.out.println("Total Run Time:" + (System.currentTimeMillis() - start) + "ms");
   }
 }

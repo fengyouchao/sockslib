@@ -14,15 +14,15 @@
 
 package fucksocks.test;
 
+import fucksocks.client.Socks5;
+import fucksocks.client.SocksServerSocket;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.Arrays;
-
-import fucksocks.client.Socks5;
-import fucksocks.client.SocksServerSocket;
 
 public class TestSocks5Bind {
 
@@ -35,7 +35,7 @@ public class TestSocks5Bind {
       InetAddress inetAddress = InetAddress.getByName("127.0.0.1");
       serverSocket = new SocksServerSocket(proxy, inetAddress, 8080);
       SocketAddress socketAddress = serverSocket.getBindSocketAddress();
-      System.out.println("Create server bind at ["+socketAddress+"]");
+      System.out.println("Create server bind at [" + socketAddress + "]");
       socket = serverSocket.accept();
       while (true) {
         byte[] bytes = new byte[1024];
@@ -47,9 +47,9 @@ public class TestSocks5Bind {
         socket.getOutputStream().flush();
       }
     } catch (IOException e) {
-     e.printStackTrace();
+      e.printStackTrace();
     } finally {
-      
+
     }
   }
 

@@ -37,7 +37,7 @@ import java.nio.charset.Charset;
 public class CommandMessage implements ReadableMessage, WritableMessage {
 
   /**
-   * Value of CONNECTE command.
+   * Value of CONNECT command.
    */
   protected static final int CMD_CONNECT = 0x01;
 
@@ -126,7 +126,7 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
         bytes[21] = SocksUtil.getSecondByteFromInt(port);
         break;
 
-      case AddressType.DOMAINNAME:
+      case AddressType.DOMAIN_NAME:
         final int hostLength = host.getBytes().length;
         bytes = new byte[7 + hostLength];
         bytes[4] = (byte) hostLength;
@@ -185,7 +185,7 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
         inetAddress = InetAddress.getByAddress(addressBytes);
         break;
 
-      case AddressType.DOMAINNAME:
+      case AddressType.DOMAIN_NAME:
         int domainLength = inputStream.read();
         byte[] domainBytes = new byte[domainLength];
         for (int i = 0; i < domainBytes.length; i++) {
