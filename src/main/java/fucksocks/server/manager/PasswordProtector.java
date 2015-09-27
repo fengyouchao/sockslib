@@ -28,7 +28,7 @@ public interface PasswordProtector {
   /**
    * Return the encrypted password.
    *
-   * @param user The instance of {@link User} which need encypt password.
+   * @param user The instance of {@link User} which need encrypt password.
    * @return Encrypted password.
    */
   String encrypt(final User user);
