@@ -171,7 +171,7 @@ public class SocksServerBuilder {
   }
 
   public SocksProxyServer build() {
-    SocksProxyServer proxyServer = new GenericSocksProxyServer(socksHandlerClass);
+    SocksProxyServer proxyServer = new BasicSocksProxyServer(socksHandlerClass);
     proxyServer.setTimeout(timeout);
     proxyServer.setBindPort(bindPort);
     proxyServer.setDaemon(daemon);

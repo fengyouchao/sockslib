@@ -15,6 +15,7 @@
 package fucksocks.server;
 
 import fucksocks.common.SocksException;
+import fucksocks.common.net.NetworkMonitor;
 import fucksocks.server.msg.ReadableMessage;
 import fucksocks.server.msg.WritableMessage;
 
@@ -163,4 +164,5 @@ public interface Session {
    */
   boolean isConnected();
 
+  NetworkMonitor getNetworkMonitor();
 }

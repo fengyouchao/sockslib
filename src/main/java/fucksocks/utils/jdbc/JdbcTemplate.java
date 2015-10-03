@@ -65,7 +65,6 @@ public class JdbcTemplate {
     Connection connection = null;
     PreparedStatement preparedStatement = null;
     try {
-      //      connection = DriverManager.getConnection(url, username, password);
       connection = dataSource.getConnection();
       connection.setAutoCommit(false);
       preparedStatement = connection.prepareStatement(sql);
@@ -94,7 +93,6 @@ public class JdbcTemplate {
     PreparedStatement preparedStatement = null;
     ResultSet resultSet = null;
     try {
-      //      connection = DriverManager.getConnection(url, username, password);
       connection = dataSource.getConnection();
       connection.setAutoCommit(false);
       preparedStatement = connection.prepareStatement(sql);

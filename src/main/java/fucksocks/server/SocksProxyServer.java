@@ -45,14 +45,6 @@ public interface SocksProxyServer {
   void start() throws IOException;
 
   /**
-   * Starts a SOCKS server and binds a port.
-   *
-   * @param bindPort The port that SOCKS server listened..
-   * @throws IOException If any I/O error occurs.
-   */
-  void start(int bindPort) throws IOException;
-
-  /**
    * Shutdown a SOCKS server.
    */
   void shutdown();

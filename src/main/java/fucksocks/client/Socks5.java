@@ -234,14 +234,14 @@ public class Socks5 implements SocksProxy {
   }
 
   @Override
-  public CommandReplyMessage requestUmpAssociate(String host, int port) throws SocksException,
+  public CommandReplyMessage requestUdpAssociate(String host, int port) throws SocksException,
       IOException {
     return socksCmdSender.send(proxySocket, SocksCommand.UDP_ASSOCIATE, new InetSocketAddress
         (host, port), SOCKS_VERSION);
   }
 
   @Override
-  public CommandReplyMessage requestUmpAssociate(InetAddress address, int port) throws
+  public CommandReplyMessage requestUdpAssociate(InetAddress address, int port) throws
       SocksException, IOException {
     return socksCmdSender.send(proxySocket, SocksCommand.UDP_ASSOCIATE, new InetSocketAddress
         (address, port), SOCKS_VERSION);

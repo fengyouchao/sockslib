@@ -62,16 +62,16 @@ public class GenericSocksMethodRequester implements SocksMethodRequester {
     logger.debug("{}", LogMessageBuilder.build(bufferSent, MsgType.SEND));
 
     // Received data.
-    byte[] bufferReceived = new byte[2];
-    inputStream.read(bufferReceived);
-    logger.debug("{}", LogMessageBuilder.build(bufferReceived, MsgType.RECEIVE));
+    byte[] receivedData = new byte[2];
+    receivedData[0] = (byte) inputStream.read();
+    receivedData[1] = (byte) inputStream.read();
+    logger.debug("{}", LogMessageBuilder.build(receivedData, MsgType.RECEIVE));
 
-    if (bufferReceived[0] != socksVersion) {
+    if (receivedData[0] != socksVersion) {
       throw new SocksException("Remote server don't support SOCKS5");
     }
-    SocksMethod socksMethod = SocksMethodRegistry.getByByte(bufferReceived[1]);
 
-    return socksMethod;
+    return SocksMethodRegistry.getByByte(receivedData[1]);
   }
 
 }

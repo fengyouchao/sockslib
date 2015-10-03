@@ -6,6 +6,7 @@ import fucksocks.common.UsernamePasswordCredentials;
 import fucksocks.common.net.MonitorSocketWrapper;
 import fucksocks.common.net.NetworkMonitor;
 import fucksocks.utils.ArgUtil;
+import fucksocks.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,7 @@ public class TCPTimeClient {
   }
 
   public void start(@Nullable String[] args) {
+    Timer.open();
     String host = "localhost";
     int port = 5051;
     String proxyHost = null;
@@ -113,13 +115,13 @@ public class TCPTimeClient {
   public void showHelp() {
     String a = "1";
     System.out.println("Usage: [Options]");
-    System.out.println("\t--host=<val>\tTCP time server host, default \"localhost\"");
-    System.out.println("\t--port=<val>\tTCP time server port, default \"5051\"");
-    System.out.println("\t--proxy-host=<val>\tHost of SOCKS5 proxy server");
-    System.out.println("\t--proxy-port=<val>\tPort of SOCKS5 proxy server, default \"1080\"");
-    System.out.println("\t--proxy-user=<val>\tUsername of SOCKS5 proxy server");
-    System.out.println("\t--proxy-password=<val>\tPassword of SOCKS5 proxy server");
-    System.out.println("\t--message=<val>\tThe message which will send to server");
-    System.out.println("\t-h or --help\tShow help");
+    System.out.println("    --host=<val>            TCP time server host, default \"localhost\"");
+    System.out.println("    --port=<val>            TCP time server port, default \"5051\"");
+    System.out.println("    --proxy-host=<val>      Host of SOCKS5 proxy server");
+    System.out.println("    --proxy-port=<val>      Port of SOCKS5 proxy server, default \"1080\"");
+    System.out.println("    --proxy-user=<val>      Username of SOCKS5 proxy server");
+    System.out.println("    --proxy-password=<val>  Password of SOCKS5 proxy server");
+    System.out.println("    --message=<val>         The message which will send to server");
+    System.out.println("    -h or --help            Show help");
   }
 }

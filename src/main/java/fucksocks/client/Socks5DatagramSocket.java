@@ -85,7 +85,7 @@ public class Socks5DatagramSocket extends DatagramSocket {
     }
     this.proxy.buildConnection();
     CommandReplyMessage message =
-        this.proxy.requestUmpAssociate(this.getLocalAddress(), this.getLocalPort());
+        this.proxy.requestUdpAssociate(this.getLocalAddress(), this.getLocalPort());
 
     logger.debug("build datagram socket at[{}:{}]", this.getLocalAddress(), this.getLocalPort());
     this.relayServerInetAddress = message.getIp();

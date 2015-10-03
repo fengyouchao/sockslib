@@ -38,6 +38,9 @@ public class SocketPipe implements Pipe {
    */
   protected static final Logger logger = LoggerFactory.getLogger(SocketPipe.class);
 
+  private static final String INPUT_PIPE_NAME = "INPUT_PIPE";
+  private static final String OUTPUT_PIPE_NAME = "OUTPUT_PIPE";
+
   /**
    * Pipe one.
    */
@@ -77,11 +80,8 @@ public class SocketPipe implements Pipe {
   public SocketPipe(Socket socket1, Socket socket2) throws IOException {
     this.socket1 = Preconditions.checkNotNull(socket1, "Argument [socks1] may not be null");
     this.socket2 = Preconditions.checkNotNull(socket2, "Argument [socks1] may not be null");
-    pipe1 = new StreamPipe(socket1.getInputStream(), socket2.getOutputStream());
-    ((StreamPipe) pipe1).setName("OUTPUT_PIPE");
-    pipe2 = new StreamPipe(socket2.getInputStream(), socket1.getOutputStream());
-    ((StreamPipe) pipe2).setName("INPUT_PIPE");
-    ;
+    pipe1 = new StreamPipe(socket1.getInputStream(), socket2.getOutputStream(), OUTPUT_PIPE_NAME);
+    pipe2 = new StreamPipe(socket2.getInputStream(), socket1.getOutputStream(), INPUT_PIPE_NAME);
 
     pipe1.addPipeListener(listener);
     pipe2.addPipeListener(listener);
@@ -98,7 +98,6 @@ public class SocketPipe implements Pipe {
     if (running) {
       pipe1.stop();
       pipe2.stop();
-      logger.debug("Socket pipe stopped");
       if (!pipe1.isRunning() && !pipe2.isRunning()) {
         running = false;
       }
@@ -108,12 +107,9 @@ public class SocketPipe implements Pipe {
 
   @Override
   public boolean close() {
-
     pipe2.removePipeListener(listener);
     pipe1.removePipeListener(listener);
-
     stop();
-
     try {
       if (socket1 != null && !socket1.isClosed()) {
         socket1.close();
@@ -121,7 +117,6 @@ public class SocketPipe implements Pipe {
       if (socket2 != null && !socket2.isClosed()) {
         socket2.close();
       }
-      logger.debug("Socket pipe closed");
       return true;
     } catch (IOException e) {
       logger.error(e.getMessage(), e);
@@ -192,7 +187,6 @@ public class SocketPipe implements Pipe {
 
     @Override
     public void onTransfer(Pipe pipe, byte[] buffer, int bufferLength) {
-
     }
 
     @Override

@@ -2,12 +2,15 @@ package fucksocks.quickstart;
 
 import fucksocks.common.methods.NoAuthenticationRequiredMethod;
 import fucksocks.common.methods.UsernamePasswordMethod;
+import fucksocks.common.net.NetworkMonitor;
+import fucksocks.server.BasicSocksProxyServer;
 import fucksocks.server.SocksProxyServer;
 import fucksocks.server.SocksServerBuilder;
 import fucksocks.server.manager.MemoryBasedUserManager;
 import fucksocks.server.manager.User;
 import fucksocks.server.manager.UserManager;
 import fucksocks.utils.ArgUtil;
+import fucksocks.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,8 +35,17 @@ public class Socks5Server {
    * @param args Some arguments.
    * @throws IOException
    */
-  public static void main(@Nullable String[] args) throws IOException {
-    new Socks5Server().start(args);
+  public static void main(@Nullable String[] args) throws IOException, InterruptedException {
+    Timer.open();
+    Socks5Server socks5Server = new Socks5Server();
+    socks5Server.start(args);
+    BasicSocksProxyServer server = (BasicSocksProxyServer) socks5Server.server;
+    NetworkMonitor monitor = server.getNetworkMonitor();
+    while (true) {
+      logger.info(monitor.toString());
+      Thread.sleep(5000);
+    }
+
   }
 
   /**
@@ -90,8 +102,10 @@ public class Socks5Server {
    */
   public void showHelp() {
     System.out.println("Usage: [Options]");
-    System.out.println("\t--port=<val>\tServer bind port");
-    System.out.println("\t--auth=<val1:val2>\tAuthenticate client by username/password");
+    System.out.println("    --port=<val>         Server bind port");
+    System.out.println("    --auth=<val1:val2>   Use username/password authentication");
+    System.out.println("                         Example: --auth=admin:1234");
+    System.out.println("    -h or --help         Show help");
   }
 
   /**

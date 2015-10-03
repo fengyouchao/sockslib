@@ -3,8 +3,11 @@ package fucksocks.common.net;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * @author Youchao Feng
@@ -24,15 +27,23 @@ public class MonitorOutputStreamWrapper extends OutputStream {
   }
 
   public MonitorOutputStreamWrapper(OutputStream outputStream, List<OutputStreamMonitor> monitors) {
-    this.originalOutputStream = outputStream;
-    this.monitors = monitors;
+    this.originalOutputStream = checkNotNull(outputStream);
+    this.monitors = checkNotNull(monitors);
+  }
+
+  public static OutputStream wrap(OutputStream outputStream, OutputStreamMonitor... monitors) {
+    return new MonitorOutputStreamWrapper(outputStream, monitors);
+  }
+
+  public static OutputStream wrap(OutputStream outputStream, List<OutputStreamMonitor> monitors) {
+    return new MonitorOutputStreamWrapper(outputStream, monitors);
   }
 
   public MonitorOutputStreamWrapper addMonitor(OutputStreamMonitor monitor) {
     if (monitors == null) {
       monitors = new ArrayList<>(1);
     }
-    monitors.add(monitor);
+    monitors.add(checkNotNull(monitor));
     return this;
   }
 
@@ -48,17 +59,14 @@ public class MonitorOutputStreamWrapper extends OutputStream {
   }
 
   public void setOriginalOutputStream(OutputStream originalOutputStream) {
-    this.originalOutputStream = originalOutputStream;
+    this.originalOutputStream = checkNotNull(originalOutputStream);
   }
 
   @Override
   public void write(int b) throws IOException {
-    if (monitors != null) {
-      for (OutputStreamMonitor monitor : monitors) {
-        monitor.onWrite(b);
-      }
-    }
     originalOutputStream.write(b);
+    byte[] bytes = {(byte) b};
+    informMonitor(bytes);
   }
 
   public List<OutputStreamMonitor> getMonitors() {
@@ -67,5 +75,43 @@ public class MonitorOutputStreamWrapper extends OutputStream {
 
   public void setMonitors(List<OutputStreamMonitor> monitors) {
     this.monitors = monitors;
+  }
+
+  @Override
+  public void close() throws IOException {
+    originalOutputStream.close();
+  }
+
+  @Override
+  public void flush() throws IOException {
+    originalOutputStream.flush();
+  }
+
+  @Override
+  public void write(byte[] b, int off, int len) throws IOException {
+    originalOutputStream.write(b, off, len);
+    informMonitor(b, off, len);
+  }
+
+  @Override
+  public void write(byte[] b) throws IOException {
+    originalOutputStream.write(b);
+    informMonitor(b);
+  }
+
+  private void informMonitor(byte[] bytes) {
+    if (monitors != null) {
+      for (OutputStreamMonitor monitor : monitors) {
+        monitor.onWrite(bytes);
+      }
+    }
+  }
+
+  private void informMonitor(byte[] bytes, int off, int length) {
+    if (monitors != null) {
+      for (OutputStreamMonitor monitor : monitors) {
+        monitor.onWrite(Arrays.copyOfRange(bytes, off, off + length));
+      }
+    }
   }
 }

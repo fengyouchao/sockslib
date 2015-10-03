@@ -19,7 +19,9 @@ import fucksocks.client.SocksProxy;
 import fucksocks.client.SocksSocket;
 import fucksocks.common.net.MonitorSocketWrapper;
 import fucksocks.common.net.NetworkMonitor;
-import fucksocks.utils.ResourceUtil;
+import fucksocks.utils.Timer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +29,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
+import static fucksocks.utils.ResourceUtil.close;
 
 /**
  * <code>TestSocks5Connect</code> is a test class. It use SOCKS5's CONNECT command to query WHOIS
@@ -38,44 +42,39 @@ import java.net.Socket;
  */
 public class TestSocks5Connect {
 
+  private static final Logger logger = LoggerFactory.getLogger(TestSocks5Connect.class);
+
   public static void main(String[] args) {
 
-    long start = System.currentTimeMillis();
+    Timer.open();
     InputStream inputStream = null;
     OutputStream outputStream = null;
     Socket socket = null;
-    StringBuffer response = null;
     int length = 0;
     byte[] buffer = new byte[2048];
 
     try {
       SocksProxy proxy = new Socks5(new InetSocketAddress("localhost", 1080));
       socket = new SocksSocket(proxy, new InetSocketAddress("whois.internic.net", 43));
-      //      socket = new Socket("whois.internic.net", 43);
       NetworkMonitor networkMonitor = new NetworkMonitor();
-      socket = new MonitorSocketWrapper(socket, networkMonitor);
+      socket = MonitorSocketWrapper.wrap(socket, networkMonitor);
       inputStream = socket.getInputStream();
       outputStream = socket.getOutputStream();
       PrintWriter printWriter = new PrintWriter(outputStream);
       printWriter.print("domain google.com\r\n"); // query google.com WHOIS.
       printWriter.flush();
-      System.out.println("Send success");
-
-      response = new StringBuffer();
+      logger.info("Waiting response from server....");
       while ((length = inputStream.read(buffer)) > 0) {
-        response.append(new String(buffer, 0, length));
+        System.out.print(new String(buffer, 0, length));
       }
 
-      System.out.println(response.toString());
-
-      System.out.println("Total Sent:     " + networkMonitor.getTotalSend() + " bytes");
-      System.out.println("Total Received: " + networkMonitor.getTotalReceive() + " bytes");
-      System.out.println("Total:          " + networkMonitor.getTotal() + " bytes");
+      logger.info("Total Sent:     " + networkMonitor.getTotalSend() + " bytes");
+      logger.info("Total Received: " + networkMonitor.getTotalReceive() + " bytes");
+      logger.info("Total:          " + networkMonitor.getTotal() + " bytes");
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     } finally {
-      ResourceUtil.close(inputStream, outputStream, socket);
+      close(inputStream, outputStream, socket);
     }
-    System.out.println("Total Run Time:" + (System.currentTimeMillis() - start) + "ms");
   }
 }

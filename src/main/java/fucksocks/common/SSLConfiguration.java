@@ -58,7 +58,7 @@ public class SSLConfiguration {
    * Creates a {@link SSLConfiguration} instance with a string.<br>
    * The string should format as: <br>
    * <pre>
-   * KEYS_TORE_PATH,KEY_STORE_PASSWORD,TURST_KEY_STORE_PATH,TRUST_KEY_STORE_PASSWORD,CLIENT_AUTH
+   * KEYS_TORE_PATH,KEY_STORE_PASSWORD,TRUST_KEY_STORE_PATH,TRUST_KEY_STORE_PASSWORD,CLIENT_AUTH
    * </pre>
    *
    * @param configuration configuration as a string.
@@ -90,14 +90,13 @@ public class SSLConfiguration {
     Properties properties = new Properties();
     properties.load(new FileInputStream(filePath));
 
-    String keystorePath =
-        PathUtil.getAbstractPath(properties.getProperty("fucksocks.ssl.keystore"));
-    String password = properties.getProperty("fucksocks.ssl.keystore.password");
-    String type = properties.getProperty("fucksocks.ssl.keystore.type", "JSK");
+    String keystorePath = PathUtil.getAbstractPath(properties.getProperty("ssl.keystore.location"));
+    String password = properties.getProperty("ssl.keystore.password");
+    String type = properties.getProperty("ssl.keystore.type", "JSK");
     String trustKeystorePath =
-        PathUtil.getAbstractPath(properties.getProperty("fucksocks.ssl.trust.keystore"));
-    String trustPassword = properties.getProperty("fucksocks.ssl.trust.keystore.password");
-    String trustType = properties.getProperty("fucksocks.ssl.trust.keystore.type", "JSK");
+        PathUtil.getAbstractPath(properties.getProperty("ssl.trust.keystore"));
+    String trustPassword = properties.getProperty("ssl.trust.keystore.password");
+    String trustType = properties.getProperty("ssl.trust.keystore.type", "JSK");
 
     if (!Strings.isNullOrEmpty(keystorePath)) {
       keyStoreInfo = new KeyStoreInfo(keystorePath, password, type);
@@ -105,7 +104,7 @@ public class SSLConfiguration {
     if (!Strings.isNullOrEmpty(trustKeystorePath)) {
       trustKeyStoreInfo = new KeyStoreInfo(trustKeystorePath, trustPassword, trustType);
     }
-    String clientAuthValue = properties.getProperty("fucksocks.ssl.client.auth", "false");
+    String clientAuthValue = properties.getProperty("ssl.client.auth", "false");
     boolean clientAuth = false;
     if (clientAuthValue.equalsIgnoreCase("true")) {
       clientAuth = true;
@@ -132,7 +131,7 @@ public class SSLConfiguration {
     KeyStore keyStore = null;
     KeyStore trustKeyStore = null;
     if (trustKeyStoreInfo == null) {
-      throw new SSLConfigurationException("Trust key store cant't be null");
+      throw new SSLConfigurationException("Trust key store can't be null");
     }
     try {
       SSLContext context = SSLContext.getInstance("SSL");
@@ -159,9 +158,7 @@ public class SSLConfiguration {
       if (keyStore != null) {
         logger.info("SSL: Key store:{}", keyStoreInfo.getKeyStorePath());
       }
-      if (trustKeyStore != null) {
-        logger.info("SSL: Trust key store:{}", trustKeyStoreInfo.getKeyStorePath());
-      }
+      logger.info("SSL: Trust key store:{}", trustKeyStoreInfo.getKeyStorePath());
       return context.getSocketFactory();
     } catch (Exception e) {
       logger.error(e.getMessage(), e);

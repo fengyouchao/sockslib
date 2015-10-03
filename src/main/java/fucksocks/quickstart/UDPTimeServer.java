@@ -1,6 +1,7 @@
 package fucksocks.quickstart;
 
 import fucksocks.utils.ArgUtil;
+import fucksocks.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,7 @@ public class UDPTimeServer implements Runnable {
   private boolean stop = false;
 
   public static void main(@Nullable String[] args) {
+    Timer.open();
     UDPTimeServer server = new UDPTimeServer();
     server.start(args);
   }
@@ -58,9 +60,9 @@ public class UDPTimeServer implements Runnable {
 
   public void showHelp() {
     System.out.println("Usage: [Options]");
-    System.out.println("\t--port=<val>\tUDP server Test port");
-    System.out.println("\t--always-response=<val> Server always responses <val> to client");
-    System.out.println("\t-h or --help\tShow help");
+    System.out.println("    --port=<val>             UDP server Test port");
+    System.out.println("    --always-response=<val>  Server always responses <val> to client");
+    System.out.println("    -h or --help             Show help");
   }
 
   public void startInCurrentThread(String[] args) {

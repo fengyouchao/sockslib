@@ -6,5 +6,5 @@ package fucksocks.common.net;
  * @date Sep 21, 2015 2:44 PM
  */
 public interface OutputStreamMonitor {
-  void onWrite(int b);
+  void onWrite(byte[] bytes);
 }

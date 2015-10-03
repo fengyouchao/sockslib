@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * The class <code>MonitorSocketWrapper</code> is wrapper of {@link java.net.Socket}.
  *
@@ -23,18 +25,33 @@ public class MonitorSocketWrapper extends Socket {
 
   private Socket originalSocket;
   private List<SocketMonitor> monitors;
+  private InputStream inputStream = null;
+  private OutputStream outputStream = null;
 
   public MonitorSocketWrapper(Socket socket, SocketMonitor... monitors) {
-    this.originalSocket = socket;
+    this.originalSocket = checkNotNull(socket, "Argument [socket] may not be null");
     this.monitors = new ArrayList<>(monitors.length);
     Collections.addAll(this.monitors, monitors);
   }
 
-  public MonitorSocketWrapper(Socket socket) {
-    this.originalSocket = socket;
+  public MonitorSocketWrapper(Socket socket, List<SocketMonitor> monitors) {
+    this.originalSocket = checkNotNull(socket, "Argument [socket] may not be null");
+    this.monitors = checkNotNull(monitors, "Arugment [monitors] may not be null");
   }
 
-  public MonitorSocketWrapper addNetworkMonitor(SocketMonitor monitor) {
+  public MonitorSocketWrapper(Socket socket) {
+    this.originalSocket = checkNotNull(socket, "Argument [socket] may not be null");
+  }
+
+  public static Socket wrap(Socket socket, SocketMonitor... monitors) {
+    return new MonitorSocketWrapper(socket, monitors);
+  }
+
+  public static Socket wrap(Socket socket, List<SocketMonitor> monitors) {
+    return new MonitorSocketWrapper(socket, monitors);
+  }
+
+  public MonitorSocketWrapper addMonitor(SocketMonitor monitor) {
     if (monitors == null) {
       monitors = new ArrayList<>(1);
     }
@@ -42,12 +59,14 @@ public class MonitorSocketWrapper extends Socket {
     return this;
   }
 
-  public MonitorSocketWrapper removeNetworkMonitor(SocketMonitor monitor) {
+  public MonitorSocketWrapper removeMonitor(SocketMonitor monitor) {
     if (monitors != null) {
       monitors.remove(monitor);
     }
     return this;
   }
+
+
 
   public Socket getOriginalSocket() {
     return originalSocket;
@@ -117,32 +136,38 @@ public class MonitorSocketWrapper extends Socket {
 
   @Override
   public InputStream getInputStream() throws IOException {
-    //    MonitorInputStreamWrapper inputStream = new MonitorInputStreamWrapper(originalSocket
-    // .getInputStream());
-    //    if(monitors != null) {
-    //      List<InputStreamMonitor> inputStreamMonitors = new ArrayList<>(monitors.size());
-    //      for (SocketMonitor socketMonitor : monitors) {
-    //        inputStreamMonitors.add(socketMonitor);
-    //      }
-    //      inputStream.setMonitors(inputStreamMonitors);
-    //    }
-    //    return inputStream;
-    return originalSocket.getInputStream();
+    if (inputStream == null) {
+      inputStream = getInputStreamFromSocket();
+    }
+    return inputStream;
+  }
+
+  public InputStream getInputStreamFromSocket() throws IOException {
+    List<InputStreamMonitor> inputStreamMonitors = new ArrayList<>(monitors.size());
+    if (monitors != null) {
+      for (SocketMonitor socketMonitor : monitors) {
+        inputStreamMonitors.add(socketMonitor);
+      }
+    }
+    return MonitorInputStreamWrapper.wrap(originalSocket.getInputStream(), inputStreamMonitors);
   }
 
   @Override
   public OutputStream getOutputStream() throws IOException {
-    //    MonitorOutputStreamWrapper outputStream = new MonitorOutputStreamWrapper(originalSocket
-    // .getOutputStream());
-    //    if(monitors != null) {
-    //      List<OutputStreamMonitor> outputStreamMonitors = new ArrayList<>(monitors.size());
-    //      for (SocketMonitor socketMonitor : monitors) {
-    //        outputStreamMonitors.add(socketMonitor);
-    //      }
-    //      outputStream.setMonitors(outputStreamMonitors);
-    //    }
-    //    return outputStream;
-    return originalSocket.getOutputStream();
+    if (outputStream == null) {
+      outputStream = getOutputStreamFromSocket();
+    }
+    return outputStream;
+  }
+
+  public OutputStream getOutputStreamFromSocket() throws IOException {
+    List<OutputStreamMonitor> outputStreamMonitors = new ArrayList<>(monitors.size());
+    if (monitors != null) {
+      for (SocketMonitor socketMonitor : monitors) {
+        outputStreamMonitors.add(socketMonitor);
+      }
+    }
+    return MonitorOutputStreamWrapper.wrap(originalSocket.getOutputStream(), outputStreamMonitors);
   }
 
   @Override

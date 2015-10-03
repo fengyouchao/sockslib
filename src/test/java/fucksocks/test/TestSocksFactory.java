@@ -38,8 +38,8 @@ public class TestSocksFactory {
     byte[] buffer = new byte[2048];
 
     try {
-      SocksProxy proxy =
-          SocksProxyFactory.parse("localhost,1080,,,classpath:client-ssl-config/clientTrust.jks,"
+      SocksProxy proxy = SocksProxyFactory.parse(
+          "localhost,1080,,,classpath:client-ssl-config/clientTrust.jks,"
               + "123456,classpath:client-ssl-config/client.jks,123456");
 
       socket = new SocksSocket(proxy);

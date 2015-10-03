@@ -31,7 +31,7 @@ import java.util.concurrent.Executors;
  * @version 1.0
  * @date May 17, 2015 4:08:06 PM
  */
-public class SSLSocksProxyServer extends GenericSocksProxyServer {
+public class SSLSocksProxyServer extends BasicSocksProxyServer {
 
   private SSLConfiguration configuration;
 

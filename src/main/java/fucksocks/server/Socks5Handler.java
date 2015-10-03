@@ -17,7 +17,6 @@ package fucksocks.server;
 import fucksocks.client.SocksProxy;
 import fucksocks.client.SocksSocket;
 import fucksocks.common.AddressType;
-import fucksocks.common.NotImplementException;
 import fucksocks.common.ProtocolErrorException;
 import fucksocks.common.SocksException;
 import fucksocks.common.methods.SocksMethod;
@@ -107,10 +106,9 @@ public class Socks5Handler implements SocksHandler {
     }
 
     doSocksCommandFilter(session, commandMessage);
+
     /**************************** DO COMMAND ******************************************/
-
     switch (commandMessage.getCommand()) {
-
       case BIND:
         doBind(session, commandMessage);
         break;
@@ -120,9 +118,6 @@ public class Socks5Handler implements SocksHandler {
       case UDP_ASSOCIATE:
         doUDPAssociate(session, commandMessage);
         break;
-      default:
-        throw new NotImplementException("Not support command");
-
     }
 
 
@@ -171,8 +166,10 @@ public class Socks5Handler implements SocksHandler {
           InetSocketAddress(remoteServerAddress, remoteServerPort), reply, e.getMessage());
     }
 
-    session.write(new CommandResponseMessage(VERSION, reply, bindAddress, bindPort));
-
+    CommandResponseMessage responseMessage =
+        new CommandResponseMessage(VERSION, reply, bindAddress, bindPort);
+    session.write(responseMessage);
+    byte[] bytes = responseMessage.getBytes();
     if (reply != ServerReply.SUCCEEDED) { // 如果返回失败信息，则退出该方法。
       session.close();
       return;
@@ -275,7 +272,8 @@ public class Socks5Handler implements SocksHandler {
        * At last, close the session.
        */
       session.close();
-      logger.info("SESSION[{}] closed", session.getId());
+      logger.info("SESSION[{}] closed, {}", session.getId(), session.getNetworkMonitor().toString
+          ());
     }
   }
 

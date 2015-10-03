@@ -82,6 +82,8 @@ public class StreamPipe implements Runnable, Pipe {
    */
   private String name;
 
+  private boolean daemon = false;
+
 
   /**
    * Constructs a Pipe instance with a input stream and a output stream.
@@ -90,9 +92,7 @@ public class StreamPipe implements Runnable, Pipe {
    * @param destination stream where it will be transferred destination.
    */
   public StreamPipe(InputStream source, OutputStream destination) {
-    this.source = checkNotNull(source, "Argument [source] may not be null");
-    this.destination = checkNotNull(destination, "Argument [destination] may not be null");
-    pipeListeners = new ArrayList<>();
+    this(source, destination, null);
   }
 
   /**
@@ -114,6 +114,7 @@ public class StreamPipe implements Runnable, Pipe {
     if (!running) { // If the pipe is not running, run it.
       running = true;
       runningThread = new Thread(this);
+      runningThread.setDaemon(daemon);
       runningThread.start();
       for (PipeListener listener : pipeListeners) {
         listener.onStart(this);
@@ -143,7 +144,6 @@ public class StreamPipe implements Runnable, Pipe {
   @Override
   public void run() {
     byte[] buffer = new byte[bufferSize];
-
     while (running) {
       int size = doTransfer(buffer);
       if (size == -1) {
@@ -166,14 +166,14 @@ public class StreamPipe implements Runnable, Pipe {
       if (length > 0) { // transfer the buffer destination output stream.
         destination.write(buffer, 0, length);
         destination.flush();
-        for (PipeListener listener : pipeListeners) {
-          listener.onTransfer(this, buffer, length);
+        for (int i = 0; i < pipeListeners.size(); i++) {
+          pipeListeners.get(i).onTransfer(this, buffer, length);
         }
       }
 
     } catch (IOException e) {
-      for (PipeListener listener : pipeListeners) {
-        listener.onError(this, e);
+      for (int i = 0; i < pipeListeners.size(); i++) {
+        pipeListeners.get(i).onError(this, e);
       }
       stop();
     }
@@ -258,4 +258,16 @@ public class StreamPipe implements Runnable, Pipe {
     this.name = name;
   }
 
+  public Thread getRunningThread() {
+    return runningThread;
+  }
+
+
+  public boolean isDaemon() {
+    return daemon;
+  }
+
+  public void setDaemon(boolean daemon) {
+    this.daemon = daemon;
+  }
 }

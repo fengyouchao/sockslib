@@ -16,6 +16,8 @@ package fucksocks.server;
 
 import fucksocks.common.Credentials;
 import fucksocks.common.SocksException;
+import fucksocks.common.net.MonitorSocketWrapper;
+import fucksocks.common.net.NetworkMonitor;
 import fucksocks.server.msg.ReadableMessage;
 import fucksocks.server.msg.WritableMessage;
 import org.slf4j.Logger;
@@ -54,6 +56,8 @@ public class SocksSession implements Session {
 
   private Map<Object, Object> attributes;
 
+  private NetworkMonitor networkMonitor;
+
   private Credentials credentials;
 
   public SocksSession() {
@@ -67,6 +71,10 @@ public class SocksSession implements Session {
     if (!socket.isConnected()) {
       throw new IllegalArgumentException("Socket should be a connected socket");
     }
+    if (socket instanceof MonitorSocketWrapper) {
+      networkMonitor = new NetworkMonitor();
+      ((MonitorSocketWrapper) socket).addMonitor(networkMonitor);
+    }
     this.id = id;
     this.socket = socket;
     this.sessions = sessions;
@@ -79,7 +87,6 @@ public class SocksSession implements Session {
     clientAddress = socket.getRemoteSocketAddress();
 
     attributes = new HashMap<Object, Object>();
-
   }
 
   @Override
@@ -191,6 +198,11 @@ public class SocksSession implements Session {
   @Override
   public boolean isConnected() {
     return socket.isConnected();
+  }
+
+  @Override
+  public NetworkMonitor getNetworkMonitor() {
+    return networkMonitor;
   }
 
   @Override

@@ -19,8 +19,10 @@ import fucksocks.common.methods.NoAuthenticationRequiredMethod;
 import fucksocks.server.SSLSocksProxyServer;
 import fucksocks.server.Socks5Handler;
 import fucksocks.server.SocksProxyServer;
+import fucksocks.utils.Timer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -33,14 +35,18 @@ import java.io.IOException;
  */
 public class SSLBasedProxyServer {
 
-  public static void main(String[] args) throws FileNotFoundException, IOException {
-    SSLConfiguration configuration = SSLConfiguration.loadClassPath("/server-ssl.properties");
+  private static final Logger logger = LoggerFactory.getLogger(SSLBasedProxyServer.class);
+
+  public static void main(String[] args) throws IOException {
+    Timer.open();
+    SSLConfiguration configuration = SSLConfiguration.loadClassPath("server-ssl.properties");
     SocksProxyServer proxyServer = new SSLSocksProxyServer(Socks5Handler.class, configuration);
+    proxyServer.setBindPort(1081);
     proxyServer.setSupportMethods(new NoAuthenticationRequiredMethod());
     try {
       proxyServer.start();
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     }
   }
 

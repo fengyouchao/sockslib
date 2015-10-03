@@ -14,10 +14,17 @@
 
 package fucksocks.test;
 
+import fucksocks.client.SSLSocks5;
+import fucksocks.client.SocksProxy;
+import fucksocks.common.SSLConfiguration;
 import fucksocks.server.SocksProxyServer;
 import fucksocks.server.SocksProxyServerFactory;
+import fucksocks.utils.Timer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 
 /**
  * The class <code>TestProxyServer</code> a test class to start a SOCKS5 proxy server.
@@ -28,14 +35,18 @@ import java.io.IOException;
  */
 public class TestProxyServer {
 
-  public static void main(String[] args) {
+  private static final Logger logger = LoggerFactory.getLogger(TestProxyServer.class);
 
+  public static void main(String[] args) throws IOException {
+    Timer.open();
     SocksProxyServer proxyServer = SocksProxyServerFactory.newNoAuthenticationServer();
-
+//        SSLConfiguration configuration = SSLConfiguration.loadClassPath("client-ssl.properties");
+//        SocksProxy proxy = new SSLSocks5(new InetSocketAddress("localhost", 1081), configuration);
+//        proxyServer.setProxy(proxy);
     try {
       proxyServer.start();
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     }
   }
 

@@ -15,13 +15,13 @@ public class NetworkMonitor implements SocketMonitor, DatagramSocketMonitor {
   private long sendUDP = 0;
 
   @Override
-  public void onRead(int b) {
-    receiveTCP++;
+  public void onRead(byte[] bytes) {
+    receiveTCP += bytes.length;
   }
 
   @Override
-  public void onWrite(int b) {
-    sendTCP++;
+  public void onWrite(byte[] bytes) {
+    sendTCP += bytes.length;
   }
 
   @Override
@@ -62,4 +62,13 @@ public class NetworkMonitor implements SocketMonitor, DatagramSocketMonitor {
     return sendUDP;
   }
 
+  @Override
+  public String toString() {
+    return "NetworkMonitor{" +
+        "sendTCP=" + sendTCP +
+        ", receiveTCP=" + receiveTCP +
+        ", sendUDP=" + sendUDP +
+        ", receiveUDP=" + receiveUDP +
+        '}';
+  }
 }

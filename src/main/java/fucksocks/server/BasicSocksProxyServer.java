@@ -17,6 +17,7 @@ package fucksocks.server;
 import fucksocks.client.SocksProxy;
 import fucksocks.common.methods.SocksMethod;
 import fucksocks.common.net.MonitorSocketWrapper;
+import fucksocks.common.net.NetworkMonitor;
 import fucksocks.server.filters.SessionFilter;
 import fucksocks.server.filters.SessionFilterChain;
 import fucksocks.server.filters.SocksCommandFilter;
@@ -36,11 +37,11 @@ import java.util.concurrent.Executors;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * The class <code>GenericSocksProxyServer</code> is a implementation of {@link SocksProxyServer}
+ * The class <code>BasicSocksProxyServer</code> is a implementation of {@link SocksProxyServer}
  * .<br>
  * You can build a SOCKS5 server easily by following codes:<br>
  * <pre>
- * ProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class);
+ * ProxyServer proxyServer = new BasicSocksProxyServer(Socks5Handler.class);
  * proxyServer.start(); // Create a SOCKS5 server bind at 1080.
  * </pre>
  * <p>
@@ -54,9 +55,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @version 1.0
  * @date Apr 19, 2015 1:10:17 PM
  */
-public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
+public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
 
-  protected static final Logger logger = LoggerFactory.getLogger(GenericSocksProxyServer.class);
+  protected static final Logger logger = LoggerFactory.getLogger(BasicSocksProxyServer.class);
 
   /**
    * Number of threads in thread pool.
@@ -129,49 +130,51 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
 
   private SocksProxy proxy;
 
+  private NetworkMonitor networkMonitor = new NetworkMonitor();
+
 
   /**
-   * Constructs a {@link GenericSocksProxyServer} by a {@link SocksHandler} class. The bind port is
+   * Constructs a {@link BasicSocksProxyServer} by a {@link SocksHandler} class. The bind port is
    * 1080.
    *
    * @param socketHandlerClass {@link SocksHandler} class.
    */
-  public GenericSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass) {
+  public BasicSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass) {
     this(socketHandlerClass, DEFAULT_SOCKS_PORT, Executors.newFixedThreadPool(THREAD_NUMBER));
   }
 
   /**
-   * Constructs a {@link GenericSocksProxyServer} by a {@link SocksHandler} class and a port.
+   * Constructs a {@link BasicSocksProxyServer} by a {@link SocksHandler} class and a port.
    *
    * @param socketHandlerClass {@link SocksHandler} class.
    * @param port               The port that SOCKS server will listen.
    */
-  public GenericSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, int port) {
+  public BasicSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, int port) {
     this(socketHandlerClass, port, Executors.newFixedThreadPool(THREAD_NUMBER));
   }
 
   /**
-   * Constructs a {@link GenericSocksProxyServer} by a {@link SocksHandler} class and a
+   * Constructs a {@link BasicSocksProxyServer} by a {@link SocksHandler} class and a
    * ExecutorService.
    *
    * @param socketHandlerClass {@link SocksHandler} class.
    * @param executorService    Thread pool.
    */
-  public GenericSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass,
-                                 ExecutorService executorService) {
+  public BasicSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, ExecutorService
+      executorService) {
     this(socketHandlerClass, DEFAULT_SOCKS_PORT, executorService);
   }
 
   /**
-   * Constructs a {@link GenericSocksProxyServer} by a {@link SocksHandler} class , a port and a
+   * Constructs a {@link BasicSocksProxyServer} by a {@link SocksHandler} class , a port and a
    * ExecutorService.
    *
    * @param socketHandlerClass {@link SocksHandler} class.
    * @param port               The port that SOCKS server will listen.
    * @param executorService    Thread pool.
    */
-  public GenericSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, int port,
-                                 ExecutorService executorService) {
+  public BasicSocksProxyServer(Class<? extends SocksHandler> socketHandlerClass, int port,
+                               ExecutorService executorService) {
     this.socksHandlerClass =
         checkNotNull(socketHandlerClass, "Argument [socksHandlerClass] may not be null");
     this.executorService =
@@ -186,7 +189,7 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
     while (!stop) {
       try {
         Socket socket = serverSocket.accept();
-        socket = new MonitorSocketWrapper(socket);
+        socket = processSocketBeforeUse(socket);
         socket.setSoTimeout(timeout);
         Session session = new SocksSession(getNextSessionId(), socket, sessions);
         sessions.put(session.getId(), session);
@@ -238,15 +241,9 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
 
   @Override
   public void start() throws IOException {
-    start(bindPort);
-  }
-
-  @Override
-  public void start(int bindPort) throws IOException {
-    this.bindPort = bindPort;
-    serverSocket = createServerSocket(this.bindPort);
+    serverSocket = createServerSocket(bindPort);
     thread = new Thread(this);
-    thread.setName("fs-boot-thread");
+    thread.setName("fs-thread");
     thread.setDaemon(daemon);
     thread.start();
   }
@@ -392,4 +389,19 @@ public class GenericSocksProxyServer implements SocksProxyServer, Runnable {
     this.sessionFilterChain = sessionFilterChain;
   }
 
+  public Thread getServerThread() {
+    return thread;
+  }
+
+  public NetworkMonitor getNetworkMonitor() {
+    return networkMonitor;
+  }
+
+  public void setNetworkMonitor(NetworkMonitor networkMonitor) {
+    this.networkMonitor = checkNotNull(networkMonitor);
+  }
+
+  protected Socket processSocketBeforeUse(Socket socket) {
+    return new MonitorSocketWrapper(socket, networkMonitor);
+  }
 }

@@ -2,18 +2,18 @@ package fucksocks.quickstart;
 
 import fucksocks.client.SocksProxy;
 import fucksocks.utils.ArgUtil;
+import fucksocks.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Youchao Feng
@@ -31,6 +31,7 @@ public class TCPTimeServer implements Runnable {
   private ServerSocket server;
 
   public static void main(@Nullable String[] args) {
+    Timer.open();
     TCPTimeServer server = new TCPTimeServer();
     server.start(args);
   }
@@ -58,9 +59,9 @@ public class TCPTimeServer implements Runnable {
 
   public void showHelp() {
     System.out.println("Usage: [Options]");
-    System.out.println("\t--port=<val>\tUDP server Test port");
-    System.out.println("\t--always-response=<val> Server always responses <val> to client");
-    System.out.println("\t-h or --help\tShow help");
+    System.out.println("    --port=<val>             UDP server Test port");
+    System.out.println("    --always-response=<val>  Server always responses <val> to client");
+    System.out.println("    -h or --help             Show help");
   }
 
   @Override
@@ -99,29 +100,25 @@ public class TCPTimeServer implements Runnable {
         Socket socket = server.accept();
         InputStream inputStream = socket.getInputStream();
         OutputStream outputStream = socket.getOutputStream();
-        List<Byte> bytes = new ArrayList<>();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         int b;
         while ((b = (byte) inputStream.read()) != -1) {
           if (b == '\n') {
             break;
           }
-          bytes.add((byte) b);
+          byteArrayOutputStream.write(b);
         }
-        byte[] buffer = new byte[bytes.size()];
-        for (int i = 0; i < buffer.length; i++) {
-          buffer[i] = bytes.get(i);
-        }
+        byte[] buffer = byteArrayOutputStream.toByteArray();
         String receive = new String(buffer);
-        receive = receive.substring(0, receive.length() - 1);
         logger.info("Client from {} send:{}", socket.getRemoteSocketAddress(), receive);
         if (receive.equals("shutdown")) {
           break;
         }
         String response = new Date().toString();
-        response += "\n";
         if (alwaysResponse != null) {
           response = alwaysResponse;
         }
+        response += "\n";
         outputStream.write(response.getBytes());
         outputStream.flush();
         inputStream.close();

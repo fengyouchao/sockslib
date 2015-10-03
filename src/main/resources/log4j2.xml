@@ -2,16 +2,13 @@
 <configuration>
     <appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %L [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
     </appenders>
 
     <loggers>
-        <root level="INFO">
+        <root level="DEBUG">
             <appender-ref ref="Console"/>
         </root>
-        <!--<logger name="org.mongodb" level="error">-->
-        <!--<appender-ref ref="Console"/>-->
-        <!--</logger>-->
     </loggers>
 </configuration>

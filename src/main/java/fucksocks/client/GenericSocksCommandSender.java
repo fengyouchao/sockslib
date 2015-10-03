@@ -15,6 +15,7 @@
 package fucksocks.client;
 
 import fucksocks.common.AddressType;
+import fucksocks.common.ProtocolErrorException;
 import fucksocks.common.SocksCommand;
 import fucksocks.common.SocksException;
 import fucksocks.utils.LogMessageBuilder;
@@ -23,6 +24,7 @@ import fucksocks.utils.UnsignedByte;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,7 +42,7 @@ import java.net.SocketAddress;
  */
 public class GenericSocksCommandSender implements SocksCommandSender {
 
-  protected static final Logger logger = LoggerFactory.getLogger(GenericSocksMethodRequester.class);
+  protected static final Logger logger = LoggerFactory.getLogger(GenericSocksCommandSender.class);
 
 
   /**
@@ -129,53 +131,79 @@ public class GenericSocksCommandSender implements SocksCommandSender {
   public CommandReplyMessage checkServerReply(InputStream inputStream) throws SocksException,
       IOException {
     byte serverReply = -1;
-    final byte[] bufferReceived = new byte[1024];
-    int bufferReceivedSize = inputStream.read(bufferReceived);
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    int temp = 0;
+    for (int i = 0; i < 4; i++) {
+      temp = inputStream.read();
+      byteArrayOutputStream.write(temp);
+    }
 
-    logger.debug("{}", LogMessageBuilder.build(bufferReceived, bufferReceivedSize, MsgType
-        .RECEIVE));
-
+    byte addressType = (byte) temp;
+    switch (addressType) {
+      case AddressType.IPV4:
+        for (int i = 0; i < 6; i++) {
+          byteArrayOutputStream.write(inputStream.read());
+        }
+        break;
+      case AddressType.DOMAIN_NAME:
+        temp = inputStream.read();
+        byteArrayOutputStream.write(temp);
+        for (int i = 0; i < temp + 2; i++) {
+          byteArrayOutputStream.write(inputStream.read());
+        }
+        break;
+      case AddressType.IPV6:
+        for (int i = 0; i < 18; i++) {
+          byteArrayOutputStream.write(inputStream.read());
+        }
+        break;
+      default:
+        throw new ProtocolErrorException();
+    }
+    byte[] receivedData = byteArrayOutputStream.toByteArray();
+    int length = receivedData.length;
+    logger.debug("{}", LogMessageBuilder.build(receivedData, length, MsgType.RECEIVE));
     byte[] addressBytes = null;
     byte[] portBytes = new byte[2];
 
-    if (bufferReceived[3] == AddressType.IPV4) {
+    if (receivedData[3] == AddressType.IPV4) {
       addressBytes = new byte[4];
       for (int i = 0; i < addressBytes.length; i++) {
-        addressBytes[i] = bufferReceived[4 + i];
+        addressBytes[i] = receivedData[4 + i];
       }
       int a = UnsignedByte.toInt(addressBytes[0]);
       int b = UnsignedByte.toInt(addressBytes[1]);
       int c = UnsignedByte.toInt(addressBytes[2]);
       int d = UnsignedByte.toInt(addressBytes[3]);
-      portBytes[0] = bufferReceived[8];
-      portBytes[1] = bufferReceived[9];
+      portBytes[0] = receivedData[8];
+      portBytes[1] = receivedData[9];
 
       logger.debug("Server replied:Address as IPv4:{}.{}.{}.{}, port:{}", a, b, c, d,
           (UnsignedByte.toInt(portBytes[0]) << 8) | (UnsignedByte.toInt(portBytes[1])));
 
-    } else if (bufferReceived[3] == AddressType.DOMAIN_NAME) {
-      int size = bufferReceived[4];
+    } else if (receivedData[3] == AddressType.DOMAIN_NAME) {
+      int size = receivedData[4];
       size = size & 0xFF;
       addressBytes = new byte[size];
       for (int i = 0; i < size; i++) {
-        addressBytes[i] = bufferReceived[4 + i];
+        addressBytes[i] = receivedData[4 + i];
       }
-      portBytes[0] = bufferReceived[4 + size];
-      portBytes[1] = bufferReceived[5 + size];
+      portBytes[0] = receivedData[4 + size];
+      portBytes[1] = receivedData[5 + size];
       logger.debug("Server replied:Address as host:{}, port:{}", new String(addressBytes),
           (UnsignedByte.toInt(portBytes[0]) << 8) | (UnsignedByte.toInt(portBytes[1])));
-    } else if (bufferReceived[3] == AddressType.IPV6) {
-      int size = bufferReceived[4];
+    } else if (receivedData[3] == AddressType.IPV6) {
+      int size = receivedData[4];
       size = size & 0xFF;
       addressBytes = new byte[16];
       for (int i = 0; i < addressBytes.length; i++) {
-        addressBytes[i] = bufferReceived[4 + i];
+        addressBytes[i] = receivedData[4 + i];
       }
       logger.debug("Server replied:Address as IPv6:{}", new String(addressBytes));
     }
 
 
-    serverReply = bufferReceived[1];
+    serverReply = receivedData[1];
 
     if (serverReply != REP_SUCCEEDED) {
       throw SocksException.serverReplyException(serverReply);
@@ -183,8 +211,8 @@ public class GenericSocksCommandSender implements SocksCommandSender {
 
     logger.debug("SOCKS server response success");
 
-    byte[] receivedBytes = new byte[bufferReceivedSize];
-    System.arraycopy(bufferReceived, 0, receivedBytes, 0, bufferReceivedSize);
+    byte[] receivedBytes = new byte[length];
+    System.arraycopy(receivedData, 0, receivedBytes, 0, length);
     return new CommandReplyMessage(receivedBytes);
   }
 

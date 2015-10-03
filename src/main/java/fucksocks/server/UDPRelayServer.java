@@ -15,6 +15,8 @@
 package fucksocks.server;
 
 import fucksocks.common.Socks5DatagramPacketHandler;
+import fucksocks.common.net.MonitorDatagramSocketWrapper;
+import fucksocks.common.net.NetworkMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,6 +78,8 @@ public class UDPRelayServer implements Runnable {
    */
   private int clientPort;
 
+  private NetworkMonitor networkMonitor;
+
   /**
    * Constructs a {@link UDPRelayServer} instance.
    */
@@ -111,6 +115,9 @@ public class UDPRelayServer implements Runnable {
   public SocketAddress start() throws SocketException {
     running = true;
     server = new DatagramSocket();
+    if (networkMonitor != null) {
+      server = new MonitorDatagramSocketWrapper(server, networkMonitor);
+    }
     SocketAddress socketAddress = server.getLocalSocketAddress();
     thread = new Thread(this);
     thread.start();
@@ -138,13 +145,9 @@ public class UDPRelayServer implements Runnable {
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
         server.receive(packet);
         if (isFromClient(packet)) {
-          logger.debug("Receive message from client:{}", new String(packet.getData(), 0, packet
-              .getLength()));
           datagramPacketHandler.decapsulate(packet);
           server.send(packet);
         } else {
-          logger.debug("Receive message from server:{}", new String(packet.getData(), 0, packet
-              .getLength()));
           packet =
               datagramPacketHandler.encapsulate(packet, new InetSocketAddress(clientAddress,
                   clientPort));
@@ -277,4 +280,15 @@ public class UDPRelayServer implements Runnable {
     return running;
   }
 
+  public NetworkMonitor getNetworkMonitor() {
+    return networkMonitor;
+  }
+
+  public void setNetworkMonitor(NetworkMonitor networkMonitor) {
+    this.networkMonitor = networkMonitor;
+  }
+
+  public Thread getServerThread() {
+    return thread;
+  }
 }

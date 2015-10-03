@@ -55,7 +55,7 @@ public class SocksProxyServerFactory {
    * @return The instance of {@link SocksProxyServer} that supports SOCKS5 protocol.
    */
   public static SocksProxyServer newNoAuthenticationServer(int port) {
-    SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class, port);
+    SocksProxyServer proxyServer = new BasicSocksProxyServer(Socks5Handler.class, port);
     proxyServer.setBufferSize(BUFFER_SIZE);
     proxyServer.setTimeout(TIMEOUT);
     proxyServer.setSupportMethods(new NoAuthenticationRequiredMethod());
@@ -73,7 +73,7 @@ public class SocksProxyServerFactory {
   }
 
   public static SocksProxyServer newUsernamePasswordAuthenticationServer(int port, User... users) {
-    SocksProxyServer proxyServer = new GenericSocksProxyServer(Socks5Handler.class, port);
+    SocksProxyServer proxyServer = new BasicSocksProxyServer(Socks5Handler.class, port);
     proxyServer.setBufferSize(BUFFER_SIZE);
     proxyServer.setTimeout(TIMEOUT);
     UsernamePasswordAuthenticator authenticator = new UsernamePasswordAuthenticator();

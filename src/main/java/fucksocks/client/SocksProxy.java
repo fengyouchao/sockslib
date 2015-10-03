@@ -180,7 +180,7 @@ public interface SocksProxy {
    * @throws SocksException If any error about SOCKS protocol occurs.
    * @throws IOException    If any I/O error occurs.
    */
-  CommandReplyMessage requestUmpAssociate(String host, int port) throws SocksException, IOException;
+  CommandReplyMessage requestUdpAssociate(String host, int port) throws SocksException, IOException;
 
   /**
    * This method will send a UDP ASSOCIATE command to SOCKS server and ask SOCKS server to establish
@@ -192,7 +192,7 @@ public interface SocksProxy {
    * @throws SocksException If any error about SOCKS protocol occurs.
    * @throws IOException    If any I/O error occurs.
    */
-  CommandReplyMessage requestUmpAssociate(InetAddress address, int port) throws SocksException,
+  CommandReplyMessage requestUdpAssociate(InetAddress address, int port) throws SocksException,
       IOException;
 
   /**
