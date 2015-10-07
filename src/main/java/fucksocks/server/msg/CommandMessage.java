@@ -109,9 +109,7 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
       case AddressType.IPV4:
         bytes = new byte[10];
         byte[] ipv4Bytes = inetAddress.getAddress();// todo
-        for (int i = 0; i < ipv4Bytes.length; i++) {
-          bytes[i + 4] = ipv4Bytes[i];
-        }
+        System.arraycopy(ipv4Bytes, 0, bytes, 4, ipv4Bytes.length);
         bytes[8] = SocksUtil.getFirstByteFromInt(port);
         bytes[9] = SocksUtil.getSecondByteFromInt(port);
         break;
@@ -119,9 +117,7 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
       case AddressType.IPV6:
         bytes = new byte[22];
         byte[] ipv6Bytes = inetAddress.getAddress();// todo
-        for (int i = 0; i < ipv6Bytes.length; i++) {
-          bytes[i + 4] = ipv6Bytes[i];
-        }
+        System.arraycopy(ipv6Bytes, 0, bytes, 4, ipv6Bytes.length);
         bytes[20] = SocksUtil.getFirstByteFromInt(port);
         bytes[21] = SocksUtil.getSecondByteFromInt(port);
         break;
