@@ -70,6 +70,11 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
   private ExecutorService executorService;
 
   /**
+   * Session manager
+   */
+  private SessionManager sessionManager = new BasicSessionManager();
+
+  /**
    * The next session's ID.
    */
   private long nextSessionId = 0;
@@ -191,8 +196,7 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
         Socket socket = serverSocket.accept();
         socket = processSocketBeforeUse(socket);
         socket.setSoTimeout(timeout);
-        Session session = new SocksSession(getNextSessionId(), socket, sessions);
-        sessions.put(session.getId(), session);
+        Session session = sessionManager.newSession(socket);
         logger.info("Create SESSION[{}] for {}", session.getId(), session.getClientAddress());
 
         try {
@@ -266,8 +270,8 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
   public void initializeSocksHandler(SocksHandler socksHandler) {
     socksHandler.setMethodSelector(methodSelector);
     socksHandler.setBufferSize(bufferSize);
-    socksHandler.setSocksCommandFilters(socksListeners);
     socksHandler.setProxy(proxy);
+    socksHandler.setSocksProxyServer(this);
   }
 
   /**
@@ -403,5 +407,15 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
 
   protected Socket processSocketBeforeUse(Socket socket) {
     return new MonitorSocketWrapper(socket, networkMonitor);
+  }
+
+  @Override
+  public SessionManager getSessionManager() {
+    return sessionManager;
+  }
+
+  @Override
+  public void setSessionManager(SessionManager sessionManager) {
+    this.sessionManager = sessionManager;
   }
 }

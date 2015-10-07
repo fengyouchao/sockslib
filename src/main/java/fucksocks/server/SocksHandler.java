@@ -106,20 +106,6 @@ public interface SocksHandler extends Runnable {
   void setBufferSize(int bufferSize);
 
   /**
-   * Returns all socks listeners.
-   *
-   * @return All socks listeners.
-   */
-  List<SocksCommandFilter> getSocksCommandFilters();
-
-  /**
-   * Sets socks listeners.
-   *
-   * @param socksListeners List of {@link SocksCommandFilter}.
-   */
-  void setSocksCommandFilters(List<SocksCommandFilter> socksListeners);
-
-  /**
    * Returns idle time.
    *
    * @return idle time.
@@ -134,5 +120,9 @@ public interface SocksHandler extends Runnable {
   void setIdleTime(int idleTime);
 
   void setProxy(SocksProxy socksProxy);
+
+  SocksProxyServer getSocksProxyServer();
+
+  void setSocksProxyServer(SocksProxyServer socksProxyServer);
 
 }

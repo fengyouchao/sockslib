@@ -78,10 +78,12 @@ public class Socks5Server {
               NoAuthenticationRequiredMethod()).setBindPort(port).build();
     } else {
       UserManager userManager = new MemoryBasedUserManager();
-      String[] users = authValue.split(":");
-      String username = users[0];
-      String password = users[1];
-      userManager.create(new User(username, password));
+      for (String user : authValue.split(",")) {
+        String[] userPassword = user.split(":");
+        String username = userPassword[0];
+        String password = userPassword[1];
+        userManager.create(new User(username, password));
+      }
       server =
           SocksServerBuilder.newSocks5ServerBuilder().setSocksMethods(new UsernamePasswordMethod
               ()).setUserManager(userManager).setBindPort(port).build();
@@ -105,6 +107,7 @@ public class Socks5Server {
     System.out.println("    --port=<val>         Server bind port");
     System.out.println("    --auth=<val1:val2>   Use username/password authentication");
     System.out.println("                         Example: --auth=admin:1234");
+    System.out.println("                                  --auth=admin:1234,root:1234");
     System.out.println("    -h or --help         Show help");
   }
 

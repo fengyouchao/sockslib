@@ -1,7 +1,10 @@
 package fucksocks.server;
 
 import fucksocks.common.SocksException;
+import fucksocks.common.methods.SocksMethod;
 import fucksocks.server.msg.CommandMessage;
+
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author Youchao Feng
@@ -10,10 +13,11 @@ import fucksocks.server.msg.CommandMessage;
  */
 public interface SessionListener {
 
-  void onCreate(Session session);
-
-  void onCommand(Session session, CommandMessage commandMessage) throws SocksException;
-
-  void onClose(Session session, Exception exception);
+  void postCreate(Session session) throws SocksException;
+  void beforeDoMethod(Session session, SocksMethod method) throws SocksException;
+  void postDoMethod(Session session, SocksMethod method) throws SocksException;
+  void beforeDoCommand(Session session, CommandMessage commandMessage) throws SocksException;
+  void postDoCommand(Session session, CommandMessage commandMessage) throws SocksException;
+  void beforeClose(Session session) throws SocksException;
 
 }

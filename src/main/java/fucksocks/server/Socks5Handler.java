@@ -69,7 +69,7 @@ public class Socks5Handler implements SocksHandler {
 
   private SocksProxy proxy;
 
-  private List<SocksCommandFilter> socksCommandFilter;
+  private SocksProxyServer socksProxyServer;
 
   @Override
   public void handle(Session session) throws Exception {
@@ -104,8 +104,6 @@ public class Socks5Handler implements SocksHandler {
       logger.info("SESSION[{}] will close, because {}", session.getId(), serverReply);
       return;
     }
-
-    doSocksCommandFilter(session, commandMessage);
 
     /**************************** DO COMMAND ******************************************/
     switch (commandMessage.getCommand()) {
@@ -297,15 +295,6 @@ public class Socks5Handler implements SocksHandler {
     this.bufferSize = bufferSize;
   }
 
-  @Override
-  public List<SocksCommandFilter> getSocksCommandFilters() {
-    return socksCommandFilter;
-  }
-
-  @Override
-  public void setSocksCommandFilters(List<SocksCommandFilter> socksCommandFilter) {
-    this.socksCommandFilter = socksCommandFilter;
-  }
 
   @Override
   public int getIdleTime() {
@@ -326,27 +315,14 @@ public class Socks5Handler implements SocksHandler {
     this.proxy = proxy;
   }
 
-  protected void doSocksCommandFilter(Session session, CommandMessage message) throws Exception {
+  @Override
+  public SocksProxyServer getSocksProxyServer() {
+    return socksProxyServer;
+  }
 
-    if (socksCommandFilter != null && socksCommandFilter.size() > 0) {
-
-      boolean isInterrupted = false;
-      SocksCommandFilter socksFilter = null;
-
-      for (int i = 0; i < socksCommandFilter.size(); i++) {
-        socksFilter = socksCommandFilter.get(i);
-        boolean bl = socksFilter.doFilter(session, message);
-        if (!bl) {
-          isInterrupted = true;
-          break;
-        }
-      }
-
-      if (isInterrupted) {
-        throw new InterruptedException("Interrupted by " + socksFilter.getClass());
-      }
-
-    }
+  @Override
+  public void setSocksProxyServer(SocksProxyServer socksProxyServer) {
+    this.socksProxyServer = socksProxyServer;
   }
 
 }

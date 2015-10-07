@@ -71,7 +71,7 @@ public interface SocksProxyServer {
   void setSupportMethods(SocksMethod... methods);
 
   /**
-   * Gets all sessions that SOKCS server managed.
+   * Gets all sessions that SOCKS server managed.
    *
    * @return All sessions that SOCKS server managed.
    */
@@ -168,7 +168,31 @@ public interface SocksProxyServer {
    */
   void setBindPort(int bindPort);
 
+  /**
+   * Returns <code>true</code> if the server run in daemon thread.
+   *
+   * @return <code>true</code> if the server run in daemon thread.
+   */
   boolean isDaemon();
 
+  /**
+   * Sets <code>true</code> the server will run in daemon thread.
+   *
+   * @param daemon Daemon thread
+   */
   void setDaemon(boolean daemon);
+
+  /**
+   * Returns {@link SessionManager}
+   *
+   * @return {@link SessionManager}
+   */
+  SessionManager getSessionManager();
+
+  /**
+   * Sets {@link SessionManager}
+   *
+   * @param sessionManager {@link SessionManager}
+   */
+  void setSessionManager(SessionManager sessionManager);
 }
