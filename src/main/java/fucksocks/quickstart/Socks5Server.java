@@ -1,9 +1,8 @@
 package fucksocks.quickstart;
 
+import fucksocks.common.SSLConfiguration;
 import fucksocks.common.methods.NoAuthenticationRequiredMethod;
 import fucksocks.common.methods.UsernamePasswordMethod;
-import fucksocks.common.net.NetworkMonitor;
-import fucksocks.server.BasicSocksProxyServer;
 import fucksocks.server.SocksProxyServer;
 import fucksocks.server.SocksServerBuilder;
 import fucksocks.server.manager.MemoryBasedUserManager;
@@ -39,13 +38,6 @@ public class Socks5Server {
     Timer.open();
     Socks5Server socks5Server = new Socks5Server();
     socks5Server.start(args);
-    BasicSocksProxyServer server = (BasicSocksProxyServer) socks5Server.server;
-    NetworkMonitor monitor = server.getNetworkMonitor();
-    while (true) {
-      logger.info(monitor.toString());
-      Thread.sleep(5000);
-    }
-
   }
 
   /**
@@ -55,27 +47,29 @@ public class Socks5Server {
    * @throws IOException
    */
   public void start(@Nullable String[] args) throws IOException {
+    ArgUtil argUtil = new ArgUtil(args);
     int port = 1080;
     String authValue = null;
-    if (args != null) {
-      for (String arg : args) {
-        if (arg.equals("-h") || arg.equals("--help")) {
-          showHelp();
-          System.exit(0);
-        } else if (arg.startsWith("--port=")) {
-          port = ArgUtil.intValueOf(arg);
-        } else if (arg.startsWith("--auth=")) {
-          authValue = ArgUtil.valueOf(arg);
-        } else {
-          logger.error("Unknown argument[{}]", arg);
-          return;
-        }
-      }
+    String sslConfigFilePath = null;
+
+    if (argUtil.hasArgsIn("-h", "--help")) {
+      showHelp();
+      System.exit(0);
     }
+
+    port = argUtil.getIntValue("-p", 1080);
+    port = argUtil.getIntValueFromArg("--port=", "=", port);
+    authValue = argUtil.getValue("-a", null);
+    authValue = argUtil.getValueFromArg("--auth=", "=", authValue);
+    sslConfigFilePath = argUtil.getValue("-c", null);
+    sslConfigFilePath = argUtil.getValueFromArg("--ssl-config=", "=", sslConfigFilePath);
+
+
+    SocksServerBuilder builder = null;
     if (authValue == null) {
-      server =
+      builder =
           SocksServerBuilder.newSocks5ServerBuilder().setSocksMethods(new
-              NoAuthenticationRequiredMethod()).setBindPort(port).build();
+              NoAuthenticationRequiredMethod());
     } else {
       UserManager userManager = new MemoryBasedUserManager();
       for (String user : authValue.split(",")) {
@@ -84,10 +78,19 @@ public class Socks5Server {
         String password = userPassword[1];
         userManager.create(new User(username, password));
       }
-      server =
+      builder =
           SocksServerBuilder.newSocks5ServerBuilder().setSocksMethods(new UsernamePasswordMethod
-              ()).setUserManager(userManager).setBindPort(port).build();
+              ()).setUserManager(userManager);
+
     }
+    builder.setBindPort(port);
+    if (sslConfigFilePath != null) {
+      SSLConfiguration configuration = SSLConfiguration.load(sslConfigFilePath);
+      builder.useSSL(configuration);
+    }
+
+    server = builder.build();
+
     final SocksProxyServer finalServer = server;
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
@@ -104,11 +107,12 @@ public class Socks5Server {
    */
   public void showHelp() {
     System.out.println("Usage: [Options]");
-    System.out.println("    --port=<val>         Server bind port");
-    System.out.println("    --auth=<val1:val2>   Use username/password authentication");
-    System.out.println("                         Example: --auth=admin:1234");
-    System.out.println("                                  --auth=admin:1234,root:1234");
-    System.out.println("    -h or --help         Show help");
+    System.out.println("    -p, --port=<val>             Server bind port");
+    System.out.println("    -a, --auth=<val1:val2>       Use username/password authentication");
+    System.out.println("                                 Example: --auth=admin:1234");
+    System.out.println("                                          --auth=admin:1234,root:1234");
+    System.out.println("    -c, --ssl-config=<val>       SSL configuration file");
+    System.out.println("    -h, --help                   Show help");
   }
 
   /**
