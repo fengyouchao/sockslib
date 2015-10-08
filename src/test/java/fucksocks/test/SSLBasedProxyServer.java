@@ -15,10 +15,8 @@
 package fucksocks.test;
 
 import fucksocks.common.SSLConfiguration;
-import fucksocks.common.methods.NoAuthenticationRequiredMethod;
-import fucksocks.server.SSLSocksProxyServer;
-import fucksocks.server.Socks5Handler;
 import fucksocks.server.SocksProxyServer;
+import fucksocks.server.SocksServerBuilder;
 import fucksocks.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,9 +38,7 @@ public class SSLBasedProxyServer {
   public static void main(String[] args) throws IOException {
     Timer.open();
     SSLConfiguration configuration = SSLConfiguration.loadClassPath("server-ssl.properties");
-    SocksProxyServer proxyServer = new SSLSocksProxyServer(Socks5Handler.class, configuration);
-    proxyServer.setBindPort(1081);
-    proxyServer.setSupportMethods(new NoAuthenticationRequiredMethod());
+    SocksProxyServer proxyServer = SocksServerBuilder.buildAnonymousSSLSocks5Server(1081, configuration);
     try {
       proxyServer.start();
     } catch (IOException e) {

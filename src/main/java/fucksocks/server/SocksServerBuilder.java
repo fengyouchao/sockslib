@@ -1,10 +1,10 @@
 package fucksocks.server;
 
 import fucksocks.client.SocksProxy;
+import fucksocks.common.SSLConfiguration;
 import fucksocks.common.methods.NoAuthenticationRequiredMethod;
 import fucksocks.common.methods.SocksMethod;
 import fucksocks.common.methods.UsernamePasswordMethod;
-import fucksocks.server.filters.SessionFilter;
 import fucksocks.server.manager.MemoryBasedUserManager;
 import fucksocks.server.manager.UserManager;
 import org.slf4j.Logger;
@@ -39,6 +39,8 @@ public class SocksServerBuilder {
   private int bindPort = DEFAULT_PORT;
   private boolean daemon = false;
   private ExecutorService executorService;
+  private SessionManager sessionManager = new BasicSessionManager();
+  private SSLConfiguration sslConfiguration;
 
   /**
    * Creates a <code>SocksServerBuilder</code> with a <code>Class<? extends {@link
@@ -49,7 +51,7 @@ public class SocksServerBuilder {
    */
   private SocksServerBuilder(Class<? extends SocksHandler> socksHandlerClass) {
     this.socksHandlerClass =
-        checkNotNull(socksHandlerClass, "Argument [socksHandlerClass] may " + "not be null");
+        checkNotNull(socksHandlerClass, "Argument [socksHandlerClass] may not be null");
     userManager = new MemoryBasedUserManager();
   }
 
@@ -76,6 +78,22 @@ public class SocksServerBuilder {
   }
 
   /**
+   * Builds a SSL based {@link SocksProxyServer} with no authentication required.
+   *
+   * @param bindPort The port that server listened.
+   * @param configuration SSL configuration
+   * @return Instance of {@link SocksProxyServer}
+   */
+  public static SocksProxyServer buildAnonymousSSLSocks5Server(int bindPort, SSLConfiguration configuration){
+    return newSocks5ServerBuilder().setSocksMethods(new NoAuthenticationRequiredMethod())
+        .setBindPort(bindPort).useSSL(configuration).build();
+  }
+
+  public static SocksProxyServer buildAnonymousSSLSocks5Server(SSLConfiguration configuration){
+    return buildAnonymousSSLSocks5Server(DEFAULT_PORT, configuration);
+  }
+
+  /**
    * Creates a <code>SocksServerBuilder</code> instance with specified Class instance of {@link
    * SocksHandler}.
    *
@@ -83,10 +101,8 @@ public class SocksServerBuilder {
    * @return Instance of {@link SocksServerBuilder}.
    */
   public static SocksServerBuilder newBuilder(Class<? extends SocksHandler> socksHandlerClass) {
-    if (socksHandlerClass == null) {
-      throw new IllegalArgumentException("socksHandlerClass can't be null");
-    }
-    return new SocksServerBuilder(socksHandlerClass);
+    return new SocksServerBuilder(
+        checkNotNull(socksHandlerClass, "Argument [socksHandlerClass] may not be null"));
   }
 
   /**
@@ -136,10 +152,6 @@ public class SocksServerBuilder {
     return this;
   }
 
-  public SocksServerBuilder setSessionFilter(SessionFilter sessionFilter) {
-    return null;
-  }
-
   public SocksServerBuilder setProxy(SocksProxy proxy) {
     this.proxy = proxy;
     return this;
@@ -161,7 +173,7 @@ public class SocksServerBuilder {
   }
 
   public SocksServerBuilder setExecutorService(ExecutorService executorService) {
-    this.executorService = executorService;
+    this.executorService = checkNotNull(executorService);
     return this;
   }
 
@@ -170,11 +182,27 @@ public class SocksServerBuilder {
     return this;
   }
 
+  public SocksServerBuilder setSessionManager(SessionManager sessionManager) {
+    this.sessionManager = checkNotNull(sessionManager);
+    return this;
+  }
+
+  public SocksServerBuilder useSSL(SSLConfiguration sslConfiguration) {
+    this.sslConfiguration = sslConfiguration;
+    return this;
+  }
+
   public SocksProxyServer build() {
-    SocksProxyServer proxyServer = new BasicSocksProxyServer(socksHandlerClass);
+    SocksProxyServer proxyServer = null;
+    if (sslConfiguration == null) {
+      proxyServer = new BasicSocksProxyServer(socksHandlerClass);
+    } else {
+      proxyServer = new SSLSocksProxyServer(socksHandlerClass, sslConfiguration);
+    }
     proxyServer.setTimeout(timeout);
     proxyServer.setBindPort(bindPort);
     proxyServer.setDaemon(daemon);
+    proxyServer.setSessionManager(sessionManager);
     if (socksMethods == null) {
       socksMethods = new HashSet<>();
       socksMethods.add(new NoAuthenticationRequiredMethod());
@@ -187,8 +215,8 @@ public class SocksServerBuilder {
           userManager = new MemoryBasedUserManager();
           userManager.addUser("fucksocks", "fucksocks");
         }
-        ((UsernamePasswordMethod) method).setAuthenticator(new UsernamePasswordAuthenticator
-            (userManager));
+        ((UsernamePasswordMethod) method)
+            .setAuthenticator(new UsernamePasswordAuthenticator(userManager));
       }
       methods[i] = method;
       i++;
