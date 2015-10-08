@@ -158,7 +158,7 @@ public class GenericSocksCommandSender implements SocksCommandSender {
         }
         break;
       default:
-        throw new ProtocolErrorException();
+        throw new ProtocolErrorException("Address type not support, type value: " + addressType);
     }
     byte[] receivedData = byteArrayOutputStream.toByteArray();
     int length = receivedData.length;
@@ -168,9 +168,7 @@ public class GenericSocksCommandSender implements SocksCommandSender {
 
     if (receivedData[3] == AddressType.IPV4) {
       addressBytes = new byte[4];
-      for (int i = 0; i < addressBytes.length; i++) {
-        addressBytes[i] = receivedData[4 + i];
-      }
+      System.arraycopy(receivedData, 4, addressBytes, 0, addressBytes.length);
       int a = UnsignedByte.toInt(addressBytes[0]);
       int b = UnsignedByte.toInt(addressBytes[1]);
       int c = UnsignedByte.toInt(addressBytes[2]);
@@ -185,9 +183,7 @@ public class GenericSocksCommandSender implements SocksCommandSender {
       int size = receivedData[4];
       size = size & 0xFF;
       addressBytes = new byte[size];
-      for (int i = 0; i < size; i++) {
-        addressBytes[i] = receivedData[4 + i];
-      }
+      System.arraycopy(receivedData, 4, addressBytes, 0, size);
       portBytes[0] = receivedData[4 + size];
       portBytes[1] = receivedData[5 + size];
       logger.debug("Server replied:Address as host:{}, port:{}", new String(addressBytes),
