@@ -21,9 +21,9 @@ public interface SessionManager {
 
   void removeSessionListener(SessionListener sessionListener);
 
-  void setSessionListeners(List<SessionListener> sessionListeners);
-
   List<SessionListener> getSessionListeners();
+
+  void setSessionListeners(List<SessionListener> sessionListeners);
 
   Session getSession(long id);
 

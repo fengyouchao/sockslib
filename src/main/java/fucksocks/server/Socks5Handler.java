@@ -20,10 +20,13 @@ import fucksocks.common.AddressType;
 import fucksocks.common.ProtocolErrorException;
 import fucksocks.common.SocksException;
 import fucksocks.common.methods.SocksMethod;
-import fucksocks.server.filters.SocksCommandFilter;
 import fucksocks.server.io.Pipe;
 import fucksocks.server.io.SocketPipe;
-import fucksocks.server.msg.*;
+import fucksocks.server.msg.CommandMessage;
+import fucksocks.server.msg.CommandResponseMessage;
+import fucksocks.server.msg.MethodSelectionMessage;
+import fucksocks.server.msg.MethodSelectionResponseMessage;
+import fucksocks.server.msg.ServerReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +35,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
 
 /**
  * The class <code>Socks5Handler</code> represents a handler that can handle SOCKS5 protocol.

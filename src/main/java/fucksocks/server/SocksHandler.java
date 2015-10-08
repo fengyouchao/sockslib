@@ -16,11 +16,9 @@ package fucksocks.server;
 
 import fucksocks.client.SocksProxy;
 import fucksocks.common.SocksException;
-import fucksocks.server.filters.SocksCommandFilter;
 import fucksocks.server.msg.CommandMessage;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * The interface <code>SocksHandler</code> represents a socket handler.

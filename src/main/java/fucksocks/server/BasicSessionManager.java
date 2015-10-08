@@ -1,15 +1,12 @@
 package fucksocks.server;
 
-import com.google.common.base.Preconditions;
-import fucksocks.common.SocksException;
-
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The class <code>BasicSessionManager</code> implements {@link SessionManager}
@@ -18,7 +15,7 @@ import static com.google.common.base.Preconditions.*;
  * @version 1.0
  * @date Oct 10,2015 7:15 PM
  */
-public class BasicSessionManager implements SessionManager{
+public class BasicSessionManager implements SessionManager {
 
   private static int nextSessionId = 0;
   private Map<Long, Session> managedSessions = new HashMap<>();
@@ -31,7 +28,7 @@ public class BasicSessionManager implements SessionManager{
 
   @Override
   public Session newSession(Socket socket) {
-    Session session = new SocksSession(++nextSessionId,socket, managedSessions);
+    Session session = new SocksSession(++nextSessionId, socket, managedSessions);
     managedSessions.put(session.getId(), session);
     return session;
   }
@@ -47,13 +44,13 @@ public class BasicSessionManager implements SessionManager{
   }
 
   @Override
-  public void setSessionListeners(List<SessionListener> sessionListeners) {
-    this.sessionListeners = checkNotNull(sessionListeners);
+  public List<SessionListener> getSessionListeners() {
+    return sessionListeners;
   }
 
   @Override
-  public List<SessionListener> getSessionListeners() {
-    return sessionListeners;
+  public void setSessionListeners(List<SessionListener> sessionListeners) {
+    this.sessionListeners = checkNotNull(sessionListeners);
   }
 
   @Override

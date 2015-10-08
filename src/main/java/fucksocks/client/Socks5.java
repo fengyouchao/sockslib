@@ -14,15 +14,27 @@
 
 package fucksocks.client;
 
-import fucksocks.common.*;
-import fucksocks.common.methods.*;
+import fucksocks.common.AnonymousCredentials;
+import fucksocks.common.Credentials;
+import fucksocks.common.SocksCommand;
+import fucksocks.common.SocksException;
+import fucksocks.common.UsernamePasswordCredentials;
+import fucksocks.common.methods.GssApiMethod;
+import fucksocks.common.methods.NoAuthenticationRequiredMethod;
+import fucksocks.common.methods.SocksMethod;
+import fucksocks.common.methods.SocksMethodRegistry;
+import fucksocks.common.methods.UsernamePasswordMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 

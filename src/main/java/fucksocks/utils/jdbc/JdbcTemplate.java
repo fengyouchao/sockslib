@@ -22,12 +22,35 @@ import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.NClob;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static fucksocks.utils.TypeUtil.*;
+import static fucksocks.utils.TypeUtil.isArray;
+import static fucksocks.utils.TypeUtil.isBigDecimal;
+import static fucksocks.utils.TypeUtil.isBlob;
+import static fucksocks.utils.TypeUtil.isBoolean;
+import static fucksocks.utils.TypeUtil.isByte;
+import static fucksocks.utils.TypeUtil.isBytes;
+import static fucksocks.utils.TypeUtil.isClob;
+import static fucksocks.utils.TypeUtil.isDate;
+import static fucksocks.utils.TypeUtil.isDouble;
+import static fucksocks.utils.TypeUtil.isFloat;
+import static fucksocks.utils.TypeUtil.isInputStream;
+import static fucksocks.utils.TypeUtil.isInt;
+import static fucksocks.utils.TypeUtil.isLong;
+import static fucksocks.utils.TypeUtil.isNClob;
+import static fucksocks.utils.TypeUtil.isShort;
+import static fucksocks.utils.TypeUtil.isString;
 
 /**
  * The class <code>JdbcTemplate</code> is a template for JDBC operation. This class provides some

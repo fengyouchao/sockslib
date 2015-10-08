@@ -80,16 +80,17 @@ public class SocksServerBuilder {
   /**
    * Builds a SSL based {@link SocksProxyServer} with no authentication required.
    *
-   * @param bindPort The port that server listened.
+   * @param bindPort      The port that server listened.
    * @param configuration SSL configuration
    * @return Instance of {@link SocksProxyServer}
    */
-  public static SocksProxyServer buildAnonymousSSLSocks5Server(int bindPort, SSLConfiguration configuration){
+  public static SocksProxyServer buildAnonymousSSLSocks5Server(int bindPort, SSLConfiguration
+      configuration) {
     return newSocks5ServerBuilder().setSocksMethods(new NoAuthenticationRequiredMethod())
         .setBindPort(bindPort).useSSL(configuration).build();
   }
 
-  public static SocksProxyServer buildAnonymousSSLSocks5Server(SSLConfiguration configuration){
+  public static SocksProxyServer buildAnonymousSSLSocks5Server(SSLConfiguration configuration) {
     return buildAnonymousSSLSocks5Server(DEFAULT_PORT, configuration);
   }
 
@@ -101,8 +102,8 @@ public class SocksServerBuilder {
    * @return Instance of {@link SocksServerBuilder}.
    */
   public static SocksServerBuilder newBuilder(Class<? extends SocksHandler> socksHandlerClass) {
-    return new SocksServerBuilder(
-        checkNotNull(socksHandlerClass, "Argument [socksHandlerClass] may not be null"));
+    return new SocksServerBuilder(checkNotNull(socksHandlerClass, "Argument [socksHandlerClass] "
+        + "may not be null"));
   }
 
   /**
@@ -215,8 +216,8 @@ public class SocksServerBuilder {
           userManager = new MemoryBasedUserManager();
           userManager.addUser("fucksocks", "fucksocks");
         }
-        ((UsernamePasswordMethod) method)
-            .setAuthenticator(new UsernamePasswordAuthenticator(userManager));
+        ((UsernamePasswordMethod) method).setAuthenticator(new UsernamePasswordAuthenticator
+            (userManager));
       }
       methods[i] = method;
       i++;

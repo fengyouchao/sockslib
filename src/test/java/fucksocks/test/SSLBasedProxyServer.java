@@ -38,7 +38,8 @@ public class SSLBasedProxyServer {
   public static void main(String[] args) throws IOException {
     Timer.open();
     SSLConfiguration configuration = SSLConfiguration.loadClassPath("server-ssl.properties");
-    SocksProxyServer proxyServer = SocksServerBuilder.buildAnonymousSSLSocks5Server(1081, configuration);
+    SocksProxyServer proxyServer =
+        SocksServerBuilder.buildAnonymousSSLSocks5Server(1081, configuration);
     try {
       proxyServer.start();
     } catch (IOException e) {
