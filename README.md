@@ -43,10 +43,10 @@ If you are looking for a SOCKS5 server instead of a SOKCS5 library, I hope [Esoc
 
 You should put following libraries in your project's *CLASSPATH*:
 
-* [log4j-slf4j-impl-2.3.jar](https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j-impl/2.3/log4j-slf4j-impl-2.3.jar)
+* [log4j-slf4j-impl-2.4.jar](https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j-impl/2.4/log4j-slf4j-impl-2.4.jar)
 * [slf4j-api-1.7.12.jar](https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.12/slf4j-api-1.7.12.jar)
-* [log4j-api-2.3.jar](https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.3/log4j-api-2.3.jar)
-* [log4j-core-2.3.jar](https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.3/log4j-core-2.3.jar)
+* [log4j-api-2.4.jar](https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.4/log4j-api-2.4.jar)
+* [log4j-core-2.4.jar](https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.4/log4j-core-2.4.jar)
 * [guava-18.0.jar](https://repo1.maven.org/maven2/com/google/guava/guava/18.0/guava-18.0.jar)
 
 ### SCOKS5 Client
@@ -76,6 +76,6 @@ You should put following libraries in your project's *CLASSPATH*:
 ### SOCKS5 Server
 
 ```java
-     SocksProxyServer proxyServer = SocksProxyServerFactory.newNoAuthenticaionServer();
+     SocksProxyServer proxyServer = SocksServerBuilder.buildAnonymousSocks5Server(); 
      proxyServer.start();// Creat a SOCKS5 server bind at port 1080
 ```
