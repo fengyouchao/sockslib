@@ -2,6 +2,7 @@ package fucksocks.utils;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -107,6 +108,39 @@ public class ArgUtil {
       return defaultValue;
     }
     return Boolean.parseBoolean(value);
+  }
+
+  public String getValue(List<String> args, @Nullable String defaultValue) {
+    checkNotNull(args);
+    String value = defaultValue;
+    for (String arg : args) {
+      value = getValue(arg, value);
+    }
+    return value;
+  }
+
+  public int getIntValue(List<String> args, int defaultValue) {
+    int value = defaultValue;
+    for (String arg : args) {
+      value = getIntValue(arg, value);
+    }
+    return value;
+  }
+
+  public long getLongValue(List<String> args, long defaultValue) {
+    long value = defaultValue;
+    for (String arg : args) {
+      value = getLongValue(arg, value);
+    }
+    return value;
+  }
+
+  public boolean getBooleanValue(List<String> args, boolean defaultValue) {
+    boolean value = defaultValue;
+    for (String arg : args) {
+      value = getBooleanValue(arg, value);
+    }
+    return value;
   }
 
   public String getValueFromArg(String prefix, String splitRegex, @Nullable String defaultValue) {

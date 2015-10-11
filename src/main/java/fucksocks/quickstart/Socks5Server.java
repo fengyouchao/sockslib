@@ -4,6 +4,7 @@ import fucksocks.client.SSLSocks5;
 import fucksocks.client.Socks5;
 import fucksocks.client.SocksProxy;
 import fucksocks.common.SSLConfiguration;
+import fucksocks.common.SSLConfigurationBuilder;
 import fucksocks.common.UsernamePasswordCredentials;
 import fucksocks.common.methods.NoAuthenticationRequiredMethod;
 import fucksocks.common.methods.UsernamePasswordMethod;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 
 /**
  * The class <code>Socks5Server</code> can create a simple Socks5 server.
@@ -53,30 +55,53 @@ public class Socks5Server {
    */
   public void start(@Nullable String[] args) throws IOException {
     ArgUtil argUtil = new ArgUtil(args);
-    int port = 1080;
+    final String KEY_STORE_TYPE = "JKS";
+    final int DEFAULT_PORT = 1080;
+    int port = DEFAULT_PORT;
     String authValue = null;
     String sslValue = null;
     String proxySslValue = null;
     SocksProxy proxy = null;
     String proxyValue = null;
+    String keyStorePath = null;
+    String keyStorePassword = null;
+    String keyStoreType = KEY_STORE_TYPE;
+    String trustKeyStorePath = null;
+    String trustKeyStorePassword = null;
+    String trustKeyStoreType = KEY_STORE_TYPE;
+    String sslClientAuth = null;
+    SocksServerBuilder builder = null;
+    SSLConfigurationBuilder sslConfigBuilder = null;
 
     if (argUtil.hasArgsIn("-h", "--help")) {
       showHelp();
       System.exit(0);
     }
 
-    port = argUtil.getIntValue("-p", 1080);
-    port = argUtil.getIntValueFromArg("--port=", "=", port);
-    authValue = argUtil.getValue("-a", null);
-    authValue = argUtil.getValueFromArg("--auth=", "=", authValue);
-    sslValue = argUtil.getValue("-s", null);
-    sslValue = argUtil.getValueFromArg("--ssl=", "=", sslValue);
-    proxyValue = argUtil.getValue("-P", null);
-    proxyValue = argUtil.getValueFromArg("--proxy=", "=", proxyValue);
-    proxySslValue = argUtil.getValue("-S", null);
-    proxySslValue = argUtil.getValueFromArg("--proxy-ssl=", "=", proxySslValue);
+    port = argUtil.getIntValue(Arrays.asList("-p", "--port"), DEFAULT_PORT);
+    authValue = argUtil.getValue(Arrays.asList("-a", "--auth"), null);
+    sslValue = argUtil.getValue(Arrays.asList("-s", "--ssl"), null);
+    proxyValue = argUtil.getValue(Arrays.asList("-P", "--proxy"), null);
+    proxySslValue = argUtil.getValue(Arrays.asList("-S", "--proxy-ssl"), null);
+    keyStorePath = argUtil.getValue(Arrays.asList("-k", "--keystore"), null);
+    keyStorePassword = argUtil.getValue(Arrays.asList("-w", "--keystore-password"), null);
+    keyStoreType = argUtil.getValue((Arrays.asList("-t", "--keystore-type")), KEY_STORE_TYPE);
+    trustKeyStorePath = argUtil.getValue(Arrays.asList("-K", "--trust-keystore"), null);
+    trustKeyStorePassword =
+        argUtil.getValue(Arrays.asList("-W", "--trust-keystore-password"), null);
+    trustKeyStoreType =
+        argUtil.getValue((Arrays.asList("-T", "--trust-keystore-type")), KEY_STORE_TYPE);
 
-    SocksServerBuilder builder = null;
+
+    if (keyStorePath != null) {
+      sslConfigBuilder = SSLConfigurationBuilder.newBuilder();
+      sslConfigBuilder.setKeyStorePath(keyStorePath).setKeyStorePassword(keyStorePassword)
+          .setKeyStoreType(keyStoreType);
+      if (trustKeyStorePath != null) {
+        sslConfigBuilder.setTrustKeyStorePath(trustKeyStorePath).setTrustKeyStorePassword
+            (trustKeyStorePassword).setTrustKeyStoreType(trustKeyStoreType).setClientAuth(true);
+      }
+    }
     if (authValue == null) {
       builder =
           SocksServerBuilder.newSocks5ServerBuilder().setSocksMethods(new
@@ -95,10 +120,16 @@ public class Socks5Server {
 
     }
     builder.setBindPort(port);
+    //set ssl configuration
     if (sslValue != null) {
       SSLConfiguration configuration = SSLConfiguration.load(sslValue);
       builder.useSSL(configuration);
     }
+    if (sslConfigBuilder != null) {
+      builder.useSSL(sslConfigBuilder.build());
+    }
+
+    //set server proxy
     if (proxyValue != null) {
       String[] values = proxyValue.split(":");
       if (values.length < 2 || values.length > 4) {
@@ -136,17 +167,26 @@ public class Socks5Server {
    */
   public void showHelp() {
     System.out.println("Usage: [Options]");
-    System.out.println("    -p, --port=<val>         Server bind port");
-    System.out.println("    -a, --auth=<val1:val2>   Use username/password authentication");
-    System.out.println("                             Example: --auth=admin:1234");
-    System.out.println("                                      --auth=admin:1234,root:1234");
-    System.out.println("    -s, --ssl=<val>          SSL configuration file path");
-    System.out.println("    -P, --proxy=<val>        Set server SOCKS5 proxy, <val> should be:");
-    System.out.println("                                 host:port");
-    System.out.println("                             Use Username/Password authentication:");
-    System.out.println("                                 host:port:username:password");
-    System.out.println("    -S, --proxy-ssl=<val>    Proxy SSL configuration file path");
-    System.out.println("    -h, --help               Show help");
+    System.out.println("  -p, --port <val>             Server bind port");
+    System.out.println("  -a, --auth <val>             Use username/password authentication");
+    System.out.println("                               Example: --auth=admin:1234");
+    System.out.println("                               --auth=admin:1234,root:1234");
+    System.out.println("  -s, --ssl <val>              SSL configuration file path");
+    System.out.println("  -P, --proxy <val>            Set server SOCKS5 proxy, <val> should be:");
+    System.out.println("                               host:port:username:password or host:port");
+    System.out.println("  -S, --proxy-ssl <val>        Proxy SSL configuration file path");
+    System.out.println("  -k, --keystore <val>         Keystore location");
+    System.out.println("  -w  --keystore-password <val>");
+    System.out.println("                               Password of keystore");
+    System.out.println("  -t  --keystore-type <val>");
+    System.out.println("                               Keystore type, default \"JKS\"");
+    System.out.println("  -K, -trust-keystore <val>    Trust keystore path");
+    System.out.println("  -W  -trust-keystore-password <val>");
+    System.out.println("                               Password of trust keystore");
+    System.out.println("  -T  -trust-keystore-type <val>");
+    System.out.println("                               Trust keystore type, default \"JKS\"");
+    System.out.println("                               Password of trust keystore");
+    System.out.println("  -h, --help                   Show help");
   }
 
   /**

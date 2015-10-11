@@ -19,6 +19,7 @@ import fucksocks.utils.PathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocketFactory;
@@ -31,6 +32,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.KeyStore;
 import java.util.Properties;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The class <code>SSLConfiguration</code> represents a configuration of SSL.
@@ -51,8 +54,8 @@ public class SSLConfiguration {
     this(keyStoreInfo, trustKeyStoreInfo, false);
   }
 
-  public SSLConfiguration(KeyStoreInfo keyStoreInfo, KeyStoreInfo trustKeyStoreInfo, boolean
-      clientAuth) {
+  public SSLConfiguration(@Nullable KeyStoreInfo keyStoreInfo, @Nullable KeyStoreInfo
+      trustKeyStoreInfo, boolean clientAuth) {
     this.keyStoreInfo = keyStoreInfo;
     this.trustKeyStoreInfo = trustKeyStoreInfo;
     this.needClientAuth = clientAuth;
@@ -86,7 +89,7 @@ public class SSLConfiguration {
   }
 
   public static SSLConfiguration load(String filePath) throws FileNotFoundException, IOException {
-
+    checkNotNull(filePath, "Argument [filePath] may not be null");
     logger.debug("load SSL configuration file:{}", filePath);
     KeyStoreInfo keyStoreInfo = null;
     KeyStoreInfo trustKeyStoreInfo = null;
@@ -119,7 +122,7 @@ public class SSLConfiguration {
 
   public static SSLConfiguration loadClassPath(String filePath) throws FileNotFoundException,
       IOException {
-
+    checkNotNull(filePath, "Argument [filePath] may not be null");
     if (!filePath.startsWith(File.separator)) {
       filePath = File.separator + filePath;
     }
@@ -132,23 +135,20 @@ public class SSLConfiguration {
   }
 
   public SSLSocketFactory getSSLSocketFactory() throws SSLConfigurationException {
+    checkNotNull(trustKeyStoreInfo, "trustKeyStoreInfo may not be null");
     KeyStore keyStore = null;
     KeyStore trustKeyStore = null;
-    if (trustKeyStoreInfo == null) {
-      throw new SSLConfigurationException("Trust key store can't be null");
-    }
     try {
       SSLContext context = SSLContext.getInstance("SSL");
-
       TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
-      trustKeyStore = KeyStore.getInstance("JKS");
+      trustKeyStore = KeyStore.getInstance(trustKeyStoreInfo.getType());
       trustKeyStore.load(new FileInputStream(trustKeyStoreInfo.getKeyStorePath()),
           trustKeyStoreInfo.getPassword().toCharArray());
       trustManagerFactory.init(trustKeyStore);
 
       if (keyStoreInfo != null && keyStoreInfo.getKeyStorePath() != null) {
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
-        keyStore = KeyStore.getInstance("JKS");
+        keyStore = KeyStore.getInstance(keyStoreInfo.getType());
         keyStore.load(new FileInputStream(keyStoreInfo.getKeyStorePath()), keyStoreInfo
             .getPassword().toCharArray());
         keyManagerFactory.init(keyStore, keyStoreInfo.getPassword().toCharArray());
@@ -171,11 +171,7 @@ public class SSLConfiguration {
   }
 
   public SSLServerSocketFactory getSSLServerSocketFactory() throws SSLConfigurationException {
-
-    if (keyStoreInfo == null) {
-      throw new SSLConfigurationException("Key store can't be null");
-    }
-
+    checkNotNull(keyStoreInfo, "keyStoreInfo may not be null");
     String KEY_STORE_PASSWORD = getKeyStoreInfo().getPassword();
     String KEY_STORE_PATH = getKeyStoreInfo().getKeyStorePath();
     KeyStore keyStore = null;
@@ -201,9 +197,7 @@ public class SSLConfiguration {
         ctx.init(keyManagerFactory.getKeyManagers(), null, null);
       }
 
-      if (keyStore != null) {
-        logger.info("SSL: Key store:{}", keyStoreInfo.getKeyStorePath());
-      }
+      logger.info("SSL: Key store:{}", keyStoreInfo.getKeyStorePath());
       if (trustKeyStore != null) {
         logger.info("SSL: Trust key store:{}", trustKeyStoreInfo.getKeyStorePath());
       }

@@ -14,6 +14,8 @@
 
 package fucksocks.common;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * The class <code>KeyStoreInfo</code> represents a key store information.
  *
@@ -25,14 +27,15 @@ public class KeyStoreInfo {
 
   private String keyStorePath;
   private String password;
-  private String type;
+  private String type = "JKS";
 
   public KeyStoreInfo() {
   }
 
   public KeyStoreInfo(String keyStorePath, String password, String type) {
-    this.keyStorePath = keyStorePath;
-    this.password = password;
+    this.keyStorePath = checkNotNull(keyStorePath, "Argument [keyStorePath] may not be null");
+    this.password = checkNotNull(password, "Argument [password] may not be null");
+    this.type = checkNotNull(type, "Argument [type] may not be null");
   }
 
   public KeyStoreInfo(String keyStorePath, String password) {
@@ -44,7 +47,7 @@ public class KeyStoreInfo {
   }
 
   public KeyStoreInfo setKeyStorePath(String keyStorePath) {
-    this.keyStorePath = keyStorePath;
+    this.keyStorePath = checkNotNull(keyStorePath);
     return this;
   }
 
@@ -62,7 +65,7 @@ public class KeyStoreInfo {
   }
 
   public void setType(String type) {
-    this.type = type;
+    this.type = checkNotNull(type);
   }
 
   @Override
