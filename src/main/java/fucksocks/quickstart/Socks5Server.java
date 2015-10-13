@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.Arrays;
 
 /**
@@ -112,6 +113,9 @@ public class Socks5Server {
     System.out.println("                               Password of trusted keystore");
     System.out.println("  -T, --trustKeystoreType <val>");
     System.out.println("                               Trust keystore type, default \"JKS\"");
+    System.out.println("  -pk <val>                    Proxy keystore path");
+    System.out.println("  -pw <val>                    Password for keystore");
+    System.out.println("  -pt <val>                    Proxy keystore type");
     System.out.println("  -h, --help                   Show help");
   }
 
@@ -218,7 +222,12 @@ public class Socks5Server {
           proxy =
               new SSLSocks5(new InetSocketAddress(host, port), SSLConfiguration.load
                   (proxySslValue));
-        } else {
+        }
+        SocksProxy tempProxy = initProxySSL(arguments, builder, new InetSocketAddress(host, port));
+        if (tempProxy != null) {
+          proxy = tempProxy;
+        }
+        if (proxy == null) {
           proxy = new Socks5(new InetSocketAddress(host, port));
         }
         if (credentials != null) {
@@ -233,8 +242,22 @@ public class Socks5Server {
     }
   }
 
-  private void initProxySSL(Arguments arguments, SocksServerBuilder builder) throws
-      IllegalArgumentException {
+  private SocksProxy initProxySSL(Arguments arguments, SocksServerBuilder builder, SocketAddress
+      address) throws IllegalArgumentException {
+    String keystorePath = arguments.getValue("-pk", null);
+    String keystorePassword = arguments.getValue("-pw", null);
+    String keystoreType = arguments.getValue("-pt", KEY_STORE_TYPE);
+    if (keystorePath != null) {
+      if (keystorePassword == null) {
+        logger.info("Need password for keystore:{}", keystorePath);
+        throw new IllegalArgumentException();
+      }
+      SSLConfigurationBuilder sslConfigurationBuilder = SSLConfigurationBuilder.newBuilder();
+      sslConfigurationBuilder.setKeyStorePath(keystorePath).setKeyStorePassword(keystorePassword)
+          .setKeyStoreType(keystoreType).useKeystoreAsTrustKeyStore();
+      return new SSLSocks5(address, sslConfigurationBuilder.build());
+    }
+    return null;
   }
 
 }
