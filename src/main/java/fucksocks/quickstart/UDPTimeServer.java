@@ -1,6 +1,6 @@
 package fucksocks.quickstart;
 
-import fucksocks.utils.ArgUtil;
+import fucksocks.utils.Arguments;
 import fucksocks.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,13 +80,13 @@ public class UDPTimeServer implements Runnable {
           System.exit(0);
         } else if (arg.startsWith("--port=")) {
           try {
-            port = ArgUtil.intValueOf(arg);
+            port = Arguments.intValueOf(arg);
           } catch (NumberFormatException e) {
             logger.error("Value of [--port] should be a number");
             System.exit(-1);
           }
         } else if (arg.startsWith("--always-response=")) {
-          alwaysResponse = ArgUtil.valueOf(arg);
+          alwaysResponse = Arguments.valueOf(arg);
         } else {
           logger.error("Unknown argument [{}]", arg);
           return;

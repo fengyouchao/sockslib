@@ -8,18 +8,18 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * The class <code>ArgUtil</code> is an argument tool class.
+ * The class <code>Arguments</code> is an argument tool class.
  *
  * @author Youchao Feng
  * @version 1.0
  * @date Sep 24, 2015 10:20 AM
  */
-public class ArgUtil {
+public class Arguments {
 
   private final String[] args;
   private final Map<String, Integer> argPositionMap;
 
-  public ArgUtil(final String[] args) {
+  public Arguments(final String[] args) {
     this.args = args;
     argPositionMap = new HashMap<>();
     for (int i = 0; i < args.length; i++) {
@@ -65,6 +65,15 @@ public class ArgUtil {
 
   public boolean hasArg(String arg) {
     return argPositionMap.get(arg) != null;
+  }
+
+  public boolean hasOneOfArgs(String... args) {
+    for (String arg : args) {
+      if (argPositionMap.get(arg) != null) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public boolean hasArgsIn(String... args) {

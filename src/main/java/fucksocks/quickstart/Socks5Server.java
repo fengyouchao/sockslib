@@ -3,6 +3,7 @@ package fucksocks.quickstart;
 import fucksocks.client.SSLSocks5;
 import fucksocks.client.Socks5;
 import fucksocks.client.SocksProxy;
+import fucksocks.common.Credentials;
 import fucksocks.common.SSLConfiguration;
 import fucksocks.common.SSLConfigurationBuilder;
 import fucksocks.common.UsernamePasswordCredentials;
@@ -13,7 +14,7 @@ import fucksocks.server.SocksServerBuilder;
 import fucksocks.server.manager.MemoryBasedUserManager;
 import fucksocks.server.manager.User;
 import fucksocks.server.manager.UserManager;
-import fucksocks.utils.ArgUtil;
+import fucksocks.utils.Arguments;
 import fucksocks.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,8 @@ import java.util.Arrays;
 public class Socks5Server {
 
   private static final Logger logger = LoggerFactory.getLogger(Socks5Server.class);
+  private final int DEFAULT_PORT = 1080;
+  private final String KEY_STORE_TYPE = "JKS";
   private SocksProxyServer server;
 
   /**
@@ -54,103 +57,25 @@ public class Socks5Server {
    * @throws IOException
    */
   public void start(@Nullable String[] args) throws IOException {
-    ArgUtil argUtil = new ArgUtil(args);
-    final String KEY_STORE_TYPE = "JKS";
-    final int DEFAULT_PORT = 1080;
-    int port = DEFAULT_PORT;
-    String authValue = null;
-    String sslValue = null;
-    String proxySslValue = null;
-    SocksProxy proxy = null;
-    String proxyValue = null;
-    String keyStorePath = null;
-    String keyStorePassword = null;
-    String keyStoreType = KEY_STORE_TYPE;
-    String trustKeyStorePath = null;
-    String trustKeyStorePassword = null;
-    String trustKeyStoreType = KEY_STORE_TYPE;
-    String sslClientAuth = null;
+    Arguments arguments = new Arguments(args);
     SocksServerBuilder builder = null;
-    SSLConfigurationBuilder sslConfigBuilder = null;
 
-    if (argUtil.hasArgsIn("-h", "--help")) {
+    if (arguments.hasArgsIn("-h", "--help")) {
       showHelp();
       System.exit(0);
     }
 
-    port = argUtil.getIntValue(Arrays.asList("-p", "--port"), DEFAULT_PORT);
-    authValue = argUtil.getValue(Arrays.asList("-a", "--auth"), null);
-    sslValue = argUtil.getValue(Arrays.asList("-s", "--ssl"), null);
-    proxyValue = argUtil.getValue(Arrays.asList("-P", "--proxy"), null);
-    proxySslValue = argUtil.getValue(Arrays.asList("-S", "--proxy-ssl"), null);
-    keyStorePath = argUtil.getValue(Arrays.asList("-k", "--keystore"), null);
-    keyStorePassword = argUtil.getValue(Arrays.asList("-w", "--keystore-password"), null);
-    keyStoreType = argUtil.getValue((Arrays.asList("-t", "--keystore-type")), KEY_STORE_TYPE);
-    trustKeyStorePath = argUtil.getValue(Arrays.asList("-K", "--trust-keystore"), null);
-    trustKeyStorePassword =
-        argUtil.getValue(Arrays.asList("-W", "--trust-keystore-password"), null);
-    trustKeyStoreType =
-        argUtil.getValue((Arrays.asList("-T", "--trust-keystore-type")), KEY_STORE_TYPE);
-
-
-    if (keyStorePath != null) {
-      sslConfigBuilder = SSLConfigurationBuilder.newBuilder();
-      sslConfigBuilder.setKeyStorePath(keyStorePath).setKeyStorePassword(keyStorePassword)
-          .setKeyStoreType(keyStoreType);
-      if (trustKeyStorePath != null) {
-        sslConfigBuilder.setTrustKeyStorePath(trustKeyStorePath).setTrustKeyStorePassword
-            (trustKeyStorePassword).setTrustKeyStoreType(trustKeyStoreType).setClientAuth(true);
-      }
-    }
-    if (authValue == null) {
-      builder =
-          SocksServerBuilder.newSocks5ServerBuilder().setSocksMethods(new
-              NoAuthenticationRequiredMethod());
-    } else {
-      UserManager userManager = new MemoryBasedUserManager();
-      for (String user : authValue.split(",")) {
-        String[] userPassword = user.split(":");
-        String username = userPassword[0];
-        String password = userPassword[1];
-        userManager.create(new User(username, password));
-      }
-      builder =
-          SocksServerBuilder.newSocks5ServerBuilder().setSocksMethods(new UsernamePasswordMethod
-              ()).setUserManager(userManager);
-
-    }
-    builder.setBindPort(port);
-    //set ssl configuration
-    if (sslValue != null) {
-      SSLConfiguration configuration = SSLConfiguration.load(sslValue);
-      builder.useSSL(configuration);
-    }
-    if (sslConfigBuilder != null) {
-      builder.useSSL(sslConfigBuilder.build());
+    builder = SocksServerBuilder.newSocks5ServerBuilder();
+    try {
+      initPort(arguments, builder);
+      initAuth(arguments, builder);
+      initSSL(arguments, builder);
+      initProxy(arguments, builder);
+    } catch (IllegalArgumentException e) {
+      return;
     }
 
-    //set server proxy
-    if (proxyValue != null) {
-      String[] values = proxyValue.split(":");
-      if (values.length < 2 || values.length > 4) {
-        logger.error("--proxy value error");
-      }
-      String proxyHost = values[0];
-      int proxyPort = Integer.parseInt(values[1]);
-      if (proxySslValue != null) {
-        proxy =
-            new SSLSocks5(new InetSocketAddress(proxyHost, proxyPort), SSLConfiguration.load
-                (proxySslValue));
-      } else {
-        proxy = new Socks5(proxyHost, proxyPort);
-      }
-      if (values.length == 4) {
-        proxy.setCredentials(new UsernamePasswordCredentials(values[2], values[3]));
-      }
-    }
-    builder.setProxy(proxy);
     server = builder.build();
-
     final SocksProxyServer finalServer = server;
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
@@ -172,20 +97,21 @@ public class Socks5Server {
     System.out.println("                               Example: --auth=admin:1234");
     System.out.println("                               --auth=admin:1234,root:1234");
     System.out.println("  -s, --ssl <val>              SSL configuration file path");
+    System.out.println("  -l, --sslClientAuth          Authenticate client's certificate");
     System.out.println("  -P, --proxy <val>            Set server SOCKS5 proxy, <val> should be:");
     System.out.println("                               host:port:username:password or host:port");
-    System.out.println("  -S, --proxy-ssl <val>        Proxy SSL configuration file path");
+    System.out.println("  -S, --proxySsl <val>         Proxy SSL configuration file path");
     System.out.println("  -k, --keystore <val>         Keystore location");
-    System.out.println("  -w  --keystore-password <val>");
+    System.out.println("  -w  --keystorePassword <val>");
     System.out.println("                               Password of keystore");
-    System.out.println("  -t  --keystore-type <val>");
+    System.out.println("  -t  --keystoreType <val>");
     System.out.println("                               Keystore type, default \"JKS\"");
-    System.out.println("  -K, -trust-keystore <val>    Trust keystore path");
-    System.out.println("  -W  -trust-keystore-password <val>");
-    System.out.println("                               Password of trust keystore");
-    System.out.println("  -T  -trust-keystore-type <val>");
+    System.out.println(
+        "  -K, --trustKeystore <val>    Trusted keystore path. default same as " + "[--keystore]");
+    System.out.println("  -W, --trustKeystorePassword <val>");
+    System.out.println("                               Password of trusted keystore");
+    System.out.println("  -T, --trustKeystoreType <val>");
     System.out.println("                               Trust keystore type, default \"JKS\"");
-    System.out.println("                               Password of trust keystore");
     System.out.println("  -h, --help                   Show help");
   }
 
@@ -196,6 +122,119 @@ public class Socks5Server {
     if (server != null) {
       server.shutdown();
     }
+  }
+
+  private void initPort(Arguments arguments, SocksServerBuilder builder) throws
+      IllegalArgumentException {
+    int port = arguments.getIntValue(Arrays.asList("-p", "--port"), DEFAULT_PORT);
+    builder.setBindPort(port);
+  }
+
+  private void initAuth(Arguments arguments, SocksServerBuilder builder) throws
+      IllegalArgumentException {
+    String authValue = arguments.getValue(Arrays.asList("-a", "--auth"), null);
+    if (authValue != null) {
+      UserManager userManager = new MemoryBasedUserManager();
+      for (String user : authValue.split(",")) {
+        String[] userPassword = user.split(":");
+        String username = userPassword[0];
+        String password = userPassword[1];
+        userManager.create(new User(username, password));
+      }
+      builder.setSocksMethods(new UsernamePasswordMethod()).setUserManager(userManager);
+    } else {
+      builder.setSocksMethods(new NoAuthenticationRequiredMethod());
+    }
+  }
+
+  private void initSSL(Arguments arguments, SocksServerBuilder builder) throws
+      IllegalArgumentException {
+    String sslConfigValue = arguments.getValue(Arrays.asList("-s", "--ssl"), null);
+    boolean clientAuth = arguments.hasArgsIn("-l", "--sslClientAuth");
+    if (sslConfigValue != null) {
+      try {
+        builder.useSSL(SSLConfiguration.load(sslConfigValue));
+      } catch (IOException e) {
+        throw new IllegalArgumentException(e.getMessage());
+      }
+    }
+    String keyStorePath = arguments.getValue(Arrays.asList("-k", "--keystore"), null);
+    String keyStorePassword = arguments.getValue(Arrays.asList("-w", "--keystorePassword"), null);
+    String keyStoreType = arguments.getValue(Arrays.asList("-t", "--keystoreType"), KEY_STORE_TYPE);
+    String trustKeyStorePath = arguments.getValue(Arrays.asList("-K", "--trustKeystore"), null);
+    String trustKeyStorePassword =
+        arguments.getValue(Arrays.asList("-W", "--trustKeystorePassword"), null);
+    String trustKeyStoreType =
+        arguments.getValue(Arrays.asList("-T", "--trustKeystoreType"), KEY_STORE_TYPE);
+    if (keyStorePath != null) {
+      if (keyStorePassword == null) {
+        logger.error("Need password for keystore:{}", keyStorePath);
+        throw new IllegalArgumentException();
+      }
+      SSLConfigurationBuilder sslConfigBuilder = SSLConfigurationBuilder.newBuilder();
+      sslConfigBuilder.setKeyStorePath(keyStorePath).setKeyStorePassword(keyStorePassword)
+          .setKeyStoreType(keyStoreType).setClientAuth(clientAuth);
+      if (clientAuth) {
+        if (trustKeyStorePath != null) {
+          if (trustKeyStorePassword == null) {
+            logger.error("Need password for keystore:{}", trustKeyStorePath);
+            throw new IllegalArgumentException();
+          }
+          sslConfigBuilder.setTrustKeyStorePath(trustKeyStorePath).setTrustKeyStorePassword
+              (trustKeyStorePassword).setTrustKeyStoreType(trustKeyStoreType).setClientAuth(true);
+        } else {// if trust keystore is null, use keystore as trust keystore
+          sslConfigBuilder.useKeystoreAsTrustKeyStore();
+        }
+      }
+      builder.useSSL(sslConfigBuilder.build());
+    }
+  }
+
+  private void initProxy(Arguments arguments, SocksServerBuilder builder) throws
+      IllegalArgumentException, IOException {
+    String proxyValue = arguments.getValue(Arrays.asList("-P", "--proxy"), null);
+    String regex = "((\\w+):(\\w+)@)?([.\\w]+):(\\d+)";
+    if (proxyValue != null) {
+      if (proxyValue.matches(regex)) {
+        SocksProxy proxy = null;
+        String host = null;
+        int port = 1080;
+        Credentials credentials = null;
+        String[] values = proxyValue.split("@");
+        String[] address = null;
+        String[] user = null;
+        if (values.length == 1) {
+          address = values[0].split(":");
+        } else {
+          user = values[0].split(":");
+          address = values[1].split(":");
+          credentials = new UsernamePasswordCredentials(user[0], user[1]);
+        }
+        host = address[0];
+        port = Integer.parseInt(address[1]);
+
+        String proxySslValue = arguments.getValue(Arrays.asList("-S", "--proxySsl"), null);
+        if (proxySslValue != null) {
+          proxy =
+              new SSLSocks5(new InetSocketAddress(host, port), SSLConfiguration.load
+                  (proxySslValue));
+        } else {
+          proxy = new Socks5(new InetSocketAddress(host, port));
+        }
+        if (credentials != null) {
+          proxy.setCredentials(credentials);
+        }
+        builder.setProxy(proxy);
+
+      } else {
+        logger.error("[-P] or [--proxy] value: [username:password@]host:port");
+        throw new IllegalArgumentException();
+      }
+    }
+  }
+
+  private void initProxySSL(Arguments arguments, SocksServerBuilder builder) throws
+      IllegalArgumentException {
   }
 
 }

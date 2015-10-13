@@ -5,7 +5,7 @@ import fucksocks.client.SocksSocket;
 import fucksocks.common.UsernamePasswordCredentials;
 import fucksocks.common.net.MonitorSocketWrapper;
 import fucksocks.common.net.NetworkMonitor;
-import fucksocks.utils.ArgUtil;
+import fucksocks.utils.Arguments;
 import fucksocks.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,20 +49,20 @@ public class TCPTimeClient {
           showHelp();
           System.exit(0);
         } else if (arg.startsWith("--proxy-host=")) {
-          proxyHost = ArgUtil.valueOf(arg);
+          proxyHost = Arguments.valueOf(arg);
           useProxy = true;
         } else if (arg.startsWith("--proxy-port=")) {
-          proxyPort = ArgUtil.intValueOf(arg);
+          proxyPort = Arguments.intValueOf(arg);
         } else if (arg.startsWith("--proxy-user=")) {
-          username = ArgUtil.valueOf(arg);
+          username = Arguments.valueOf(arg);
         } else if (arg.startsWith("--proxy-password=")) {
-          password = ArgUtil.valueOf(arg);
+          password = Arguments.valueOf(arg);
         } else if (arg.startsWith("--host=")) {
-          host = ArgUtil.valueOf(arg);
+          host = Arguments.valueOf(arg);
         } else if (arg.startsWith("--port=")) {
-          port = ArgUtil.intValueOf(arg);
+          port = Arguments.intValueOf(arg);
         } else if (arg.startsWith("--message=")) {
-          message = ArgUtil.valueOf(arg);
+          message = Arguments.valueOf(arg);
         } else {
           logger.error("Unknown argument [{}]", arg);
           System.exit(-1);

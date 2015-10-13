@@ -55,6 +55,20 @@ public class SSLConfigurationBuilder {
     return this;
   }
 
+  public SSLConfigurationBuilder useKeystoreAsTrustKeyStore() {
+    this.trustKeyStorePath = keyStorePath;
+    this.trustKeyStorePassword = keyStorePassword;
+    this.trustKeyStoreType = keyStoreType;
+    return this;
+  }
+
+  public SSLConfigurationBuilder useTrustKeyStoreAsKeyStore() {
+    this.keyStorePath = trustKeyStorePath;
+    this.keyStorePassword = trustKeyStorePassword;
+    this.keyStoreType = trustKeyStoreType;
+    return this;
+  }
+
   public SSLConfigurationBuilder setTrustKeyStoreType(String trustKeyStoreType) {
     this.trustKeyStoreType = checkNotNull(trustKeyStoreType);
     return this;
