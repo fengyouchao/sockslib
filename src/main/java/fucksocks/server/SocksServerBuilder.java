@@ -102,8 +102,8 @@ public class SocksServerBuilder {
    * @return Instance of {@link SocksServerBuilder}.
    */
   public static SocksServerBuilder newBuilder(Class<? extends SocksHandler> socksHandlerClass) {
-    return new SocksServerBuilder(checkNotNull(socksHandlerClass, "Argument [socksHandlerClass] "
-        + "may not be null"));
+    checkNotNull(socksHandlerClass, "Argument [socksHandlerClass] may not be null");
+    return new SocksServerBuilder(socksHandlerClass);
   }
 
   /**
