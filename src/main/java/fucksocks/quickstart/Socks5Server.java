@@ -35,7 +35,6 @@ import java.util.Arrays;
 public class Socks5Server {
 
   private static final Logger logger = LoggerFactory.getLogger(Socks5Server.class);
-  private final int DEFAULT_PORT = 1080;
   private final String KEY_STORE_TYPE = "JKS";
   private SocksProxyServer server;
 
@@ -43,9 +42,9 @@ public class Socks5Server {
    * Run a SOCKS5 server. Same as @{@link #start(String[])}.
    *
    * @param args Some arguments.
-   * @throws IOException
+   * @throws IOException If any I/O error occurred
    */
-  public static void main(@Nullable String[] args) throws IOException, InterruptedException {
+  public static void main(@Nullable String[] args) throws IOException {
     Timer.open();
     Socks5Server socks5Server = new Socks5Server();
     socks5Server.start(args);
@@ -55,7 +54,7 @@ public class Socks5Server {
    * Start a SOCKS5 server with some options.
    *
    * @param args Arguments.Support "--h --help --port --auth"
-   * @throws IOException
+   * @throws IOException If any I/O error occurred
    */
   public void start(@Nullable String[] args) throws IOException {
     Arguments arguments = new Arguments(args);
@@ -130,7 +129,7 @@ public class Socks5Server {
 
   private void initPort(Arguments arguments, SocksServerBuilder builder) throws
       IllegalArgumentException {
-    int port = arguments.getIntValue(Arrays.asList("-p", "--port"), DEFAULT_PORT);
+    int port = arguments.getIntValue(Arrays.asList("-p", "--port"), 1080);
     builder.setBindPort(port);
   }
 
