@@ -60,7 +60,6 @@ public class JdbcConfiguration {
       return new JdbcConfiguration(url, username, password);
     } catch (IOException e) {
       logger.error(e.getMessage(), e);
-      e.printStackTrace();
     }
     return null;
   }

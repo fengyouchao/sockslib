@@ -14,6 +14,9 @@
 
 package fucksocks.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,6 +32,8 @@ import java.net.Socket;
  * @since 1.0
  */
 public class ResourceUtil {
+
+  private static final Logger logger = LoggerFactory.getLogger(ResourceUtil.class);
 
   public static void close(InputStream inputStream, OutputStream outputStream, Socket socket) {
     close(inputStream, outputStream, socket, null);
@@ -47,7 +52,7 @@ public class ResourceUtil {
       try {
         inputStream.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        logger.error(e.getMessage(), e);
       }
     }
   }
@@ -57,7 +62,7 @@ public class ResourceUtil {
       try {
         outputStream.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        logger.error(e.getMessage(), e);
       }
     }
   }
@@ -67,7 +72,7 @@ public class ResourceUtil {
       try {
         socket.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        logger.error(e.getMessage(), e);
       }
     }
   }
@@ -77,7 +82,7 @@ public class ResourceUtil {
       try {
         serverSocket.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        logger.error(e.getMessage(), e);
       }
     }
   }

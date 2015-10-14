@@ -93,7 +93,6 @@ public class MongoDBConfiguration {
       return new MongoDBConfiguration(host, port, database, username, password);
     } catch (IOException e) {
       logger.error(e.getMessage(), e);
-      e.printStackTrace();
     }
     return null;
   }

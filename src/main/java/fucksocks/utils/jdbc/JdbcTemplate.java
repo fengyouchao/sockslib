@@ -98,7 +98,6 @@ public class JdbcTemplate {
       return result;
     } catch (SQLException e) {
       logger.error(e.getMessage(), e);
-      e.printStackTrace();
     } finally {
       close(preparedStatement);
       close(connection);
@@ -127,7 +126,6 @@ public class JdbcTemplate {
       connection.commit();
     } catch (SQLException e) {
       logger.error(e.getMessage(), e);
-      e.printStackTrace();
     } finally {
       close(resultSet);
       close(preparedStatement);
@@ -175,7 +173,6 @@ public class JdbcTemplate {
         preparedStatement.setClob(i + 1, (Clob) arg);
       } else if (isNClob(arg)) {
         preparedStatement.setNClob(i + 1, (NClob) arg);
-        ;
       } else {
         throw new IllegalArgumentException(
             "Type:" + arg.getClass().getName() + " is not supported");
@@ -190,7 +187,6 @@ public class JdbcTemplate {
       }
     } catch (SQLException e) {
       logger.error(e.getMessage(), e);
-      e.printStackTrace();
     }
   }
 
@@ -201,7 +197,6 @@ public class JdbcTemplate {
       }
     } catch (SQLException e) {
       logger.error(e.getMessage(), e);
-      e.printStackTrace();
     }
   }
 
@@ -212,7 +207,6 @@ public class JdbcTemplate {
       }
     } catch (SQLException e) {
       logger.error(e.getMessage(), e);
-      e.printStackTrace();
     }
   }
 

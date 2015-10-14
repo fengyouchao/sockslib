@@ -225,12 +225,12 @@ public class FileBasedUserManager implements UserManager {
         try {
           Thread.sleep(reloadAfter);
         } catch (InterruptedException e) {
-          e.printStackTrace();
+          logger.error(e.getMessage(), e);
         }
         try {
           loadFromFile();
         } catch (IOException e) {
-          e.printStackTrace();
+          logger.error(e.getMessage(), e);
         }
       }
     }
