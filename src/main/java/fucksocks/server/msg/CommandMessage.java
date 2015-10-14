@@ -177,7 +177,9 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
 
       case AddressType.IPV4:
         byte[] addressBytes = new byte[4];
-        inputStream.read(addressBytes);
+        for (int i = 0; i < addressBytes.length; i++) {
+          addressBytes[i] = (byte) inputStream.read();
+        }
         inetAddress = InetAddress.getByAddress(addressBytes);
         break;
 
@@ -195,6 +197,7 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
             socksException = SocksException.serverReplyException(ServerReply.HOST_UNREACHABLE);
           }
         }
+        break;
       default:
         // TODO Implement later.
         break;
