@@ -62,7 +62,7 @@ public class Socks5Server {
 
     if (arguments.hasArgsIn("-h", "--help")) {
       showHelp();
-      System.exit(0);
+      return;
     }
 
     builder = SocksServerBuilder.newSocks5ServerBuilder();
