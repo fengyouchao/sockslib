@@ -107,10 +107,10 @@ public class Socks5Server {
     System.out.println("  -t  --keystoreType <val>");
     System.out.println("                               Keystore type, default \"JKS\"");
     System.out.println(
-        "  -K, --trustKeystore <val>    Trusted keystore path. default same as " + "[--keystore]");
-    System.out.println("  -W, --trustKeystorePassword <val>");
+        "  -K, --trustStore <val>    Trust keystore location. default same as [--keystore]");
+    System.out.println("  -W, --trustStorePassword <val>");
     System.out.println("                               Password of trusted keystore");
-    System.out.println("  -T, --trustKeystoreType <val>");
+    System.out.println("  -T, --trustStoreType <val>");
     System.out.println("                               Trust keystore type, default \"JKS\"");
     System.out.println("  -pk <val>                    Proxy keystore path");
     System.out.println("  -pw <val>                    Password for keystore");
@@ -164,11 +164,11 @@ public class Socks5Server {
     String keyStorePath = arguments.getValue(Arrays.asList("-k", "--keystore"), null);
     String keyStorePassword = arguments.getValue(Arrays.asList("-w", "--keystorePassword"), null);
     String keyStoreType = arguments.getValue(Arrays.asList("-t", "--keystoreType"), KEY_STORE_TYPE);
-    String trustKeyStorePath = arguments.getValue(Arrays.asList("-K", "--trustKeystore"), null);
+    String trustKeyStorePath = arguments.getValue(Arrays.asList("-K", "--trustStore"), null);
     String trustKeyStorePassword =
-        arguments.getValue(Arrays.asList("-W", "--trustKeystorePassword"), null);
+        arguments.getValue(Arrays.asList("-W", "--trustStorePassword"), null);
     String trustKeyStoreType =
-        arguments.getValue(Arrays.asList("-T", "--trustKeystoreType"), KEY_STORE_TYPE);
+        arguments.getValue(Arrays.asList("-T", "--trustStoreType"), KEY_STORE_TYPE);
     if (keyStorePath != null) {
       if (keyStorePassword == null) {
         logger.error("Need password for keystore:{}", keyStorePath);

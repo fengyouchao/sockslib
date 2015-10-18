@@ -101,9 +101,9 @@ public class SSLConfiguration {
     String password = properties.getProperty("ssl.keystore.password");
     String type = properties.getProperty("ssl.keystore.type", "JSK");
     String trustKeystorePath =
-        PathUtil.getAbstractPath(properties.getProperty("ssl.trust.keystore"));
-    String trustPassword = properties.getProperty("ssl.trust.keystore.password");
-    String trustType = properties.getProperty("ssl.trust.keystore.type", "JSK");
+        PathUtil.getAbstractPath(properties.getProperty("ssl.trustStore.location"));
+    String trustPassword = properties.getProperty("ssl.trustStore.password");
+    String trustType = properties.getProperty("ssl.trustStore.type", "JSK");
 
     if (!Strings.isNullOrEmpty(keystorePath)) {
       keyStoreInfo = new KeyStoreInfo(keystorePath, password, type);
