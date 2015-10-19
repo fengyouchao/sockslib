@@ -1,3 +1,17 @@
+/*
+ * Copyright 2015-2025 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package fucksocks.utils;
 
 import javax.annotation.Nullable;
@@ -14,16 +28,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @version 1.0
  * @date Sep 24, 2015 10:20 AM
  */
-public class Arguments {
+public final class Arguments {
 
   private final String[] args;
   private final Map<String, Integer> argPositionMap;
 
-  public Arguments(final String[] args) {
+  public Arguments(final @Nullable String[] args) {
     this.args = args;
     argPositionMap = new HashMap<>();
-    for (int i = 0; i < args.length; i++) {
-      argPositionMap.put(args[i], i);
+    if(args != null) {
+      for (int i = 0; i < args.length; i++) {
+        argPositionMap.put(args[i], i);
+      }
     }
   }
 
