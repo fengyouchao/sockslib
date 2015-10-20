@@ -16,6 +16,7 @@ package fucksocks.test.client;
 
 import fucksocks.client.Socks5;
 import fucksocks.client.SocksProxy;
+import fucksocks.common.AuthenticationException;
 import fucksocks.common.UsernamePasswordCredentials;
 import fucksocks.common.methods.NoAuthenticationRequiredMethod;
 import fucksocks.common.methods.UsernamePasswordMethod;
@@ -56,7 +57,7 @@ public final class TestSocksSocket {
   public void testNoAuth() throws IOException {
     startNoAuthSocks5Server();
     SocksProxy proxy = new Socks5(socks5ServerAddress);
-    TCPClient.checkConnect(proxy);
+    SocksTester.checkConnect(proxy);
   }
 
   @Test
@@ -64,7 +65,15 @@ public final class TestSocksSocket {
     startAuthSocks5Server();
     SocksProxy proxy = new Socks5(socks5ServerAddress);
     proxy.setCredentials(new UsernamePasswordCredentials(username, password));
-    TCPClient.checkConnect(proxy);
+    SocksTester.checkConnect(proxy);
+  }
+
+  @Test(expected = AuthenticationException.class)
+  public void testUsernamePasswordAuthFailed() throws IOException {
+    startAuthSocks5Server();
+    SocksProxy proxy = new Socks5(socks5ServerAddress);
+    proxy.setCredentials(new UsernamePasswordCredentials(username, "wrong password"));
+    SocksTester.checkConnect(proxy);
   }
 
   @Test
@@ -79,7 +88,7 @@ public final class TestSocksSocket {
     SocksProxy proxy2 = new Socks5("127.0.0.1", 1082);
     proxy.setChainProxy(proxy1);
     proxy1.setChainProxy(proxy2);
-    TCPClient.checkConnect(proxy);
+    SocksTester.checkConnect(proxy);
     server1.shutdown();
     server2.shutdown();
     System.out.println(proxy);

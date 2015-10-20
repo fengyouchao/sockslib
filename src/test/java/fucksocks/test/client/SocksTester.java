@@ -33,7 +33,7 @@ import java.net.SocketAddress;
  * @version 1.0
  * @date Oct 19, 2015 4:39 PM
  */
-public class TCPClient {
+public class SocksTester {
 
   private static final int REMOTE_SERVER_PORT = 8888;
   private static final SocketAddress remoteServerAddress =
@@ -42,12 +42,13 @@ public class TCPClient {
   public static void checkConnect(SocksProxy proxy) throws IOException {
     SampleTCPServer server = new SampleTCPServer();
     server.start(REMOTE_SERVER_PORT);
-    Socket socket = new SocksSocket(proxy, remoteServerAddress);
+    Socket socket = null;
     InputStream inputStream = null;
     OutputStream outputStream = null;
     ByteArrayOutputStream cache = new ByteArrayOutputStream();
     String sendMessage = "Hello fucksocks!\n";
     try {
+      socket = new SocksSocket(proxy, remoteServerAddress);
       inputStream = socket.getInputStream();
       outputStream = socket.getOutputStream();
       outputStream.write(sendMessage.getBytes());
@@ -57,15 +58,13 @@ public class TCPClient {
       while ((length = inputStream.read(buffer)) > 0) {
         cache.write(buffer, 0, length);
       }
-    } catch (Exception e) {
-      e.printStackTrace();
     } finally {
       ResourceUtil.close(inputStream);
       ResourceUtil.close(outputStream);
       ResourceUtil.close(socket);
+      server.shutdown();
     }
     byte[] data = cache.toByteArray();
-    server.shutdown();
     Assert.assertEquals(sendMessage, new String(data));
   }
 }

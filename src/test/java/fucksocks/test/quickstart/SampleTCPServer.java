@@ -15,6 +15,8 @@
 package fucksocks.test.quickstart;
 
 import fucksocks.utils.ResourceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +33,7 @@ import java.net.Socket;
  */
 public final class SampleTCPServer implements Runnable {
 
+  private static final Logger logger = LoggerFactory.getLogger(SampleTCPServer.class);
   private int port;
   private ServerSocket serverSocket;
 
@@ -69,7 +72,7 @@ public final class SampleTCPServer implements Runnable {
         }
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage());
     } finally {
       ResourceUtil.close(inputStream);
       ResourceUtil.close(outputStream);
