@@ -20,6 +20,9 @@ import fucksocks.common.UsernamePasswordCredentials;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static fucksocks.utils.StreamUtil.checkEnd;
+import static fucksocks.utils.StreamUtil.readString;
+
 
 /**
  * The class <code>UsernamePasswordMessage</code> represents a USERNAME/PASSWROD authentication
@@ -104,27 +107,11 @@ public class UsernamePasswordMessage implements ReadableMessage, WritableMessage
 
   @Override
   public void read(InputStream inputStream) throws SocksException, IOException {
-    version = inputStream.read();
-    if (version == -1) {
-      throw new IOException("Socket closed");
-    }
-    usernameLength = inputStream.read();
-    byte[] buffer = new byte[usernameLength];
-    int size = inputStream.read(buffer);
-
-    if (size != usernameLength) {
-      throw new SocksException("Protocol error");
-    }
-    username = new String(buffer);
-    passwordLength = inputStream.read();
-    buffer = new byte[passwordLength];
-    size = inputStream.read(buffer);
-    if (size != passwordLength) {
-      throw new SocksException("Protocol error");
-    }
-
-    password = new String(buffer);
-
+    version = checkEnd(inputStream.read());
+    usernameLength = checkEnd(inputStream.read());
+    username = readString(inputStream, usernameLength);
+    passwordLength = checkEnd(inputStream.read());
+    password = readString(inputStream, passwordLength);
     credentials = new UsernamePasswordCredentials(username, password);
   }
 

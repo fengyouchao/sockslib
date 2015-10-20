@@ -18,6 +18,7 @@ import fucksocks.common.AddressType;
 import fucksocks.common.SocksCommand;
 import fucksocks.common.SocksException;
 import fucksocks.utils.SocksUtil;
+import fucksocks.utils.StreamUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +27,8 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
+
+import static fucksocks.utils.StreamUtil.checkEnd;
 
 /**
  * The class <code>RequestCommandMessage</code> represents a SOCKS5 command message.
@@ -132,7 +135,6 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
         bytes[5 + hostLength] = SocksUtil.getFirstByteFromInt(port);
         bytes[6 + hostLength] = SocksUtil.getSecondByteFromInt(port);
         break;
-
       default:
         break;
     }
@@ -148,8 +150,8 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
   @Override
   public void read(InputStream inputStream) throws SocksException, IOException {
 
-    version = inputStream.read();
-    int cmd = inputStream.read();
+    version = checkEnd(inputStream.read());
+    int cmd = checkEnd(inputStream.read());
 
     switch (cmd) {
       case CMD_CONNECT:
@@ -165,8 +167,8 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
       default:
         socksException = SocksException.serverReplyException(ServerReply.COMMAND_NOT_SUPPORTED);
     }
-    reserved = inputStream.read();
-    addressType = inputStream.read();
+    reserved = checkEnd(inputStream.read());
+    addressType = checkEnd(inputStream.read());
 
     if (!AddressType.isSupport(addressType) && socksException == null) {
       socksException = SocksException.serverReplyException(ServerReply.ADDRESS_TYPE_NOT_SUPPORTED);
@@ -176,19 +178,16 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
     switch (addressType) {
 
       case AddressType.IPV4:
-        byte[] addressBytes = new byte[4];
-        for (int i = 0; i < addressBytes.length; i++) {
-          addressBytes[i] = (byte) inputStream.read();
-        }
+        byte[] addressBytes = StreamUtil.read(inputStream, 4);
         inetAddress = InetAddress.getByAddress(addressBytes);
         break;
 
       case AddressType.DOMAIN_NAME:
-        int domainLength = inputStream.read();
-        byte[] domainBytes = new byte[domainLength];
-        for (int i = 0; i < domainBytes.length; i++) {
-          domainBytes[i] = (byte) inputStream.read();
+        int domainLength = checkEnd(inputStream.read());
+        if (domainLength < 1) {
+          throw new SocksException("Length of domain must great than 0");
         }
+        byte[] domainBytes = StreamUtil.read(inputStream, domainLength);
         host = new String(domainBytes, Charset.forName("UTF-8"));
         try {
           inetAddress = InetAddress.getByName(host);
@@ -204,8 +203,7 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
     }
 
     // Read port
-    byte[] portBytes = new byte[2];
-    inputStream.read(portBytes);
+    byte[] portBytes = StreamUtil.read(inputStream, 2);
     port = SocksUtil.bytesToInt(portBytes);
 
   }

@@ -40,11 +40,7 @@ public class UsernamePasswordResponseMessage implements WritableMessage {
    * @param success If username and password is matched, it will return <code>true</code>.
    */
   public UsernamePasswordResponseMessage(boolean success) {
-    if (success) {
-      status = 0x00;
-    } else {
-      status = 0x01;
-    }
+    status = success ? 0x00 : 0x01;
   }
 
   @Override

@@ -19,6 +19,7 @@ import fucksocks.common.methods.SocksMethod;
 import fucksocks.common.methods.SocksMethodRegistry;
 import fucksocks.utils.LogMessageBuilder;
 import fucksocks.utils.LogMessageBuilder.MsgType;
+import fucksocks.utils.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,9 +63,7 @@ public class GenericSocksMethodRequester implements SocksMethodRequester {
     logger.debug("{}", LogMessageBuilder.build(bufferSent, MsgType.SEND));
 
     // Received data.
-    byte[] receivedData = new byte[2];
-    receivedData[0] = (byte) inputStream.read();
-    receivedData[1] = (byte) inputStream.read();
+    byte[] receivedData = StreamUtil.read(inputStream, 2);
     logger.debug("{}", LogMessageBuilder.build(receivedData, MsgType.RECEIVE));
 
     if (receivedData[0] != socksVersion) {

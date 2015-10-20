@@ -19,6 +19,8 @@ import fucksocks.common.SocksException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static fucksocks.utils.StreamUtil.checkEnd;
+
 /**
  * The class <code>MethodSelectionMessage</code> represents a method selection message.
  *
@@ -54,16 +56,12 @@ public class MethodSelectionMessage implements ReadableMessage, WritableMessage 
 
   @Override
   public void read(InputStream inputStream) throws SocksException, IOException {
-
-    version = inputStream.read();
-    methodNum = inputStream.read();
-
+    version = checkEnd(inputStream.read());
+    methodNum = checkEnd(inputStream.read());
     methods = new int[methodNum];
-
     for (int i = 0; i < methodNum; i++) {
-      methods[i] = inputStream.read();
+      methods[i] = checkEnd(inputStream.read());
     }
-
   }
 
   public int getVersion() {
