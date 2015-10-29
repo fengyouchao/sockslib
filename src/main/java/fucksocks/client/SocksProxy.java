@@ -40,7 +40,7 @@ public interface SocksProxy {
   /**
    * Default SOCKS server port.
    */
-  public static final int SOCKS_DEFAULT_PORT = 1080;
+  int SOCKS_DEFAULT_PORT = 1080;
 
   /**
    * Get the socket which connect SOCKS server.
@@ -144,7 +144,7 @@ public interface SocksProxy {
    * @throws SocksException If any error about SOCKS protocol occurs.
    * @throws IOException    If any I/O error occurs.
    */
-  public CommandReplyMessage requestBind(String host, int port) throws SocksException, IOException;
+  CommandReplyMessage requestBind(String host, int port) throws SocksException, IOException;
 
   /**
    * This method will send a BIND command to SOKCS server.
@@ -155,7 +155,7 @@ public interface SocksProxy {
    * @throws SocksException If any error about SOCKS protocol occurs.
    * @throws IOException    If any I/O error occurs.
    */
-  public CommandReplyMessage requestBind(InetAddress inetAddress, int port) throws
+  CommandReplyMessage requestBind(InetAddress inetAddress, int port) throws
       SocksException, IOException;
 
   /**
@@ -287,7 +287,7 @@ public interface SocksProxy {
    *
    * @return the chain proxy.
    */
-  public SocksProxy getChainProxy();
+  SocksProxy getChainProxy();
 
   /**
    * Returns the instance of <code>SocksProxy</code>.
@@ -295,7 +295,7 @@ public interface SocksProxy {
    * @param chainProxy chain proxy.
    * @return the instance of <code>SocksProxy</code>.
    */
-  public SocksProxy setChainProxy(SocksProxy chainProxy);
+  SocksProxy setChainProxy(SocksProxy chainProxy);
 
   /**
    * Creates a proxy socket.
@@ -305,7 +305,7 @@ public interface SocksProxy {
    * @return Socket instance.
    * @throws IOException If an I\O error occurred.
    */
-  public Socket createProxySocket(InetAddress address, int port) throws IOException;
+  Socket createProxySocket(InetAddress address, int port) throws IOException;
 
   /**
    * Creates a unconnected socket.
@@ -313,6 +313,6 @@ public interface SocksProxy {
    * @return a unconnected socket.
    * @throws IOException If an I\O error occurred.
    */
-  public Socket createProxySocket() throws IOException;
+  Socket createProxySocket() throws IOException;
 
 }
