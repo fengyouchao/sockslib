@@ -1,6 +1,6 @@
-# Fucksocks
+# SocksLib
 
-**Fucksocks** is a Java library for **SOCKS5** protocol.
+**SocksLib** is a Java library for **SOCKS5** protocol.
 
 See [Java API Documentation](http://fengyouchao.github.io/projects/fucksocks/apidocs/index.html)
 
