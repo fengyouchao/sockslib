@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.fengyouchao</groupId>
-    <artifactId>fucksocks</artifactId>
+    <artifactId>sockslib</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>fucksocks</name>
     <description>A Java library for SOCKS5 client and SOCKS5 server</description>
-    <url>http://fengyouchao.github.io/fucksocks/</url>
+    <url>http://fengyouchao.github.io/sockslib/</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
