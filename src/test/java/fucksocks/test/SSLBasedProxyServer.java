@@ -14,10 +14,10 @@
 
 package fucksocks.test;
 
-import fucksocks.common.SSLConfiguration;
-import fucksocks.server.SocksProxyServer;
-import fucksocks.server.SocksServerBuilder;
-import fucksocks.utils.Timer;
+import sockslib.common.SSLConfiguration;
+import sockslib.server.SocksProxyServer;
+import sockslib.server.SocksServerBuilder;
+import sockslib.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

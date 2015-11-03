@@ -14,11 +14,11 @@
 
 package fucksocks.test.client;
 
-import fucksocks.client.SSLSocks5;
-import fucksocks.client.SocksProxy;
-import fucksocks.common.SSLConfigurationBuilder;
-import fucksocks.server.SocksProxyServer;
-import fucksocks.server.SocksServerBuilder;
+import sockslib.client.SSLSocks5;
+import sockslib.client.SocksProxy;
+import sockslib.common.SSLConfigurationBuilder;
+import sockslib.server.SocksProxyServer;
+import sockslib.server.SocksServerBuilder;
 import fucksocks.test.SSLResource;
 import org.junit.After;
 import org.junit.Test;

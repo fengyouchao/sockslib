@@ -14,11 +14,11 @@
 
 package fucksocks.test;
 
-import fucksocks.client.Socks5;
-import fucksocks.client.SocksProxy;
-import fucksocks.client.SocksSocket;
-import fucksocks.common.UsernamePasswordCredentials;
-import fucksocks.utils.ResourceUtil;
+import sockslib.client.Socks5;
+import sockslib.client.SocksProxy;
+import sockslib.client.SocksSocket;
+import sockslib.common.UsernamePasswordCredentials;
+import sockslib.utils.ResourceUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

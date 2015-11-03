@@ -14,7 +14,7 @@
 
 package fucksocks.test.quickstart;
 
-import fucksocks.utils.ResourceUtil;
+import sockslib.utils.ResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

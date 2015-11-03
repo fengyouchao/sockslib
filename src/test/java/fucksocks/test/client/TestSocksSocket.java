@@ -14,26 +14,27 @@
 
 package fucksocks.test.client;
 
-import fucksocks.client.Socks5;
-import fucksocks.client.SocksProxy;
-import fucksocks.common.AuthenticationException;
-import fucksocks.common.UsernamePasswordCredentials;
-import fucksocks.common.methods.NoAuthenticationRequiredMethod;
-import fucksocks.common.methods.UsernamePasswordMethod;
-import fucksocks.server.SocksProxyServer;
-import fucksocks.server.SocksServerBuilder;
-import fucksocks.server.manager.MemoryBasedUserManager;
-import fucksocks.server.manager.User;
-import fucksocks.server.manager.UserManager;
+import sockslib.client.Socks5;
+import sockslib.client.SocksProxy;
+import sockslib.common.AuthenticationException;
+import sockslib.common.UsernamePasswordCredentials;
+import sockslib.common.methods.NoAuthenticationRequiredMethod;
+import sockslib.common.methods.UsernamePasswordMethod;
+import sockslib.server.SocksProxyServer;
+import sockslib.server.SocksServerBuilder;
+import sockslib.server.manager.MemoryBasedUserManager;
+import sockslib.server.manager.User;
+import sockslib.server.manager.UserManager;
 import org.junit.After;
 import org.junit.Test;
+import sockslib.client.SocksSocket;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 /**
- * The class <code>TestSocketSocket</code> is a test class for {@link fucksocks.client.SocksSocket}
+ * The class <code>TestSocketSocket</code> is a test class for {@link SocksSocket}
  *
  * @author Youchao Feng
  * @version 1.0

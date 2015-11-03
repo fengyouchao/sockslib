@@ -14,10 +14,10 @@
 
 package fucksocks.test;
 
-import fucksocks.client.SocksProxy;
-import fucksocks.client.SocksProxyFactory;
-import fucksocks.client.SocksSocket;
-import fucksocks.utils.ResourceUtil;
+import sockslib.client.SocksProxy;
+import sockslib.client.SocksProxyFactory;
+import sockslib.client.SocksSocket;
+import sockslib.utils.ResourceUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

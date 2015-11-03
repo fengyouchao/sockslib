@@ -14,11 +14,11 @@
 
 package fucksocks.test;
 
-import fucksocks.client.Socks5;
-import fucksocks.client.Socks5DatagramSocket;
-import fucksocks.common.net.MonitorDatagramSocketWrapper;
-import fucksocks.common.net.NetworkMonitor;
-import fucksocks.utils.ResourceUtil;
+import sockslib.client.Socks5;
+import sockslib.client.Socks5DatagramSocket;
+import sockslib.common.net.MonitorDatagramSocketWrapper;
+import sockslib.common.net.NetworkMonitor;
+import sockslib.utils.ResourceUtil;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

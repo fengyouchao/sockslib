@@ -14,12 +14,12 @@
 
 package fucksocks.test;
 
-import fucksocks.client.Socks5;
-import fucksocks.client.SocksProxy;
-import fucksocks.client.SocksSocket;
-import fucksocks.common.net.MonitorSocketWrapper;
-import fucksocks.common.net.NetworkMonitor;
-import fucksocks.utils.Timer;
+import sockslib.client.Socks5;
+import sockslib.client.SocksProxy;
+import sockslib.client.SocksSocket;
+import sockslib.common.net.MonitorSocketWrapper;
+import sockslib.common.net.NetworkMonitor;
+import sockslib.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +30,7 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import static fucksocks.utils.ResourceUtil.close;
+import static sockslib.utils.ResourceUtil.close;
 
 /**
  * <code>TestSocks5Connect</code> is a test class. It use SOCKS5's CONNECT command to query WHOIS

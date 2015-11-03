@@ -14,9 +14,9 @@
 
 package fucksocks.test;
 
-import fucksocks.server.SocksProxyServer;
-import fucksocks.server.SocksProxyServerFactory;
-import fucksocks.utils.Timer;
+import sockslib.server.SocksProxyServer;
+import sockslib.server.SocksProxyServerFactory;
+import sockslib.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

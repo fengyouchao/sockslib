@@ -1,10 +1,10 @@
 package fucksocks.test;
 
-import fucksocks.common.methods.UsernamePasswordMethod;
-import fucksocks.server.SocksProxyServer;
-import fucksocks.server.SocksServerBuilder;
-import fucksocks.server.manager.MongoDBBasedUserManager;
-import fucksocks.server.manager.UserManager;
+import sockslib.common.methods.UsernamePasswordMethod;
+import sockslib.server.SocksProxyServer;
+import sockslib.server.SocksServerBuilder;
+import sockslib.server.manager.MongoDBBasedUserManager;
+import sockslib.server.manager.UserManager;
 
 import java.io.IOException;
 

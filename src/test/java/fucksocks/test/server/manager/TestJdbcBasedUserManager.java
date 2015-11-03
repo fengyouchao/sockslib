@@ -16,10 +16,10 @@
 
 package fucksocks.test.server.manager;
 
-import fucksocks.server.manager.JdbcBasedUserManager;
-import fucksocks.server.manager.JdbcConfiguration;
-import fucksocks.server.manager.User;
-import fucksocks.utils.jdbc.JdbcTemplate;
+import sockslib.server.manager.JdbcBasedUserManager;
+import sockslib.server.manager.JdbcConfiguration;
+import sockslib.server.manager.User;
+import sockslib.utils.jdbc.JdbcTemplate;
 import junit.framework.Assert;
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
 import org.junit.After;

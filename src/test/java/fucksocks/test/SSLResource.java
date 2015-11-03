@@ -14,7 +14,7 @@
 
 package fucksocks.test;
 
-import fucksocks.utils.PathUtil;
+import sockslib.utils.PathUtil;
 
 import java.io.FileNotFoundException;
 

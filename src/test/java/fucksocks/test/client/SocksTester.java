@@ -14,10 +14,10 @@
 
 package fucksocks.test.client;
 
-import fucksocks.client.SocksProxy;
-import fucksocks.client.SocksSocket;
+import sockslib.client.SocksProxy;
+import sockslib.client.SocksSocket;
 import fucksocks.test.quickstart.SampleTCPServer;
-import fucksocks.utils.ResourceUtil;
+import sockslib.utils.ResourceUtil;
 import org.junit.Assert;
 
 import java.io.ByteArrayOutputStream;

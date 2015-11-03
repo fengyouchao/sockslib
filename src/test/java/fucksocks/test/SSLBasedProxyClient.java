@@ -14,13 +14,13 @@
 
 package fucksocks.test;
 
-import fucksocks.client.SSLSocks5;
-import fucksocks.client.SocksProxy;
-import fucksocks.client.SocksSocket;
-import fucksocks.common.SSLConfiguration;
-import fucksocks.common.net.MonitorSocketWrapper;
-import fucksocks.common.net.NetworkMonitor;
-import fucksocks.utils.Timer;
+import sockslib.client.SSLSocks5;
+import sockslib.client.SocksProxy;
+import sockslib.client.SocksSocket;
+import sockslib.common.SSLConfiguration;
+import sockslib.common.net.MonitorSocketWrapper;
+import sockslib.common.net.NetworkMonitor;
+import sockslib.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +32,7 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import static fucksocks.utils.ResourceUtil.close;
+import static sockslib.utils.ResourceUtil.close;
 
 /**
  * The class <code>SSLBasedProxyClient</code> is a client to connect a SSL based SOCKS5 proxy

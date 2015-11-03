@@ -14,8 +14,8 @@
 
 package fucksocks.test;
 
-import fucksocks.client.Socks5;
-import fucksocks.client.SocksServerSocket;
+import sockslib.client.Socks5;
+import sockslib.client.SocksServerSocket;
 
 import java.io.IOException;
 import java.net.InetAddress;

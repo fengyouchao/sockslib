@@ -14,15 +14,15 @@
 
 package fucksocks.test.quickstart;
 
-import fucksocks.client.SSLSocks5;
-import fucksocks.client.Socks5;
-import fucksocks.client.SocksProxy;
-import fucksocks.common.SSLConfiguration;
-import fucksocks.common.UsernamePasswordCredentials;
-import fucksocks.quickstart.Socks5Server;
-import fucksocks.utils.TCPTelnet;
-import fucksocks.utils.Telnet;
-import fucksocks.utils.UDPTelnet;
+import sockslib.client.SSLSocks5;
+import sockslib.client.Socks5;
+import sockslib.client.SocksProxy;
+import sockslib.common.SSLConfiguration;
+import sockslib.common.UsernamePasswordCredentials;
+import sockslib.quickstart.Socks5Server;
+import sockslib.utils.TCPTelnet;
+import sockslib.utils.Telnet;
+import sockslib.utils.UDPTelnet;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
