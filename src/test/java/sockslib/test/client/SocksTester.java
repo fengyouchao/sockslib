@@ -12,11 +12,11 @@
  * the License.
  */
 
-package fucksocks.test.client;
+package sockslib.test.client;
 
 import sockslib.client.SocksProxy;
 import sockslib.client.SocksSocket;
-import fucksocks.test.quickstart.SampleTCPServer;
+import sockslib.test.quickstart.SampleTCPServer;
 import sockslib.utils.ResourceUtil;
 import org.junit.Assert;
 

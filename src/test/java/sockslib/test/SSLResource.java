@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fucksocks.test;
+package sockslib.test;
 
 import sockslib.utils.PathUtil;
 

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fucksocks.test;
+package sockslib.test;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

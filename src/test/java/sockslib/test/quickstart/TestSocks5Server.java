@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fucksocks.test.quickstart;
+package sockslib.test.quickstart;
 
 import sockslib.client.SSLSocks5;
 import sockslib.client.Socks5;
@@ -33,10 +33,10 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-import static fucksocks.test.SSLResource.PASSWORD;
-import static fucksocks.test.SSLResource.getClientSSLConfigPath;
-import static fucksocks.test.SSLResource.getServerKeyStorePath;
-import static fucksocks.test.SSLResource.getServerSSLConfigPath;
+import static sockslib.test.SSLResource.PASSWORD;
+import static sockslib.test.SSLResource.getClientSSLConfigPath;
+import static sockslib.test.SSLResource.getServerKeyStorePath;
+import static sockslib.test.SSLResource.getServerSSLConfigPath;
 
 /**
  * The class <code>TestSocks5Server</code> is the test class for {@link Socks5Server}.

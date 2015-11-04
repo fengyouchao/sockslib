@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fucksocks.test;
+package sockslib.test;
 
 import java.io.InputStream;
 import java.io.OutputStream;

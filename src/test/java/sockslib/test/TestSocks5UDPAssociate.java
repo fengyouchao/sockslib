@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fucksocks.test;
+package sockslib.test;
 
 import sockslib.client.Socks5;
 import sockslib.client.Socks5DatagramSocket;

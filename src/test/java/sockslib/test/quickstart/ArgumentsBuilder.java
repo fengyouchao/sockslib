@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fucksocks.test.quickstart;
+package sockslib.test.quickstart;
 
 import java.util.ArrayList;
 import java.util.List;

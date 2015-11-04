@@ -12,17 +12,19 @@
  * the License.
  */
 
-package fucksocks.test;
+package sockslib.test;
 
-import sockslib.client.Socks5;
+import sockslib.client.SSLSocks5;
 import sockslib.client.SocksProxy;
 import sockslib.client.SocksSocket;
+import sockslib.common.SSLConfiguration;
 import sockslib.common.net.MonitorSocketWrapper;
 import sockslib.common.net.NetworkMonitor;
 import sockslib.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,48 +35,51 @@ import java.net.Socket;
 import static sockslib.utils.ResourceUtil.close;
 
 /**
- * <code>TestSocks5Connect</code> is a test class. It use SOCKS5's CONNECT command to query WHOIS
- * from a WHOIS server.
+ * The class <code>SSLBasedProxyClient</code> is a client to connect a SSL based SOCKS5 proxy
+ * server.
  *
  * @author Youchao Feng
  * @version 1.0
- * @date Mar 24, 2015 10:22:42 PM
+ * @since 1.0
  */
-public class TestSocks5Connect {
+public class SSLBasedProxyClient {
 
-  private static final Logger logger = LoggerFactory.getLogger(TestSocks5Connect.class);
+  private static final Logger logger = LoggerFactory.getLogger(SSLBasedProxyClient.class);
 
   public static void main(String[] args) {
 
     Timer.open();
     InputStream inputStream = null;
     OutputStream outputStream = null;
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     Socket socket = null;
+    NetworkMonitor networkMonitor = new NetworkMonitor();
     int length = 0;
     byte[] buffer = new byte[2048];
 
     try {
-      SocksProxy proxy = new Socks5(new InetSocketAddress("localhost", 1080));
+      SSLConfiguration configuration = SSLConfiguration.loadClassPath("client-ssl.properties");
+      SocksProxy proxy = new SSLSocks5(new InetSocketAddress("localhost", 1081), configuration);
       socket = new SocksSocket(proxy, new InetSocketAddress("whois.internic.net", 43));
-      NetworkMonitor networkMonitor = new NetworkMonitor();
       socket = MonitorSocketWrapper.wrap(socket, networkMonitor);
       inputStream = socket.getInputStream();
       outputStream = socket.getOutputStream();
       PrintWriter printWriter = new PrintWriter(outputStream);
       printWriter.print("domain google.com\r\n"); // query google.com WHOIS.
       printWriter.flush();
-      logger.info("Waiting response from server....");
+      logger.info("Waiting response from server...");
       while ((length = inputStream.read(buffer)) > 0) {
-        System.out.print(new String(buffer, 0, length));
+        byteArrayOutputStream.write(buffer, 0, length);
       }
-
-      logger.info("Total Sent:     " + networkMonitor.getTotalSend() + " bytes");
-      logger.info("Total Received: " + networkMonitor.getTotalReceive() + " bytes");
-      logger.info("Total:          " + networkMonitor.getTotal() + " bytes");
+      //      logger.info("Server response:\n{}",new String(byteArrayOutputStream.toByteArray(),
+      // 9, byteArrayOutputStream.toByteArray().length-9));
+      logger.info("Server response:\n{}", new String(byteArrayOutputStream.toByteArray()));
     } catch (IOException e) {
-      logger.error(e.getMessage(), e);
+      e.printStackTrace();
     } finally {
       close(inputStream, outputStream, socket);
+      close(byteArrayOutputStream);
     }
   }
+
 }

@@ -12,24 +12,20 @@
  * the License.
  */
 
-package fucksocks.test.client;
+package sockslib.test.client;
 
 import sockslib.client.SSLSocks5;
 import sockslib.client.SocksProxy;
 import sockslib.common.SSLConfigurationBuilder;
 import sockslib.server.SocksProxyServer;
 import sockslib.server.SocksServerBuilder;
-import fucksocks.test.SSLResource;
+import sockslib.test.SSLResource;
 import org.junit.After;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-
-import static fucksocks.test.SSLResource.PASSWORD;
-import static fucksocks.test.SSLResource.getClientTrustStorePath;
-import static fucksocks.test.SSLResource.getServerKeyStorePath;
 
 /**
  * The class <code>TestSSLSocks5</code> is a test class for {@link SSLSocks5}.
@@ -57,8 +53,8 @@ public final class TestSSLSocks5 {
   public void testConnectNoAuthSSLServer() throws IOException {
     startNoAuthSSLServer();
     SSLConfigurationBuilder builder = SSLConfigurationBuilder.newBuilder();
-    builder.setTrustKeyStorePath(getClientTrustStorePath());
-    builder.setTrustKeyStorePassword(PASSWORD);
+    builder.setTrustKeyStorePath(SSLResource.getClientTrustStorePath());
+    builder.setTrustKeyStorePassword(SSLResource.PASSWORD);
     SocksProxy proxy = new SSLSocks5(socks5ServerAddress, builder.build());
     SocksTester.checkConnect(proxy);
   }
@@ -68,8 +64,10 @@ public final class TestSSLSocks5 {
   public void testConnectSSLAuthServer() throws IOException {
     startNoAuthSSLServer();
     SSLConfigurationBuilder builder = SSLConfigurationBuilder.newBuilder();
-    builder.setTrustKeyStorePath(getClientTrustStorePath()).setTrustKeyStorePassword(PASSWORD)
-        .setKeyStorePath(SSLResource.getClientKeyStorePath()).setKeyStorePassword(PASSWORD);
+    builder.setTrustKeyStorePath(SSLResource.getClientTrustStorePath()).setTrustKeyStorePassword(
+        SSLResource.PASSWORD)
+        .setKeyStorePath(SSLResource.getClientKeyStorePath()).setKeyStorePassword(
+        SSLResource.PASSWORD);
     SocksProxy proxy = new SSLSocks5(socks5ServerAddress, builder.build());
     SocksTester.checkConnect(proxy);
   }
@@ -77,8 +75,8 @@ public final class TestSSLSocks5 {
   public void startNoAuthSSLServer() throws IOException {
     SSLConfigurationBuilder builder = SSLConfigurationBuilder.newBuilder();
     builder.setClientAuth(false);
-    builder.setKeyStorePath(getServerKeyStorePath());
-    builder.setKeyStorePassword(PASSWORD);
+    builder.setKeyStorePath(SSLResource.getServerKeyStorePath());
+    builder.setKeyStorePassword(SSLResource.PASSWORD);
     socksProxyServer = SocksServerBuilder.buildAnonymousSSLSocks5Server(PORT, builder.build());
     socksProxyServer.start();
   }
@@ -86,10 +84,10 @@ public final class TestSSLSocks5 {
   private void startSSLServerWithClientAuthBySSL() throws IOException {
     SSLConfigurationBuilder builder = SSLConfigurationBuilder.newBuilder();
     builder.setClientAuth(false);
-    builder.setKeyStorePath(getServerKeyStorePath());
-    builder.setKeyStorePassword(PASSWORD);
+    builder.setKeyStorePath(SSLResource.getServerKeyStorePath());
+    builder.setKeyStorePassword(SSLResource.PASSWORD);
     builder.setTrustKeyStorePath(SSLResource.getServerTrustStorePath());
-    builder.setTrustKeyStorePassword(PASSWORD);
+    builder.setTrustKeyStorePassword(SSLResource.PASSWORD);
     builder.setClientAuth(true);
     socksProxyServer = SocksServerBuilder.buildAnonymousSSLSocks5Server(PORT, builder.build());
     socksProxyServer.start();

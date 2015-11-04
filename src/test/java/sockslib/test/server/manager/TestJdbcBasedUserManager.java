@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fucksocks.test.server.manager;
+package sockslib.test.server.manager;
 
 import sockslib.server.manager.JdbcBasedUserManager;
 import sockslib.server.manager.JdbcConfiguration;

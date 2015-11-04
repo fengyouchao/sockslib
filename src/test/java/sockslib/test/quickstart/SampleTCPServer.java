@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fucksocks.test.quickstart;
+package sockslib.test.quickstart;
 
 import sockslib.utils.ResourceUtil;
 import org.slf4j.Logger;

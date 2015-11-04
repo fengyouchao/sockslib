@@ -1,4 +1,4 @@
-package fucksocks.test;
+package sockslib.test;
 
 import sockslib.common.methods.UsernamePasswordMethod;
 import sockslib.server.SocksProxyServer;

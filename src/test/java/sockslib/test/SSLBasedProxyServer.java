@@ -12,10 +12,11 @@
  * the License.
  */
 
-package fucksocks.test;
+package sockslib.test;
 
+import sockslib.common.SSLConfiguration;
 import sockslib.server.SocksProxyServer;
-import sockslib.server.SocksProxyServerFactory;
+import sockslib.server.SocksServerBuilder;
 import sockslib.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,24 +24,22 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * The class <code>TestProxyServer</code> a test class to start a SOCKS5 proxy server.
+ * The class <code>SSLBasedProxyServer</code> is a test class to start a SSL based SOCKS5 proxy
+ * server.
  *
  * @author Youchao Feng
  * @version 1.0
- * @date Apr 19, 2015 11:43:22 PM
+ * @since 1.0
  */
-public class TestProxyServer {
+public class SSLBasedProxyServer {
 
-  private static final Logger logger = LoggerFactory.getLogger(TestProxyServer.class);
+  private static final Logger logger = LoggerFactory.getLogger(SSLBasedProxyServer.class);
 
   public static void main(String[] args) throws IOException {
     Timer.open();
-    SocksProxyServer proxyServer = SocksProxyServerFactory.newNoAuthenticationServer();
-    //        SSLConfiguration configuration = SSLConfiguration.loadClassPath("client-ssl
-    // .properties");
-    //        SocksProxy proxy = new SSLSocks5(new InetSocketAddress("localhost", 1081),
-    // configuration);
-    //        proxyServer.setProxy(proxy);
+    SSLConfiguration configuration = SSLConfiguration.loadClassPath("server-ssl.properties");
+    SocksProxyServer proxyServer =
+        SocksServerBuilder.buildAnonymousSSLSocks5Server(1081, configuration);
     try {
       proxyServer.start();
     } catch (IOException e) {
