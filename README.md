@@ -58,6 +58,15 @@ You should put following libraries in your project's *CLASSPATH*:
     Socket socket = new SocksSocket(proxy, new InetSocketAddress("whois.internic.net",43));
 ```
 
+Connect SOCKS5 server using SSL connection
+
+```java
+    SSLConfigurationBuilder builder = SSLConfigurationBuilder.newBuilder();
+    builder.setTrustKeyStorePath("client-trust-keystore.jks");
+    builder.setTrustKeyStorePassword("123456");
+    SocksProxy proxy = new SSLSocks5(socks5ServerAddress, builder.build());
+```
+
 #### BIND
 
 ```java
@@ -70,7 +79,7 @@ You should put following libraries in your project's *CLASSPATH*:
 #### UDP ASSOCIATE
 
 ```java
-   DatagramSocket socket = new Socks5DatagramSocket(proxy);
+     DatagramSocket socket = new Socks5DatagramSocket(proxy);
 ```
 
 ### SOCKS5 Server
@@ -78,4 +87,15 @@ You should put following libraries in your project's *CLASSPATH*:
 ```java
      SocksProxyServer proxyServer = SocksServerBuilder.buildAnonymousSocks5Server(); 
      proxyServer.start();// Creat a SOCKS5 server bind at port 1080
+```
+
+SSL socks server
+
+```java
+    SSLConfigurationBuilder builder = SSLConfigurationBuilder.newBuilder();
+    builder.setKeyStorePath("server-keystore.jks");
+    builder.setKeyStorePassword("123456");
+    builder.setClientAuth(false);
+    socksProxyServer = SocksServerBuilder.buildAnonymousSSLSocks5Server(PORT, builder.build());
+    socksProxyServer.start();
 ```
