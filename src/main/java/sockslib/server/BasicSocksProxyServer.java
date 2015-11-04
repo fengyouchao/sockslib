@@ -18,9 +18,6 @@ import sockslib.client.SocksProxy;
 import sockslib.common.methods.SocksMethod;
 import sockslib.common.net.MonitorSocketWrapper;
 import sockslib.common.net.NetworkMonitor;
-import sockslib.server.filters.SessionFilter;
-import sockslib.server.filters.SessionFilterChain;
-import sockslib.server.filters.SocksCommandFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,11 +102,6 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
   private Thread thread;
 
   /**
-   * Session filter chain.
-   */
-  private SessionFilterChain sessionFilterChain = new SessionFilterChain();
-
-  /**
    * Timeout for a session.
    */
   private int timeout = 10000;
@@ -125,11 +117,6 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
    * Buffer size.
    */
   private int bufferSize = 1024 * 1024 * 5;
-
-  /**
-   * SOCKS listeners.
-   */
-  private List<SocksCommandFilter> socksListeners;
 
   private int bindPort = DEFAULT_SOCKS_PORT;
 
@@ -198,14 +185,6 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
         socket.setSoTimeout(timeout);
         Session session = sessionManager.newSession(socket);
         logger.info("Create SESSION[{}] for {}", session.getId(), session.getClientAddress());
-
-        try {
-          sessionFilterChain.doFilterChain(session);
-        } catch (InterruptedException e) {
-          session.close();
-          logger.info(e.getMessage());
-          continue;
-        }
 
         SocksHandler socksHandler = createSocksHandler();
 
@@ -330,32 +309,6 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
   }
 
   @Override
-  public void addSocksCommandFilter(SocksCommandFilter socksListener) {
-    if (socksListeners == null) {
-      socksListeners = new ArrayList<>();
-    }
-    socksListeners.add(socksListener);
-  }
-
-  @Override
-  public void removeSocksCommandFilter(SocksCommandFilter socksListener) {
-    if (socksListener == null) {
-      return;
-    }
-    socksListeners.remove(socksListener);
-  }
-
-  @Override
-  public void addSessionFilter(SessionFilter sessionFilter) {
-    sessionFilterChain.addFilter(sessionFilter);
-  }
-
-  @Override
-  public void removeSessionFilter(SessionFilter sessionFilter) {
-    sessionFilterChain.remoteFilter(sessionFilter);
-  }
-
-  @Override
   public SocksProxy getProxy() {
     return proxy;
   }
@@ -383,14 +336,6 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
   @Override
   public void setDaemon(boolean daemon) {
     this.daemon = daemon;
-  }
-
-  public SessionFilterChain getSessionFilterChain() {
-    return sessionFilterChain;
-  }
-
-  public void setSessionFilterChain(SessionFilterChain sessionFilterChain) {
-    this.sessionFilterChain = sessionFilterChain;
   }
 
   public Thread getServerThread() {

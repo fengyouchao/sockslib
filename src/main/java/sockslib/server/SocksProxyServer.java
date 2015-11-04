@@ -16,8 +16,6 @@ package sockslib.server;
 
 import sockslib.client.SocksProxy;
 import sockslib.common.methods.SocksMethod;
-import sockslib.server.filters.SessionFilter;
-import sockslib.server.filters.SocksCommandFilter;
 
 import java.io.IOException;
 import java.util.Map;
@@ -104,34 +102,6 @@ public interface SocksProxyServer {
    * @param timeout timeout.
    */
   void setTimeout(int timeout);
-
-  /**
-   * Adds a {@link SocksCommandFilter}.
-   *
-   * @param socksCommandFilter Instance of {@link SocksCommandFilter}.
-   */
-  void addSocksCommandFilter(SocksCommandFilter socksCommandFilter);
-
-  /**
-   * Removes a {@link SocksCommandFilter}.
-   *
-   * @param socksCommandFilter Instance of {@link SocksCommandFilter}.
-   */
-  void removeSocksCommandFilter(SocksCommandFilter socksCommandFilter);
-
-  /**
-   * Adds {@link SessionFilter}.
-   *
-   * @param sessionFilter Instance of {@link SessionFilter}.
-   */
-  void addSessionFilter(SessionFilter sessionFilter);
-
-  /**
-   * Removes {@link SessionFilter}.
-   *
-   * @param sessionFilter Instance of {@link SessionFilter}.
-   */
-  void removeSessionFilter(SessionFilter sessionFilter);
 
   /**
    * Returns server's proxy.
