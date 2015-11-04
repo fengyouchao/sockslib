@@ -1,4 +1,4 @@
-# SocksLib
+# SocksLib [![Build Status](https://travis-ci.org/fengyouchao/fucksocks.svg?branch=sockslib)](https://travis-ci.org/fengyouchao/fucksocks)
 
 **SocksLib** is a Java library for **SOCKS5** protocol.
 
