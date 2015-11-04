@@ -64,7 +64,8 @@ Connect SOCKS5 server using SSL connection
     SSLConfigurationBuilder builder = SSLConfigurationBuilder.newBuilder();
     builder.setTrustKeyStorePath("client-trust-keystore.jks");
     builder.setTrustKeyStorePassword("123456");
-    SocksProxy proxy = new SSLSocks5(socks5ServerAddress, builder.build());
+    SocksProxy proxy = new SSLSocks5(new InetSocketAddress("localhost", 1081), builder.build());
+    Socket socket = new SocksSocket(proxy, new InetSocketAddress("whois.internic.net",43));
 ```
 
 #### BIND
@@ -96,6 +97,6 @@ SSL socks server
     builder.setKeyStorePath("server-keystore.jks");
     builder.setKeyStorePassword("123456");
     builder.setClientAuth(false);
-    socksProxyServer = SocksServerBuilder.buildAnonymousSSLSocks5Server(PORT, builder.build());
+    socksProxyServer = SocksServerBuilder.buildAnonymousSSLSocks5Server(1081, builder.build());
     socksProxyServer.start();
 ```
