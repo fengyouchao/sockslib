@@ -14,11 +14,13 @@
 
 package sockslib.test;
 
-import sockslib.server.SocksProxyServer;
-import sockslib.server.SocksProxyServerFactory;
-import sockslib.utils.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sockslib.server.SessionManager;
+import sockslib.server.SocksProxyServer;
+import sockslib.server.SocksServerBuilder;
+import sockslib.server.listener.LoggingListener;
+import sockslib.utils.Timer;
 
 import java.io.IOException;
 
@@ -35,17 +37,14 @@ public class TestProxyServer {
 
   public static void main(String[] args) throws IOException {
     Timer.open();
-    SocksProxyServer proxyServer = SocksProxyServerFactory.newNoAuthenticationServer();
-    //        SSLConfiguration configuration = SSLConfiguration.loadClassPath("client-ssl
-    // .properties");
-    //        SocksProxy proxy = new SSLSocks5(new InetSocketAddress("localhost", 1081),
-    // configuration);
-    //        proxyServer.setProxy(proxy);
+    SocksProxyServer proxyServer = SocksServerBuilder.buildAnonymousSocks5Server();
+    SessionManager sessionManager = proxyServer.getSessionManager();
+    sessionManager.addSessionListener("logging", new LoggingListener());
     try {
       proxyServer.start();
     } catch (IOException e) {
       logger.error(e.getMessage(), e);
     }
   }
-
 }
+

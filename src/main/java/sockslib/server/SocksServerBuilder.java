@@ -1,17 +1,20 @@
 package sockslib.server;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sockslib.client.SocksProxy;
 import sockslib.common.SSLConfiguration;
 import sockslib.common.methods.NoAuthenticationRequiredMethod;
 import sockslib.common.methods.SocksMethod;
 import sockslib.common.methods.UsernamePasswordMethod;
+import sockslib.server.listener.SessionListener;
 import sockslib.server.manager.MemoryBasedUserManager;
 import sockslib.server.manager.UserManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -41,6 +44,7 @@ public class SocksServerBuilder {
   private ExecutorService executorService;
   private SessionManager sessionManager = new BasicSessionManager();
   private SSLConfiguration sslConfiguration;
+  private Map<String, SessionListener> sessionListeners = new HashMap<>();
 
   /**
    * Creates a <code>SocksServerBuilder</code> with a <code>Class<? extends {@link
@@ -183,16 +187,45 @@ public class SocksServerBuilder {
     return this;
   }
 
+  /**
+   * Sets {@link SessionManager}.
+   *
+   * @param sessionManager instance of {@link SessionManager}.
+   * @return Instance of {@link SocksServerBuilder}.
+   */
   public SocksServerBuilder setSessionManager(SessionManager sessionManager) {
     this.sessionManager = checkNotNull(sessionManager);
     return this;
   }
 
+  /**
+   * Add a {@link SessionListener}.
+   *
+   * @param name name of {@link SessionListener}
+   * @param listener instance of {@link SessionListener}.
+   * @return Instance of {@link SocksServerBuilder}.
+   */
+  public SocksServerBuilder addSessionListener(String name, SessionListener listener) {
+    sessionListeners.put(name, listener);
+    return this;
+  }
+
+  /**
+   * Sets server in SSL mode.
+   *
+   * @param sslConfiguration instance of {@link SSLConfiguration}.
+   * @return Instance of {@link SocksServerBuilder}.
+   */
   public SocksServerBuilder useSSL(SSLConfiguration sslConfiguration) {
     this.sslConfiguration = sslConfiguration;
     return this;
   }
 
+  /**
+   * Builds a {@link SocksProxyServer} instance.
+   *
+   * @return instance of {@link SocksProxyServer}.
+   */
   public SocksProxyServer build() {
     SocksProxyServer proxyServer = null;
     if (sslConfiguration == null) {
@@ -229,6 +262,9 @@ public class SocksServerBuilder {
     proxyServer.setSupportMethods(methods);
     if (proxy != null) {
       proxyServer.setProxy(proxy);
+    }
+    for (String name : sessionListeners.keySet()) {
+      proxyServer.getSessionManager().addSessionListener(name, sessionListeners.get(name));
     }
     return proxyServer;
   }

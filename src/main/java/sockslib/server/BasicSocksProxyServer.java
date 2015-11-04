@@ -14,19 +14,17 @@
 
 package sockslib.server;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sockslib.client.SocksProxy;
 import sockslib.common.methods.SocksMethod;
 import sockslib.common.net.MonitorSocketWrapper;
 import sockslib.common.net.NetworkMonitor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -184,10 +182,7 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
         socket = processSocketBeforeUse(socket);
         socket.setSoTimeout(timeout);
         Session session = sessionManager.newSession(socket);
-        logger.info("Create SESSION[{}] for {}", session.getId(), session.getClientAddress());
-
         SocksHandler socksHandler = createSocksHandler();
-
         /* initialize socks handler */
         socksHandler.setSession(session);
         initializeSocksHandler(socksHandler);

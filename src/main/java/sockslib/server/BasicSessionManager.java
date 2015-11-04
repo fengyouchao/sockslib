@@ -1,9 +1,11 @@
 package sockslib.server;
 
+import sockslib.server.listener.SessionListener;
+import sockslib.server.listener.StopProcessException;
+import sockslib.server.msg.CommandMessage;
+
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -19,12 +21,7 @@ public class BasicSessionManager implements SessionManager {
 
   private static int nextSessionId = 0;
   private Map<Long, Session> managedSessions = new HashMap<>();
-  private List<SessionListener> sessionListeners = new ArrayList<>();
-
-  @Override
-  public Map<Long, Session> getAllManagedSessions() {
-    return managedSessions;
-  }
+  private Map<String, SessionListener> sessionListeners = new HashMap<>();
 
   @Override
   public Session newSession(Socket socket) {
@@ -33,29 +30,61 @@ public class BasicSessionManager implements SessionManager {
     return session;
   }
 
-  @Override
-  public void addSessionListener(SessionListener sessionListener) {
-    sessionListeners.add(sessionListener);
-  }
-
-  @Override
-  public void removeSessionListener(SessionListener sessionListener) {
-    sessionListeners.remove(sessionListener);
-  }
-
-  @Override
-  public List<SessionListener> getSessionListeners() {
-    return sessionListeners;
-  }
-
-  @Override
-  public void setSessionListeners(List<SessionListener> sessionListeners) {
-    this.sessionListeners = checkNotNull(sessionListeners);
-  }
 
   @Override
   public Session getSession(long id) {
     return managedSessions.get(id);
   }
 
+  @Override
+  public void sessionOnCreate(Session session) throws StopProcessException {
+    for (SessionListener listener : sessionListeners.values()) {
+      listener.onCreate(session);
+    }
+  }
+
+  @Override
+  public void sessionOnCommand(Session session, CommandMessage message) throws
+      StopProcessException {
+    for (SessionListener listener : sessionListeners.values()) {
+      listener.onCommand(session, message);
+    }
+  }
+
+  @Override
+  public void sessionOnException(Session session, Exception exception) {
+    for (SessionListener listener : sessionListeners.values()) {
+      listener.onException(session, exception);
+    }
+  }
+
+  @Override
+  public void sessionOnClose(Session session) {
+    for (SessionListener listener : sessionListeners.values()) {
+      listener.onClose(session);
+    }
+  }
+
+  @Override
+  public void removeSessionListener(String name) {
+    sessionListeners.remove(name);
+  }
+
+  @Override
+  public void addSessionListener(String name, SessionListener listener) {
+    sessionListeners.put(name, listener);
+  }
+
+  @Override
+  public Map<Long, Session> getManagedSessions() {
+    return managedSessions;
+  }
+
+  public Map<String, SessionListener> getSessionListeners() {
+    return sessionListeners;
+  }
+
+  public void setSessionListeners(Map<String, SessionListener> sessionListeners) {
+    this.sessionListeners = checkNotNull(sessionListeners, "sessionListeners");
+  }
 }

@@ -1,5 +1,7 @@
 package sockslib.quickstart;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sockslib.client.SSLSocks5;
 import sockslib.client.Socks5;
 import sockslib.client.SocksProxy;
@@ -11,13 +13,12 @@ import sockslib.common.methods.NoAuthenticationRequiredMethod;
 import sockslib.common.methods.UsernamePasswordMethod;
 import sockslib.server.SocksProxyServer;
 import sockslib.server.SocksServerBuilder;
+import sockslib.server.listener.LoggingListener;
 import sockslib.server.manager.MemoryBasedUserManager;
 import sockslib.server.manager.User;
 import sockslib.server.manager.UserManager;
 import sockslib.utils.Arguments;
 import sockslib.utils.Timer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -84,6 +85,7 @@ public class Socks5Server {
         logger.info("SOCKS5 sever shutdown");
       }
     }));
+    server.getSessionManager().addSessionListener("logger", new LoggingListener());
     server.start();
   }
 
@@ -107,7 +109,7 @@ public class Socks5Server {
     System.out.println("  -t  --keystoreType <val>");
     System.out.println("                               Keystore type, default \"JKS\"");
     System.out.println(
-        "  -K, --trustStore <val>    Trust keystore location. default same as [--keystore]");
+        "  -K, --trustStore <val>    Trust keystore location. default same as " + "[--keystore]");
     System.out.println("  -W, --trustStorePassword <val>");
     System.out.println("                               Password of trusted keystore");
     System.out.println("  -T, --trustStoreType <val>");
@@ -127,14 +129,12 @@ public class Socks5Server {
     }
   }
 
-  private void initPort(Arguments arguments, SocksServerBuilder builder) throws
-      IllegalArgumentException {
+  private void initPort(Arguments arguments, SocksServerBuilder builder) throws IllegalArgumentException {
     int port = arguments.getIntValue(Arrays.asList("-p", "--port"), 1080);
     builder.setBindPort(port);
   }
 
-  private void initAuth(Arguments arguments, SocksServerBuilder builder) throws
-      IllegalArgumentException {
+  private void initAuth(Arguments arguments, SocksServerBuilder builder) throws IllegalArgumentException {
     String authValue = arguments.getValue(Arrays.asList("-a", "--auth"), null);
     if (authValue != null) {
       UserManager userManager = new MemoryBasedUserManager();
@@ -150,8 +150,7 @@ public class Socks5Server {
     }
   }
 
-  private void initSSL(Arguments arguments, SocksServerBuilder builder) throws
-      IllegalArgumentException {
+  private void initSSL(Arguments arguments, SocksServerBuilder builder) throws IllegalArgumentException {
     String sslConfigValue = arguments.getValue(Arrays.asList("-s", "--ssl"), null);
     boolean clientAuth = arguments.hasArgsIn("-l", "--sslClientAuth");
     if (sslConfigValue != null) {

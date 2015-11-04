@@ -14,9 +14,10 @@
 
 package sockslib.server;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sockslib.client.SocksProxy;
 import sockslib.client.SocksSocket;
-import sockslib.common.AddressType;
 import sockslib.common.ProtocolErrorException;
 import sockslib.common.SocksException;
 import sockslib.common.methods.SocksMethod;
@@ -27,8 +28,6 @@ import sockslib.server.msg.CommandResponseMessage;
 import sockslib.server.msg.MethodSelectionMessage;
 import sockslib.server.msg.MethodSelectionResponseMessage;
 import sockslib.server.msg.ServerReply;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -73,8 +72,12 @@ public class Socks5Handler implements SocksHandler {
 
   private SocksProxyServer socksProxyServer;
 
+  private SessionManager sessionManager;
+
   @Override
   public void handle(Session session) throws Exception {
+    sessionManager = getSocksProxyServer().getSessionManager();
+    sessionManager.sessionOnCreate(session);
 
     MethodSelectionMessage msg = new MethodSelectionMessage();
     session.read(msg);
@@ -94,10 +97,10 @@ public class Socks5Handler implements SocksHandler {
     CommandMessage commandMessage = new CommandMessage();
     session.read(commandMessage); // Read command request.
 
-    logger.info("SESSION[{}] request:{}  {}:{}", session.getId(), commandMessage.getCommand(),
-        commandMessage.getAddressType() != AddressType.DOMAIN_NAME ?
-            commandMessage.getInetAddress() :
-            commandMessage.getHost(), commandMessage.getPort());
+    //    logger.info("SESSION[{}] request:{}  {}:{}", session.getId(), commandMessage.getCommand(),
+    //        commandMessage.getAddressType() != AddressType.DOMAIN_NAME ?
+    //            commandMessage.getInetAddress() :
+    //            commandMessage.getHost(), commandMessage.getPort());
 
     // If there is a SOCKS exception in command message, It will send a right response to client.
     if (commandMessage.hasSocksException()) {
@@ -108,6 +111,7 @@ public class Socks5Handler implements SocksHandler {
     }
 
     /**************************** DO COMMAND ******************************************/
+    sessionManager.sessionOnCommand(session, commandMessage);
     switch (commandMessage.getCommand()) {
       case BIND:
         doBind(session, commandMessage);
@@ -119,9 +123,6 @@ public class Socks5Handler implements SocksHandler {
         doUDPAssociate(session, commandMessage);
         break;
     }
-
-
-
   }
 
   @Override
@@ -169,7 +170,6 @@ public class Socks5Handler implements SocksHandler {
     CommandResponseMessage responseMessage =
         new CommandResponseMessage(VERSION, reply, bindAddress, bindPort);
     session.write(responseMessage);
-    byte[] bytes = responseMessage.getBytes();
     if (reply != ServerReply.SUCCEEDED) { // 如果返回失败信息，则退出该方法。
       session.close();
       return;
@@ -265,15 +265,13 @@ public class Socks5Handler implements SocksHandler {
     try {
       handle(session);
     } catch (Exception e) {
-      logger.error("SESSION[{}]: {}", session.getId(), e.getMessage());
-      logger.error(e.getMessage(), e);
+      sessionManager.sessionOnException(session, e);
+      //      logger.error("SESSION[{}]: {}", session.getId(), e.getMessage());
     } finally {
-      /*
-       * At last, close the session.
-       */
       session.close();
-      logger.info("SESSION[{}] closed, {}", session.getId(), session.getNetworkMonitor().toString
-          ());
+      sessionManager.sessionOnClose(session);
+      //      logger.info("SESSION[{}] closed, {}", session.getId(), session.getNetworkMonitor().toString
+      //          ());
     }
   }
 
