@@ -1,4 +1,4 @@
-# SocksLib [![Build Status](https://travis-ci.org/fengyouchao/fucksocks.svg?branch=sockslib)](https://travis-ci.org/fengyouchao/fucksocks) [![Coverage Status](https://coveralls.io/repos/fengyouchao/fucksocks/badge.svg?branch=sockslib&service=github)](https://coveralls.io/github/fengyouchao/fucksocks?branch=sockslib)
+# SocksLib [![Build Status](https://travis-ci.org/fengyouchao/sockslib.svg?branch=master)](https://travis-ci.org/fengyouchao/sockslib) [![Coverage Status](https://coveralls.io/repos/fengyouchao/fucksocks/badge.svg?branch=sockslib&service=github)](https://coveralls.io/github/fengyouchao/fucksocks?branch=sockslib)
 
 **SocksLib** is a Java library for **SOCKS5** protocol.
 
