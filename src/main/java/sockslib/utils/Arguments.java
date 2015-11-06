@@ -79,6 +79,18 @@ public final class Arguments {
     return arg.equals("-h") || arg.equals("--help");
   }
 
+  public String argAt(int index){
+    return argAt(index, null);
+  }
+
+  public String argAt(int index, @Nullable String defaultValue){
+    if(args == null || index >= args.length || index < 0){
+      return defaultValue;
+    }else{
+      return args[index];
+    }
+  }
+
   public boolean hasArg(String arg) {
     return argPositionMap.get(arg) != null;
   }
