@@ -18,7 +18,6 @@ package sockslib.utils.jdbc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sockslib.utils.TypeUtil;
 
 import javax.sql.DataSource;
 import java.io.InputStream;

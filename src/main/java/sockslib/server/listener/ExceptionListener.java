@@ -14,13 +14,21 @@
 
 package sockslib.server.listener;
 
+import sockslib.server.Session;
+
 /**
- * The class <code>SessionListener</code> represents a session listener.
- *
  * @author Youchao Feng
  * @version 1.0
- * @date Sep 30, 2015 12:38 PM
+ * @date Nov 10, 2015 4:57 PM
  */
-public interface SessionListener
-    extends SessionCreateListener, SessionCloseListener, CommandListener, ExceptionListener {
+@FunctionalInterface
+public interface ExceptionListener {
+
+  /**
+   * When a session occurred an exception, this method will be called by {@link sockslib.server * .SocksHandler}.
+   *
+   * @param session   Current session.
+   * @param exception Exception occurred in session.
+   */
+  void onException(Session session, Exception exception);
 }

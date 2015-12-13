@@ -12,7 +12,7 @@
  * the License.
  */
 
-package sockslib.test;
+package socklib.test;
 
 import sockslib.utils.PathUtil;
 

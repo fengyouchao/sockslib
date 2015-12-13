@@ -17,6 +17,10 @@ package sockslib.common;
 import com.google.common.base.Preconditions;
 
 import java.io.Serializable;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -68,7 +72,7 @@ public class IPRange implements Iterable<IP>, Serializable {
    * @param range a string such as "1.1.1.1-1.1.2.255".
    * @return IP range.
    */
-  public static IPRange parseFromString(String range) {
+  public static IPRange parse(String range) {
     String[] ips = range.split("-");
     Preconditions.checkArgument(
         ips.length == 2,
@@ -96,7 +100,7 @@ public class IPRange implements Iterable<IP>, Serializable {
       maxIpAsLong = minIpAsLong | (~maskAsLong);
     } else {
       throw new IllegalArgumentException(
-          "The input String format error. for example" + " 192.168.1.1/24");
+          "The input String format error. For example" + " 192.168.1.1/24");
     }
     return new IPRange(new IP(minIpAsLong), new IP(maxIpAsLong));
   }
@@ -138,8 +142,18 @@ public class IPRange implements Iterable<IP>, Serializable {
    * @return If the IP is in the rang return <code>true</code>.
    */
   public boolean contains(IP ip) {
-    if (ip.compareTo(startIP) >= 0 && ip.compareTo(endIP) <= 0) {
-      return true;
+    return ip.compareTo(startIP) >= 0 && ip.compareTo(endIP) <= 0;
+  }
+
+  public boolean contains(SocketAddress address) {
+    return address instanceof InetSocketAddress && contains(
+        ((InetSocketAddress) address).getAddress());
+  }
+
+  public boolean contains(InetAddress address){
+    if (address instanceof Inet4Address){
+      IP ip = new IP(address.getAddress());
+      return contains(ip);
     }
     return false;
   }

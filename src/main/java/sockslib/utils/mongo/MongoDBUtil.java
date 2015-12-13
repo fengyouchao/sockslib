@@ -58,30 +58,23 @@ public class MongoDBUtil {
   }
 
   public DeleteResult deleteAll(String collectionName) {
-    return keepConnect(collectionName, new CollectionCallback<DeleteResult>() {
-      @Override
-      public DeleteResult process(MongoCollection<Document> collection) {
-        return collection.deleteMany(new Document());
-      }
-    });
+    return execute(collectionName, collection -> collection.deleteMany(new Document()));
   }
 
   public void dropCollection(String collectionName) {
-    keepConnect(collectionName, new CollectionCallback<Void>() {
-      @Override
-      public Void process(MongoCollection<Document> collection) {
-        collection.drop();
-        return null;
-      }
+    execute(collectionName, collection -> {
+      collection.drop();
+      return null;
     });
   }
 
-  public <T> T keepConnect(String collectionName, CollectionCallback<T> callback) {
+  public <T> T execute(String collectionName, CollectionCallback<T> callback) {
     MongoDatabase database = null;
     if (mongoClient == null) {
       mongoClient = getConnectedClient();
     }
-    return callback.process(mongoClient.getDatabase(databaseName).getCollection(collectionName));
+    return callback.doInCollection(
+        mongoClient.getDatabase(databaseName).getCollection(collectionName));
   }
 
   public void closeConnection() {
@@ -105,7 +98,7 @@ public class MongoDBUtil {
       client = getConnectedClient();
       MongoDatabase database = client.getDatabase(databaseName);
       MongoCollection<Document> collection = database.getCollection(collectionName);
-      t = callback.process(collection);
+      t = callback.doInCollection(collection);
     } finally {
       if (client != null) {
         client.close();

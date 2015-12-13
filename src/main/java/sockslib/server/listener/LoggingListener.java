@@ -32,12 +32,12 @@ public class LoggingListener implements SessionListener {
   private static final Logger logger = LoggerFactory.getLogger(LoggingListener.class);
 
   @Override
-  public void onCreate(Session session) throws StopProcessException {
+  public void onCreate(Session session) throws CloseSessionException {
     logger.info("Create SESSION[{}] for {}", session.getId(), session.getClientAddress());
   }
 
   @Override
-  public void onCommand(Session session, CommandMessage message) throws StopProcessException {
+  public void onCommand(Session session, CommandMessage message) throws CloseSessionException {
     logger.info("SESSION[{}] request:{}  {}:{}", session.getId(), message.getCommand(),
         message.getAddressType() != AddressType.DOMAIN_NAME ?
             message.getInetAddress() :

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package sockslib.utils;
+package sockslib.utils.jdbc;
 
 import java.io.InputStream;
 import java.math.BigDecimal;

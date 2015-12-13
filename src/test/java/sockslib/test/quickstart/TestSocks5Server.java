@@ -33,10 +33,10 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-import static sockslib.test.SSLResource.PASSWORD;
-import static sockslib.test.SSLResource.getClientSSLConfigPath;
-import static sockslib.test.SSLResource.getServerKeyStorePath;
-import static sockslib.test.SSLResource.getServerSSLConfigPath;
+import static socklib.test.SSLResource.PASSWORD;
+import static socklib.test.SSLResource.getClientSSLConfigPath;
+import static socklib.test.SSLResource.getServerKeyStorePath;
+import static socklib.test.SSLResource.getServerSSLConfigPath;
 
 /**
  * The class <code>TestSocks5Server</code> is the test class for {@link Socks5Server}.

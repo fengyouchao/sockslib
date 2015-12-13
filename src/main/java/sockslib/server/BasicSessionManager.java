@@ -1,14 +1,16 @@
 package sockslib.server;
 
+import sockslib.server.listener.CloseSessionException;
+import sockslib.server.listener.CommandListener;
+import sockslib.server.listener.ExceptionListener;
+import sockslib.server.listener.SessionCloseListener;
+import sockslib.server.listener.SessionCreateListener;
 import sockslib.server.listener.SessionListener;
-import sockslib.server.listener.StopProcessException;
 import sockslib.server.msg.CommandMessage;
 
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The class <code>BasicSessionManager</code> implements {@link SessionManager}
@@ -21,7 +23,10 @@ public class BasicSessionManager implements SessionManager {
 
   private static int nextSessionId = 0;
   private Map<Long, Session> managedSessions = new HashMap<>();
-  private Map<String, SessionListener> sessionListeners = new HashMap<>();
+  private Map<String, SessionCreateListener> sessionCreateListenerMap = new HashMap<>();
+  private Map<String, SessionCloseListener> sessionCloseListenerMap = new HashMap<>();
+  private Map<String, CommandListener> commandListenerMap = new HashMap<>();
+  private Map<String, ExceptionListener> exceptionListenerMap = new HashMap<>();
 
   @Override
   public Session newSession(Socket socket) {
@@ -37,42 +42,48 @@ public class BasicSessionManager implements SessionManager {
   }
 
   @Override
-  public void sessionOnCreate(Session session) throws StopProcessException {
-    for (SessionListener listener : sessionListeners.values()) {
+  public void sessionOnCreate(Session session) throws CloseSessionException {
+    for (SessionCreateListener listener : sessionCreateListenerMap.values()) {
       listener.onCreate(session);
     }
   }
 
   @Override
-  public void sessionOnCommand(Session session, CommandMessage message) throws
-      StopProcessException {
-    for (SessionListener listener : sessionListeners.values()) {
+  public void sessionOnCommand(Session session, CommandMessage message)
+      throws CloseSessionException {
+    for (CommandListener listener : commandListenerMap.values()) {
       listener.onCommand(session, message);
     }
   }
 
   @Override
   public void sessionOnException(Session session, Exception exception) {
-    for (SessionListener listener : sessionListeners.values()) {
+    for (ExceptionListener listener : exceptionListenerMap.values()) {
       listener.onException(session, exception);
     }
   }
 
   @Override
   public void sessionOnClose(Session session) {
-    for (SessionListener listener : sessionListeners.values()) {
+    for (SessionCloseListener listener : sessionCloseListenerMap.values()) {
       listener.onClose(session);
     }
   }
 
   @Override
   public void removeSessionListener(String name) {
-    sessionListeners.remove(name);
+    this.removeCommandListener(name);
+    this.removeExceptionListener(name);
+    this.removeSessionCloseListener(name);
+    this.removeSessionCreateListener(name);
   }
 
   @Override
   public void addSessionListener(String name, SessionListener listener) {
-    sessionListeners.put(name, listener);
+    this.onCommand(name, listener);
+    this.onException(name, listener);
+    this.onSessionClose(name, listener);
+    this.onSessionCreate(name, listener);
   }
 
   @Override
@@ -80,11 +91,44 @@ public class BasicSessionManager implements SessionManager {
     return managedSessions;
   }
 
-  public Map<String, SessionListener> getSessionListeners() {
-    return sessionListeners;
+  @Override
+  public SessionManager onSessionClose(String name, SessionCloseListener listener) {
+    sessionCloseListenerMap.put(name, listener);
+    return this;
   }
 
-  public void setSessionListeners(Map<String, SessionListener> sessionListeners) {
-    this.sessionListeners = checkNotNull(sessionListeners, "sessionListeners");
+  @Override
+  public SessionManager onSessionCreate(String name, SessionCreateListener listener) {
+    sessionCreateListenerMap.put(name, listener);
+    return this;
   }
+
+  @Override
+  public SessionManager onCommand(String name, CommandListener listener) {
+    commandListenerMap.put(name, listener);
+    return this;
+  }
+
+  @Override
+  public SessionManager onException(String name, ExceptionListener listener) {
+    exceptionListenerMap.put(name, listener);
+    return this;
+  }
+
+  public SessionCloseListener removeSessionCloseListener(String name){
+    return sessionCloseListenerMap.remove(name);
+  }
+
+  public SessionCreateListener removeSessionCreateListener(String name){
+    return sessionCreateListenerMap.remove(name);
+  }
+
+  public CommandListener removeCommandListener(String name){
+    return commandListenerMap.remove(name);
+  }
+
+  public ExceptionListener removeExceptionListener(String name){
+    return exceptionListenerMap.remove(name);
+  }
+
 }

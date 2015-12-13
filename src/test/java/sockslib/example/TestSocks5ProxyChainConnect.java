@@ -12,11 +12,12 @@
  * the License.
  */
 
-package sockslib.test;
+package sockslib.example;
 
+import sockslib.client.Socks5;
 import sockslib.client.SocksProxy;
-import sockslib.client.SocksProxyFactory;
 import sockslib.client.SocksSocket;
+import sockslib.common.UsernamePasswordCredentials;
 import sockslib.utils.ResourceUtil;
 
 import java.io.IOException;
@@ -26,7 +27,15 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-public class TestSocksFactory {
+/**
+ * <code>TestSocks5Connect</code> is a test class. It use SOCKS5's CONNECT command to query WHOIS
+ * from a WHOIS server.
+ *
+ * @author Youchao Feng
+ * @version 1.0
+ * @date Mar 24, 2015 10:22:42 PM
+ */
+public class TestSocks5ProxyChainConnect {
 
   public static void main(String[] args) {
 
@@ -34,33 +43,45 @@ public class TestSocksFactory {
     InputStream inputStream = null;
     OutputStream outputStream = null;
     StringBuffer response = null;
-    int length = 0;
     byte[] buffer = new byte[2048];
+    int length = 0;
+
+    SocksProxy proxy1 = new Socks5(new InetSocketAddress("localhost", 1080));
+    proxy1.setCredentials(new UsernamePasswordCredentials("socks", "1234"));
+    SocksProxy proxy2 = new Socks5(new InetSocketAddress("localhost", 1081));
+    proxy2.setCredentials(new UsernamePasswordCredentials("socks", "1234"));
+
+    SocksProxy proxy3 = new Socks5(new InetSocketAddress("localhost", 1082));
+    proxy3.setCredentials(new UsernamePasswordCredentials("socks", "1234"));
+
+    proxy1.setChainProxy(proxy2.setChainProxy(proxy3));
+
+    System.out.println("USE proxy:" + proxy1);
 
     try {
-      SocksProxy proxy = SocksProxyFactory.parse(
-          "localhost,1080,,,classpath:client-ssl-config/clientTrust.jks,"
-              + "123456,classpath:client-ssl-config/client.jks,123456");
 
-      socket = new SocksSocket(proxy);
+      socket = new SocksSocket(proxy1);
       socket.connect(new InetSocketAddress("whois.internic.net", 43));
+
       inputStream = socket.getInputStream();
       outputStream = socket.getOutputStream();
       PrintWriter printWriter = new PrintWriter(outputStream);
       printWriter.print("domain google.com\r\n");
       printWriter.flush();
 
+      length = 0;
       response = new StringBuffer();
       while ((length = inputStream.read(buffer)) > 0) {
         response.append(new String(buffer, 0, length));
       }
-
       System.out.println(response.toString());
+
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
       ResourceUtil.close(inputStream, outputStream, socket);
     }
+
   }
 
 }

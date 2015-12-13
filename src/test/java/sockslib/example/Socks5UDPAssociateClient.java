@@ -12,7 +12,7 @@
  * the License.
  */
 
-package sockslib.test;
+package sockslib.example;
 
 import sockslib.client.Socks5;
 import sockslib.client.Socks5DatagramSocket;
@@ -25,7 +25,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 
-public class TestSocks5UDPAssociate {
+public class Socks5UDPAssociateClient {
 
   public static void main(String[] args) throws InterruptedException {
 

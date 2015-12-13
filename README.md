@@ -16,15 +16,15 @@ If you are looking for a SOCKS5 server instead of a SOKCS5 library, I hope [Esoc
 * [SOCKS Protocol Version 5](http://www.ietf.org/rfc/rfc1928.txt)
 * [Username/Password Authentication for SOCKS V5](http://www.ietf.org/rfc/rfc1929.txt)
 
-## Featrues
+## Features
 
 ### Client
 
 * TCP proxy
 * UDP proxy
 * Bind
-* Anonymouse authenticaion
-* USERNAME/PASSWORD authencation
+* Anonymous authentication
+* USERNAME/PASSWORD authentication
 * Proxy chain
 
 ### Server
@@ -32,12 +32,16 @@ If you are looking for a SOCKS5 server instead of a SOKCS5 library, I hope [Esoc
 * TCP proxy
 * UDP proxy
 * Bind
-* Anonymouse authenticaion
-* USERNAME/PASSWORD authencation
+* Anonymous authentication
+* USERNAME/PASSWORD authentication
 * Proxy chain
 * Black or white IP lists for clients
 
 ## Quick start
+
+#### Environment
+
+* JDK 8+
 
 #### Dependencies
 
@@ -49,7 +53,7 @@ You should put following libraries in your project's *CLASSPATH*:
 * [log4j-core-2.4.jar](https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.4/log4j-core-2.4.jar)
 * [guava-18.0.jar](https://repo1.maven.org/maven2/com/google/guava/guava/18.0/guava-18.0.jar)
 
-### SCOKS5 Client
+### SOCKS5 Client
 
 #### CONNECT
 

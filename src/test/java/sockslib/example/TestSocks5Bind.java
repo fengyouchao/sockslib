@@ -12,7 +12,7 @@
  * the License.
  */
 
-package sockslib.test;
+package sockslib.example;
 
 import sockslib.client.Socks5;
 import sockslib.client.SocksServerSocket;

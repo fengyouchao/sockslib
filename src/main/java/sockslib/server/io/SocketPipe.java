@@ -175,7 +175,7 @@ public class SocketPipe implements Pipe {
     @Override
     public void onStop(Pipe pipe) {
       StreamPipe streamPipe = (StreamPipe) pipe;
-      logger.debug("Pipe[{}] stopped", streamPipe.getName());
+      logger.trace("Pipe[{}] stopped", streamPipe.getName());
       close();
     }
 

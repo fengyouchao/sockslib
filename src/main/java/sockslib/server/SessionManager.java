@@ -1,7 +1,11 @@
 package sockslib.server;
 
+import sockslib.server.listener.CloseSessionException;
+import sockslib.server.listener.CommandListener;
+import sockslib.server.listener.ExceptionListener;
+import sockslib.server.listener.SessionCloseListener;
+import sockslib.server.listener.SessionCreateListener;
 import sockslib.server.listener.SessionListener;
-import sockslib.server.listener.StopProcessException;
 import sockslib.server.msg.CommandMessage;
 
 import java.net.Socket;
@@ -32,9 +36,9 @@ public interface SessionManager {
    */
   Session getSession(long id);
 
-  void sessionOnCreate(Session session) throws StopProcessException;
+  void sessionOnCreate(Session session) throws CloseSessionException;
 
-  void sessionOnCommand(Session session, CommandMessage message) throws StopProcessException;
+  void sessionOnCommand(Session session, CommandMessage message) throws CloseSessionException;
 
   void sessionOnException(Session session, Exception exception);
 
@@ -50,7 +54,7 @@ public interface SessionManager {
   /**
    * Add a {@link SessionListener}.
    *
-   * @param name name of {@link SessionListener}.
+   * @param name     name of {@link SessionListener}.
    * @param listener instance of {@link SessionListener}.
    */
   void addSessionListener(String name, SessionListener listener);
@@ -61,4 +65,14 @@ public interface SessionManager {
    * @return all managed sessions.
    */
   Map<Long, Session> getManagedSessions();
+
+  SessionManager onSessionClose(String name, SessionCloseListener listener);
+
+  SessionManager onSessionCreate(String name, SessionCreateListener listener);
+
+  SessionManager onCommand(String name, CommandListener listener);
+
+  SessionManager onException(String name, ExceptionListener listener);
+
+
 }

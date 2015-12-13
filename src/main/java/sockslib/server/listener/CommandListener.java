@@ -14,13 +14,25 @@
 
 package sockslib.server.listener;
 
+import sockslib.server.Session;
+import sockslib.server.msg.CommandMessage;
+
 /**
- * The class <code>SessionListener</code> represents a session listener.
+ * This interface <code>CommandListener</code> is a command listener.
  *
  * @author Youchao Feng
  * @version 1.0
- * @date Sep 30, 2015 12:38 PM
+ * @date Nov 10, 2015 4:59 PM
  */
-public interface SessionListener
-    extends SessionCreateListener, SessionCloseListener, CommandListener, ExceptionListener {
+@FunctionalInterface
+public interface CommandListener {
+
+  /**
+   * When a client request a SOCKS5 command, this method will be called.
+   *
+   * @param session Current session.
+   * @param message The {@link CommandMessage} sent to server.
+   * @throws CloseSessionException
+   */
+  void onCommand(Session session, CommandMessage message) throws CloseSessionException;
 }

@@ -15,31 +15,32 @@
 package sockslib.server.listener;
 
 /**
- * <code>StopProcessException</code> is an exception to stop a session in {@link SessionListener}.
+ * <code>CloseSessionException</code> is an exception to request
+ * {@link sockslib.server.SocksHandler} to close current session.
  *
  * @author Youchao Feng
  * @version 1.0
  * @date Nov 04, 2015 4:06 PM
  */
-public class StopProcessException extends Exception {
+public class CloseSessionException extends Exception {
 
-  public StopProcessException() {
+  public CloseSessionException() {
     super("Stop Process");
   }
 
-  public StopProcessException(Throwable cause) {
+  public CloseSessionException(Throwable cause) {
     super(cause);
   }
 
-  public StopProcessException(String message) {
+  public CloseSessionException(String message) {
     super(message);
   }
 
-  public StopProcessException(String message, Throwable cause) {
+  public CloseSessionException(String message, Throwable cause) {
     super(message, cause);
   }
 
-  protected StopProcessException(String message, Throwable cause, boolean enableSuppression,
+  protected CloseSessionException(String message, Throwable cause, boolean enableSuppression,
       boolean writableStackTrace) {
     super(message, cause, enableSuppression, writableStackTrace);
   }

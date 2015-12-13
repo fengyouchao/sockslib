@@ -12,7 +12,7 @@
  * the License.
  */
 
-package sockslib.test;
+package sockslib.example;
 
 import sockslib.common.SSLConfiguration;
 import sockslib.server.SocksProxyServer;
@@ -24,16 +24,16 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * The class <code>SSLBasedProxyServer</code> is a test class to start a SSL based SOCKS5 proxy
+ * The class <code>SSLSocks5Server</code> is a test class to start a SSL based SOCKS5 proxy
  * server.
  *
  * @author Youchao Feng
  * @version 1.0
  * @since 1.0
  */
-public class SSLBasedProxyServer {
+public class SSLSocks5Server {
 
-  private static final Logger logger = LoggerFactory.getLogger(SSLBasedProxyServer.class);
+  private static final Logger logger = LoggerFactory.getLogger(SSLSocks5Server.class);
 
   public static void main(String[] args) throws IOException {
     Timer.open();

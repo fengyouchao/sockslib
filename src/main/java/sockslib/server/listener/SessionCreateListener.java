@@ -12,38 +12,24 @@
  * the License.
  */
 
-package sockslib.common.http;
+package sockslib.server.listener;
+
+import sockslib.server.Session;
 
 /**
- * The class <code>HttpBody</code> represents HTTP body.
- *
  * @author Youchao Feng
  * @version 1.0
- * @date Oct 10,2015 10:40 PM
+ * @date Nov 10, 2015 5:01 PM
  */
-public class HttpBody {
+@FunctionalInterface
+public interface SessionCreateListener {
 
   /**
-   * The data in body of HTTP.
-   */
-  private byte[] data;
-
-  /**
-   * Constructs an instance of {@link HttpBody} with data.
+   * When a session created, this method will be called by {@link sockslib.server.SocksHandler}.
    *
-   * @param data data in HTTP body.
+   * @param session Current session.
+   * @throws CloseSessionException This exception will tell {@link sockslib.server.SocksHandler}
+   *                               to close session.
    */
-  public HttpBody(byte[] data) {
-    this.data = data;
-  }
-
-  /**
-   * Returns data in HTTP body.
-   *
-   * @return data in HTTP body.
-   */
-  public byte[] getData() {
-    return data;
-  }
-
+  void onCreate(Session session) throws CloseSessionException;
 }

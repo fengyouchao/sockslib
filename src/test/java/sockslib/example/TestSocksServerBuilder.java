@@ -1,4 +1,4 @@
-package sockslib.test;
+package sockslib.example;
 
 import sockslib.common.methods.UsernamePasswordMethod;
 import sockslib.server.SocksProxyServer;

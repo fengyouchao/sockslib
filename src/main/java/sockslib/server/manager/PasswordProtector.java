@@ -23,6 +23,7 @@ package sockslib.server.manager;
  * @version 1.0
  * @date Sep 6, 2015
  */
+@FunctionalInterface
 public interface PasswordProtector {
 
   /**

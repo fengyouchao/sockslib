@@ -12,7 +12,7 @@
  * the License.
  */
 
-package sockslib.test;
+package sockslib.example;
 
 import java.io.InputStream;
 import java.io.OutputStream;

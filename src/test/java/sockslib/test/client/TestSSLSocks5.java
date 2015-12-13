@@ -19,7 +19,7 @@ import sockslib.client.SocksProxy;
 import sockslib.common.SSLConfigurationBuilder;
 import sockslib.server.SocksProxyServer;
 import sockslib.server.SocksServerBuilder;
-import sockslib.test.SSLResource;
+import socklib.test.SSLResource;
 import org.junit.After;
 import org.junit.Test;
 

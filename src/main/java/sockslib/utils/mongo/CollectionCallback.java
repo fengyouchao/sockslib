@@ -19,12 +19,12 @@ import org.bson.Document;
 
 /**
  * The interface <code>CollectionCallback</code> is a callback for
- * {@link MongoDBUtil#keepConnect(String, CollectionCallback)}.
+ * {@link MongoDBUtil#execute(String, CollectionCallback)}.
  *
  * @author Youchao
  * @version 1.0
  * @date Aug 23, 2015
- * @see MongoDBUtil#keepConnect(String, CollectionCallback)
+ * @see MongoDBUtil#execute(String, CollectionCallback)
  * @see MongoDBUtil#connect(String, CollectionCallback)
  */
 public interface CollectionCallback<T> {
@@ -33,9 +33,9 @@ public interface CollectionCallback<T> {
    * This method is a callback method.
    *
    * @param collection The collection of MongoDB
-   * @return The value which you want {@link MongoDBUtil#keepConnect(String, CollectionCallback)}
+   * @return The value which you want {@link MongoDBUtil#execute(String, CollectionCallback)}
    * returned;
    */
-  T process(MongoCollection<Document> collection);
+  T doInCollection(MongoCollection<Document> collection);
 
 }

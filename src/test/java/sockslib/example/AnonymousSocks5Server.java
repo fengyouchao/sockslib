@@ -12,7 +12,7 @@
  * the License.
  */
 
-package sockslib.test;
+package sockslib.example;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,15 +25,15 @@ import sockslib.utils.Timer;
 import java.io.IOException;
 
 /**
- * The class <code>TestProxyServer</code> a test class to start a SOCKS5 proxy server.
+ * The class <code>AnonymousSocks5Server</code> a test class to start a SOCKS5 proxy server.
  *
  * @author Youchao Feng
  * @version 1.0
  * @date Apr 19, 2015 11:43:22 PM
  */
-public class TestProxyServer {
+public class AnonymousSocks5Server {
 
-  private static final Logger logger = LoggerFactory.getLogger(TestProxyServer.class);
+  private static final Logger logger = LoggerFactory.getLogger(AnonymousSocks5Server.class);
 
   public static void main(String[] args) throws IOException {
     Timer.open();
