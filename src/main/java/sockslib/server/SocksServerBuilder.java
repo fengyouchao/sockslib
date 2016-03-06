@@ -8,6 +8,7 @@ import sockslib.common.methods.NoAuthenticationRequiredMethod;
 import sockslib.common.methods.SocksMethod;
 import sockslib.common.methods.UsernamePasswordMethod;
 import sockslib.server.io.PipeListener;
+import sockslib.server.listener.PipeInitializer;
 import sockslib.server.listener.SessionListener;
 import sockslib.server.manager.MemoryBasedUserManager;
 import sockslib.server.manager.UserManager;
@@ -48,7 +49,7 @@ public class SocksServerBuilder {
   private SessionManager sessionManager = new BasicSessionManager();
   private SSLConfiguration sslConfiguration;
   private Map<String, SessionListener> sessionListeners = new HashMap<>();
-  private List<PipeListener> pipeListeners = new ArrayList<>();
+  private PipeInitializer pipeInitializer;
 
   /**
    * Creates a <code>SocksServerBuilder</code> with a <code>Class<? extends {@link
@@ -151,15 +152,8 @@ public class SocksServerBuilder {
     return this;
   }
 
-
-  /**
-   * Add a {@link PipeListener}.
-   *
-   * @param pipeListener Instance of {@link PipeListener}.
-   * @return Instance of {@link SocksServerBuilder}.
-   */
-  public SocksServerBuilder addPipeListener(PipeListener pipeListener) {
-    pipeListeners.add(pipeListener);
+  public SocksServerBuilder setPipeInitializer(PipeInitializer pipeInitializer) {
+    this.pipeInitializer = pipeInitializer;
     return this;
   }
 
@@ -253,7 +247,7 @@ public class SocksServerBuilder {
     proxyServer.setBindPort(bindPort);
     proxyServer.setDaemon(daemon);
     proxyServer.setSessionManager(sessionManager);
-    proxyServer.setPipeListeners(pipeListeners);
+    proxyServer.setPipeInitializer(pipeInitializer);
     if (socksMethods == null) {
       socksMethods = new HashSet<>();
       socksMethods.add(new NoAuthenticationRequiredMethod());

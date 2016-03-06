@@ -16,10 +16,9 @@ package sockslib.server;
 
 import sockslib.client.SocksProxy;
 import sockslib.common.methods.SocksMethod;
-import sockslib.server.io.PipeListener;
+import sockslib.server.listener.PipeInitializer;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
@@ -168,15 +167,7 @@ public interface SocksProxyServer {
    */
   void setSessionManager(SessionManager sessionManager);
 
-  /**
-   * Sets {@link PipeListener}s.
-   * @param listeners List of {@link PipeListener}.
-   */
-  void setPipeListeners(List<PipeListener> listeners);
+  PipeInitializer getPipeInitializer();
 
-  /**
-   * Returns list of {@link PipeListener}.
-   * @return {@link PipeListener}s.
-   */
-  List<PipeListener> getPipeListeners();
+  void setPipeInitializer(PipeInitializer pipeInitializer);
 }

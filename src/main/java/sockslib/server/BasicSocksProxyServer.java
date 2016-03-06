@@ -20,14 +20,12 @@ import sockslib.client.SocksProxy;
 import sockslib.common.methods.SocksMethod;
 import sockslib.common.net.MonitorSocketWrapper;
 import sockslib.common.net.NetworkMonitor;
-import sockslib.server.io.PipeListener;
+import sockslib.server.listener.PipeInitializer;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -125,8 +123,7 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
 
   private NetworkMonitor networkMonitor = new NetworkMonitor();
 
-  private List<PipeListener> pipeListeners = new ArrayList<>();
-
+  private PipeInitializer pipeInitializer;
 
   /**
    * Constructs a {@link BasicSocksProxyServer} by a {@link SocksHandler} class. The bind port is
@@ -365,12 +362,12 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
   }
 
   @Override
-  public List<PipeListener> getPipeListeners() {
-    return pipeListeners;
+  public PipeInitializer getPipeInitializer() {
+    return pipeInitializer;
   }
 
   @Override
-  public void setPipeListeners(List<PipeListener> pipeListeners) {
-    this.pipeListeners = pipeListeners;
+  public void setPipeInitializer(PipeInitializer pipeInitializer) {
+    this.pipeInitializer = pipeInitializer;
   }
 }

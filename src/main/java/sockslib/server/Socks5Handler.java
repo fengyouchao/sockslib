@@ -179,7 +179,9 @@ public class Socks5Handler implements SocksHandler {
     Pipe pipe = new SocketPipe(session.getSocket(), socket);
     pipe.setName("SESSION[" + session.getId() + "]");
     pipe.setBufferSize(bufferSize);
-    getSocksProxyServer().getPipeListeners().forEach(pipe::addPipeListener);
+    if(getSocksProxyServer().getPipeInitializer() != null){
+      pipe = getSocksProxyServer().getPipeInitializer().initialize(pipe);
+    }
     pipe.start(); // This method will build tow thread to run tow internal pipes.
 
     // wait for pipe exit.
