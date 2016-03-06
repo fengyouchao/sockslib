@@ -147,6 +147,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
+                            <mainClass>sockslib.quickstart.Socks5Server</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
