@@ -53,5 +53,6 @@ public class LoggingListener implements SessionListener {
   public void onException(Session session, Exception exception) {
     logger.error("SESSION[{}] occurred error:{}, message:{}", session.getId(), exception.getClass
         ().getSimpleName(), exception.getMessage());
+    exception.printStackTrace();
   }
 }

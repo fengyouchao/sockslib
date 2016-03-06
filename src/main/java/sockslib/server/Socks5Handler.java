@@ -22,6 +22,7 @@ import sockslib.common.ProtocolErrorException;
 import sockslib.common.SocksException;
 import sockslib.common.methods.SocksMethod;
 import sockslib.server.io.Pipe;
+import sockslib.server.io.PipeListener;
 import sockslib.server.io.SocketPipe;
 import sockslib.server.msg.CommandMessage;
 import sockslib.server.msg.CommandResponseMessage;
@@ -178,6 +179,7 @@ public class Socks5Handler implements SocksHandler {
     Pipe pipe = new SocketPipe(session.getSocket(), socket);
     pipe.setName("SESSION[" + session.getId() + "]");
     pipe.setBufferSize(bufferSize);
+    getSocksProxyServer().getPipeListeners().forEach(pipe::addPipeListener);
     pipe.start(); // This method will build tow thread to run tow internal pipes.
 
     // wait for pipe exit.

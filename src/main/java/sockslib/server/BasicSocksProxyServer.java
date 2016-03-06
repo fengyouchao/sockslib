@@ -20,11 +20,14 @@ import sockslib.client.SocksProxy;
 import sockslib.common.methods.SocksMethod;
 import sockslib.common.net.MonitorSocketWrapper;
 import sockslib.common.net.NetworkMonitor;
+import sockslib.server.io.PipeListener;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -121,6 +124,8 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
   private SocksProxy proxy;
 
   private NetworkMonitor networkMonitor = new NetworkMonitor();
+
+  private List<PipeListener> pipeListeners = new ArrayList<>();
 
 
   /**
@@ -357,5 +362,15 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
   @Override
   public void setSessionManager(SessionManager sessionManager) {
     this.sessionManager = sessionManager;
+  }
+
+  @Override
+  public List<PipeListener> getPipeListeners() {
+    return pipeListeners;
+  }
+
+  @Override
+  public void setPipeListeners(List<PipeListener> pipeListeners) {
+    this.pipeListeners = pipeListeners;
   }
 }

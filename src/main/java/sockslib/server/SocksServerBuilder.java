@@ -7,13 +7,16 @@ import sockslib.common.SSLConfiguration;
 import sockslib.common.methods.NoAuthenticationRequiredMethod;
 import sockslib.common.methods.SocksMethod;
 import sockslib.common.methods.UsernamePasswordMethod;
+import sockslib.server.io.PipeListener;
 import sockslib.server.listener.SessionListener;
 import sockslib.server.manager.MemoryBasedUserManager;
 import sockslib.server.manager.UserManager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -45,6 +48,7 @@ public class SocksServerBuilder {
   private SessionManager sessionManager = new BasicSessionManager();
   private SSLConfiguration sslConfiguration;
   private Map<String, SessionListener> sessionListeners = new HashMap<>();
+  private List<PipeListener> pipeListeners = new ArrayList<>();
 
   /**
    * Creates a <code>SocksServerBuilder</code> with a <code>Class<? extends {@link
@@ -147,6 +151,18 @@ public class SocksServerBuilder {
     return this;
   }
 
+
+  /**
+   * Add a {@link PipeListener}.
+   *
+   * @param pipeListener Instance of {@link PipeListener}.
+   * @return Instance of {@link SocksServerBuilder}.
+   */
+  public SocksServerBuilder addPipeListener(PipeListener pipeListener) {
+    pipeListeners.add(pipeListener);
+    return this;
+  }
+
   public SocksServerBuilder setSocksMethods(Set<SocksMethod> methods) {
     socksMethods = checkNotNull(methods, "Argument [methods] may not be null");
     return this;
@@ -237,6 +253,7 @@ public class SocksServerBuilder {
     proxyServer.setBindPort(bindPort);
     proxyServer.setDaemon(daemon);
     proxyServer.setSessionManager(sessionManager);
+    proxyServer.setPipeListeners(pipeListeners);
     if (socksMethods == null) {
       socksMethods = new HashSet<>();
       socksMethods.add(new NoAuthenticationRequiredMethod());

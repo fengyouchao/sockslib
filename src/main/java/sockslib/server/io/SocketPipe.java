@@ -38,8 +38,8 @@ public class SocketPipe implements Pipe {
    */
   protected static final Logger logger = LoggerFactory.getLogger(SocketPipe.class);
 
-  private static final String INPUT_PIPE_NAME = "INPUT_PIPE";
-  private static final String OUTPUT_PIPE_NAME = "OUTPUT_PIPE";
+  public static final String INPUT_PIPE_NAME = "INPUT_PIPE";
+  public static final String OUTPUT_PIPE_NAME = "OUTPUT_PIPE";
 
   /**
    * Pipe one.
@@ -142,8 +142,8 @@ public class SocketPipe implements Pipe {
 
   @Override
   public void addPipeListener(PipeListener pipeListener) {
-    // TODO Auto-generated method stub
-
+    pipe1.addPipeListener(pipeListener);
+    pipe2.addPipeListener(pipeListener);
   }
 
   @Override
