@@ -14,12 +14,15 @@
 
 package sockslib.server.io;
 
-import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 
 /**
@@ -40,6 +43,8 @@ public class SocketPipe implements Pipe {
 
   public static final String INPUT_PIPE_NAME = "INPUT_PIPE";
   public static final String OUTPUT_PIPE_NAME = "OUTPUT_PIPE";
+  public static final String ATTR_SOURCE_SOCKET = "SOURCE_SOCKET";
+  public static final String ATTR_DESTINATION_SOCKET = "DESTINATION_SOCKET";
 
   /**
    * Pipe one.
@@ -63,6 +68,8 @@ public class SocketPipe implements Pipe {
 
   private String name;
 
+  private Map<String, Object> attributes = new HashMap<>();
+
   /**
    * flag.
    */
@@ -78,10 +85,14 @@ public class SocketPipe implements Pipe {
    * @throws IOException If an I/O error occurred.
    */
   public SocketPipe(Socket socket1, Socket socket2) throws IOException {
-    this.socket1 = Preconditions.checkNotNull(socket1, "Argument [socks1] may not be null");
-    this.socket2 = Preconditions.checkNotNull(socket2, "Argument [socks1] may not be null");
+    this.socket1 = checkNotNull(socket1, "Argument [socks1] may not be null");
+    this.socket2 = checkNotNull(socket2, "Argument [socks1] may not be null");
     pipe1 = new StreamPipe(socket1.getInputStream(), socket2.getOutputStream(), OUTPUT_PIPE_NAME);
+    pipe1.setAttribute(ATTR_SOURCE_SOCKET, socket1);
+    pipe1.setAttribute(ATTR_DESTINATION_SOCKET, socket2);
     pipe2 = new StreamPipe(socket2.getInputStream(), socket1.getOutputStream(), INPUT_PIPE_NAME);
+    pipe2.setAttribute(ATTR_SOURCE_SOCKET, socket2);
+    pipe2.setAttribute(ATTR_DESTINATION_SOCKET, socket1);
 
     pipe1.addPipeListener(listener);
     pipe2.addPipeListener(listener);
@@ -159,6 +170,21 @@ public class SocketPipe implements Pipe {
   @Override
   public void setName(String name) {
     this.name = name;
+  }
+
+  @Override
+  public void setAttribute(String name, Object value) {
+    attributes.put(name, value);
+  }
+
+  @Override
+  public Object getAttribute(String name) {
+    return attributes.get(name);
+  }
+
+  @Override
+  public Map<String, Object> getAttributes() {
+    return attributes;
   }
 
 

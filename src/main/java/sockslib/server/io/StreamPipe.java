@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -46,6 +48,8 @@ public class StreamPipe implements Runnable, Pipe {
    * Default buffer size.
    */
   private static final int BUFFER_SIZE = 1024 * 1024 * 5;
+
+  private Map<String, Object> attributes = new HashMap<>();
 
   /**
    * Listeners
@@ -256,6 +260,21 @@ public class StreamPipe implements Runnable, Pipe {
   @Override
   public void setName(String name) {
     this.name = name;
+  }
+
+  @Override
+  public void setAttribute(String name, Object value) {
+    attributes.put(name, value);
+  }
+
+  @Override
+  public Object getAttribute(String name) {
+    return attributes.get(name);
+  }
+
+  @Override
+  public Map<String, Object> getAttributes() {
+    return attributes;
   }
 
   public Thread getRunningThread() {

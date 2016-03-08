@@ -16,6 +16,8 @@ package sockslib.server.io;
 
 
 
+import java.util.Map;
+
 /**
  * The class <code>Pipe</code> represents a pipe that can transfer byte.
  *
@@ -95,4 +97,10 @@ public interface Pipe {
    */
   void setName(String name);
 
+
+  void setAttribute(String name, Object value);
+
+  Object getAttribute(String name);
+
+  Map<String, Object> getAttributes();
 }
