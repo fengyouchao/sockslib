@@ -45,6 +45,7 @@ public class SocketPipe implements Pipe {
   public static final String OUTPUT_PIPE_NAME = "OUTPUT_PIPE";
   public static final String ATTR_SOURCE_SOCKET = "SOURCE_SOCKET";
   public static final String ATTR_DESTINATION_SOCKET = "DESTINATION_SOCKET";
+  public static final String ATTR_PARENT_PIPE = "PARENT_PIPE";
 
   /**
    * Pipe one.
@@ -96,6 +97,8 @@ public class SocketPipe implements Pipe {
 
     pipe1.addPipeListener(listener);
     pipe2.addPipeListener(listener);
+    pipe1.setAttribute(ATTR_PARENT_PIPE, this);
+    pipe2.setAttribute(ATTR_PARENT_PIPE, this);
   }
 
   @Override
