@@ -13,6 +13,7 @@ import sockslib.server.listener.SessionListener;
 import sockslib.server.manager.MemoryBasedUserManager;
 import sockslib.server.manager.UserManager;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ public class SocksServerBuilder {
   private UserManager userManager;
   private SocksProxy proxy;
   private int timeout;
+  private InetAddress bindAddr;
   private int bindPort = DEFAULT_PORT;
   private boolean daemon = false;
   private ExecutorService executorService;
@@ -182,6 +184,11 @@ public class SocksServerBuilder {
     return this;
   }
 
+  public SocksServerBuilder setBindAddr(InetAddress bindAddr) {
+    this.bindAddr = bindAddr;
+    return this;
+  }
+
   public SocksServerBuilder setBindPort(int bindPort) {
     this.bindPort = bindPort;
     return this;
@@ -244,6 +251,7 @@ public class SocksServerBuilder {
       proxyServer = new SSLSocksProxyServer(socksHandlerClass, sslConfiguration);
     }
     proxyServer.setTimeout(timeout);
+    proxyServer.setBindAddr(bindAddr);
     proxyServer.setBindPort(bindPort);
     proxyServer.setDaemon(daemon);
     proxyServer.setSessionManager(sessionManager);
