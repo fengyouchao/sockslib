@@ -1,11 +1,11 @@
 /*
  * Copyright 2015-2025 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -23,6 +23,7 @@ import sockslib.common.net.NetworkMonitor;
 import sockslib.server.listener.PipeInitializer;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -118,6 +119,8 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
   private int bufferSize = 1024 * 1024 * 5;
 
   private int bindPort = DEFAULT_SOCKS_PORT;
+
+  private InetAddress bindAddr;
 
   private SocksProxy proxy;
 
@@ -221,15 +224,15 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
 
   @Override
   public void start() throws IOException {
-    serverSocket = createServerSocket(bindPort);
+    serverSocket = createServerSocket(bindPort, bindAddr);
     thread = new Thread(this);
     thread.setName("fs-thread");
     thread.setDaemon(daemon);
     thread.start();
   }
 
-  protected ServerSocket createServerSocket(int bindPort) throws IOException {
-    return new ServerSocket(bindPort);
+  protected ServerSocket createServerSocket(int bindPort, InetAddress bindAddr) throws IOException {
+    return new ServerSocket(bindPort, 50, bindAddr);
   }
 
   @Override
@@ -313,6 +316,16 @@ public class BasicSocksProxyServer implements SocksProxyServer, Runnable {
   @Override
   public void setProxy(SocksProxy proxy) {
     this.proxy = proxy;
+  }
+
+  @Override
+  public InetAddress getBindAddr() {
+    return bindAddr;
+  }
+
+  @Override
+  public void setBindAddr(InetAddress bindAddr) {
+    this.bindAddr = bindAddr;
   }
 
   @Override

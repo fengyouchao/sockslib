@@ -1,11 +1,11 @@
 /*
  * Copyright 2015-2025 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -19,6 +19,7 @@ import sockslib.common.SocksException;
 
 import javax.net.ssl.SSLServerSocket;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -58,9 +59,9 @@ public class SSLSocksProxyServer extends BasicSocksProxyServer {
   }
 
   @Override
-  protected ServerSocket createServerSocket(int bindPort) throws IOException {
+  protected ServerSocket createServerSocket(int bindPort, InetAddress bindAddr) throws IOException {
     try {
-      return createSSLServer(bindPort);
+      return createSSLServer(bindPort, bindAddr);
     } catch (Exception e) {
       throw new SocksException(e.getMessage());
     }
@@ -74,9 +75,9 @@ public class SSLSocksProxyServer extends BasicSocksProxyServer {
     this.configuration = configuration;
   }
 
-  public ServerSocket createSSLServer(int port) throws Exception {
+  public ServerSocket createSSLServer(int port, InetAddress bindAddr) throws Exception {
     SSLServerSocket serverSocket =
-        (SSLServerSocket) configuration.getSSLServerSocketFactory().createServerSocket(port);
+        (SSLServerSocket) configuration.getSSLServerSocketFactory().createServerSocket(port, 50, bindAddr);
     if (configuration.isNeedClientAuth()) {
       serverSocket.setNeedClientAuth(true);
     } else {
