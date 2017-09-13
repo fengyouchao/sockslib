@@ -182,6 +182,11 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
         inetAddress = InetAddress.getByAddress(addressBytes);
         break;
 
+      case AddressType.IPV6:
+        byte[] addressBytes6 = StreamUtil.read(inputStream, 16);
+        inetAddress = InetAddress.getByAddress(addressBytes6);
+        break;
+
       case AddressType.DOMAIN_NAME:
         int domainLength = checkEnd(inputStream.read());
         if (domainLength < 1) {
