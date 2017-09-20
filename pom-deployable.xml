@@ -5,7 +5,7 @@
 
     <groupId>com.github.mike10004</groupId>
     <artifactId>fengyouchao-sockslib</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>sockslibs</name>
@@ -37,12 +37,14 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>${log4j.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

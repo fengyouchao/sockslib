@@ -14,6 +14,7 @@
 
 package sockslib.utils.mongo;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
@@ -21,7 +22,6 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
-import org.apache.logging.log4j.util.Strings;
 import org.bson.Document;
 
 /**
@@ -115,7 +115,7 @@ public class MongoDBUtil {
   }
 
   private MongoClient getConnectedClient() {
-    if (Strings.isEmpty(username)) {
+    if (Strings.isNullOrEmpty(username)) {
       return new MongoClient(host, port);
     } else {
       MongoCredential credential =
