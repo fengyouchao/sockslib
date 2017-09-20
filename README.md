@@ -6,10 +6,17 @@ See [Java API Documentation](http://fengyouchao.github.io/projects/fucksocks/api
 
 See [Wiki Page](http://git.oschina.net/fyc/fucksocks/wikis/home) (Chinese)
 
-If you are looking for a SOCKS5 server instead of a SOKCS5 library, I hope [Esocks](https://github.com/fengyouchao/esocks) can help you.
+If you are looking for a SOCKS5 server instead of a SOCKS5 library, I hope [Esocks](https://github.com/fengyouchao/esocks) can help you.
 
+## Maven
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.mike10004/sockslib.svg)](https://repo1.maven.org/maven2/com/github/mike10004/fengyouchao-sockslib/)
 
+    <dependency>
+        <groupId>com.github.mike10004</groupId>
+        <artifactId>fengyouchao-sockslib</artifactId>
+        <version>1.0.0</version> <!-- use latest version from Maven badge above -->
+    </dependency>
 
 #### References
  
