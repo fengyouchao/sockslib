@@ -3,6 +3,7 @@ package sockslib.example;
 import sockslib.common.methods.UsernamePasswordMethod;
 import sockslib.server.SocksProxyServer;
 import sockslib.server.SocksServerBuilder;
+import sockslib.server.UsernamePasswordAuthenticator;
 import sockslib.server.manager.MongoDBBasedUserManager;
 import sockslib.server.manager.MongoDBConfiguration;
 import sockslib.server.manager.UserManager;
@@ -22,8 +23,9 @@ public class TestSocksServerBuilder {
   public static void main(String[] args) {
     UserManager userManager = newDefaultUserManager();
     SocksProxyServer server =
-        SocksServerBuilder.newSocks5ServerBuilder().setUserManager(userManager).setSocksMethods
-            (new UsernamePasswordMethod()).build();
+        SocksServerBuilder.newSocks5ServerBuilder()
+                .setSocksMethods(new UsernamePasswordMethod(new UsernamePasswordAuthenticator(userManager)))
+                .build();
     try {
       server.start();
     } catch (IOException e) {

@@ -22,6 +22,7 @@ import sockslib.common.methods.NoAuthenticationRequiredMethod;
 import sockslib.common.methods.UsernamePasswordMethod;
 import sockslib.server.SocksProxyServer;
 import sockslib.server.SocksServerBuilder;
+import sockslib.server.UsernamePasswordAuthenticator;
 import sockslib.server.manager.MemoryBasedUserManager;
 import sockslib.server.manager.User;
 import sockslib.server.manager.UserManager;
@@ -107,8 +108,8 @@ public final class TestSocksSocket {
     UserManager userManager = new MemoryBasedUserManager();
     userManager.create(new User(username, password));
     SocksServerBuilder builder = SocksServerBuilder.newSocks5ServerBuilder();
-    builder.setBindPort(SOCKS_SERVER_PORT).setSocksMethods(new UsernamePasswordMethod())
-        .setUserManager(userManager);
+    builder.setBindPort(SOCKS_SERVER_PORT)
+            .setSocksMethods(new UsernamePasswordMethod(new UsernamePasswordAuthenticator(userManager)));
     socksProxyServer = builder.build();
     socksProxyServer.start();
   }

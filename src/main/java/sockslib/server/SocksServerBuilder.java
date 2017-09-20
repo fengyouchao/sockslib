@@ -6,19 +6,13 @@ import sockslib.client.SocksProxy;
 import sockslib.common.SSLConfiguration;
 import sockslib.common.methods.NoAuthenticationRequiredMethod;
 import sockslib.common.methods.SocksMethod;
-import sockslib.common.methods.UsernamePasswordMethod;
-import sockslib.server.io.PipeListener;
 import sockslib.server.listener.PipeInitializer;
 import sockslib.server.listener.SessionListener;
-import sockslib.server.manager.MemoryBasedUserManager;
-import sockslib.server.manager.UserManager;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -41,7 +35,6 @@ public class SocksServerBuilder {
 
   private Class<? extends SocksHandler> socksHandlerClass;
   private Set<SocksMethod> socksMethods;
-  private UserManager userManager;
   private SocksProxy proxy;
   private int timeout;
   private InetAddress bindAddr;
@@ -63,7 +56,6 @@ public class SocksServerBuilder {
   private SocksServerBuilder(Class<? extends SocksHandler> socksHandlerClass) {
     this.socksHandlerClass =
         checkNotNull(socksHandlerClass, "Argument [socksHandlerClass] may not be null");
-    userManager = new MemoryBasedUserManager();
   }
 
   /**
@@ -164,11 +156,6 @@ public class SocksServerBuilder {
     return this;
   }
 
-  public SocksServerBuilder setUserManager(UserManager userManager) {
-    this.userManager = checkNotNull(userManager, "Argument [userManager] may not be null");
-    return this;
-  }
-
   public SocksServerBuilder setProxy(SocksProxy proxy) {
     this.proxy = proxy;
     return this;
@@ -263,14 +250,6 @@ public class SocksServerBuilder {
     SocksMethod[] methods = new SocksMethod[socksMethods.size()];
     int i = 0;
     for (SocksMethod method : socksMethods) {
-      if (method instanceof UsernamePasswordMethod) {
-        if (userManager == null) {
-          userManager = new MemoryBasedUserManager();
-          userManager.addUser("fucksocks", "fucksocks");
-        }
-        ((UsernamePasswordMethod) method).setAuthenticator(new UsernamePasswordAuthenticator
-            (userManager));
-      }
       methods[i] = method;
       i++;
     }

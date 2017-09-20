@@ -13,6 +13,7 @@ import sockslib.common.methods.NoAuthenticationRequiredMethod;
 import sockslib.common.methods.UsernamePasswordMethod;
 import sockslib.server.SocksProxyServer;
 import sockslib.server.SocksServerBuilder;
+import sockslib.server.UsernamePasswordAuthenticator;
 import sockslib.server.listener.LoggingListener;
 import sockslib.server.manager.MemoryBasedUserManager;
 import sockslib.server.manager.User;
@@ -144,7 +145,7 @@ public class Socks5Server {
         String password = userPassword[1];
         userManager.create(new User(username, password));
       }
-      builder.setSocksMethods(new UsernamePasswordMethod()).setUserManager(userManager);
+      builder.setSocksMethods(new UsernamePasswordMethod(new UsernamePasswordAuthenticator(userManager)));
     } else {
       builder.setSocksMethods(new NoAuthenticationRequiredMethod());
     }
