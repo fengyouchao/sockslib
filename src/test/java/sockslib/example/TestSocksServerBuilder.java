@@ -4,6 +4,7 @@ import sockslib.common.methods.UsernamePasswordMethod;
 import sockslib.server.SocksProxyServer;
 import sockslib.server.SocksServerBuilder;
 import sockslib.server.manager.MongoDBBasedUserManager;
+import sockslib.server.manager.MongoDBConfiguration;
 import sockslib.server.manager.UserManager;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.io.IOException;
 public class TestSocksServerBuilder {
 
   public static void main(String[] args) {
-    UserManager userManager = MongoDBBasedUserManager.newDefaultUserManager();
+    UserManager userManager = newDefaultUserManager();
     SocksProxyServer server =
         SocksServerBuilder.newSocks5ServerBuilder().setUserManager(userManager).setSocksMethods
             (new UsernamePasswordMethod()).build();
@@ -29,4 +30,16 @@ public class TestSocksServerBuilder {
       e.printStackTrace();
     }
   }
+
+  /**
+   * Creates a {@link MongoDBBasedUserManager} instance with no parameters.
+   * This method is same as <code>new MongoDBBasedUserManager("classpath:mongo.properties")</code>.
+   * It will read a configuration file in class path named "mongo.properties".
+   *
+   * @return Instance of <code>MongoDBBasedUserManager</code>
+   */
+  private static MongoDBBasedUserManager newDefaultUserManager() {
+    return new MongoDBBasedUserManager(MongoDBConfiguration.load(MONGO_CONFIG_FILE));
+  }
+  private static final String MONGO_CONFIG_FILE = "classpath:mongo.properties";
 }

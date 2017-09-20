@@ -41,7 +41,6 @@ public class MongoDBBasedUserManager implements UserManager {
   private static final String COLLECTION_NAME = "users";
   private static final String USER_USERNAME_KEY = "un";
   private static final String USER_PASSWORD_KEY = "pw";
-  private static final String MONGO_CONFIG_FILE = "classpath:mongo.properties";
 
   private String usernameKey = USER_USERNAME_KEY;
   private String passwordKey = USER_PASSWORD_KEY;
@@ -58,22 +57,6 @@ public class MongoDBBasedUserManager implements UserManager {
    * Password protector
    */
   private PasswordProtector passwordProtector;
-
-  /**
-   * Constructs a {@link MongoDBBasedUserManager} instance with no parameters.
-   */
-  public MongoDBBasedUserManager() {
-  }
-
-  /**
-   * Constructs a {@link MongoDBBasedUserManager} instance with configuration file path.
-   * This constructor will read a specified file.
-   *
-   * @param configFile Configuration file path. The path support prefix "classpath:" or "file:".
-   */
-  public MongoDBBasedUserManager(String configFile) {
-    this(MongoDBConfiguration.load(configFile));
-  }
 
   /**
    * Constructs a {@link MongoDBBasedUserManager} instance.
@@ -130,16 +113,6 @@ public class MongoDBBasedUserManager implements UserManager {
     passwordProtector = new NonePasswordProtector();
   }
 
-  /**
-   * Creates a {@link MongoDBBasedUserManager} instance with no parameters.
-   * This method is same as <code>new MongoDBBasedUserManager("classpath:mongo.properties")</code>.
-   * It will read a configuration file in class path named "mongo.properties".
-   *
-   * @return Instance of <code>MongoDBBasedUserManager</code>
-   */
-  public static MongoDBBasedUserManager newDefaultUserManager() {
-    return new MongoDBBasedUserManager(MONGO_CONFIG_FILE);
-  }
 
   public User fetchUserFromMongoDB(final String username) {
     return mongoDBUtil.execute(userCollectionName, collection -> {

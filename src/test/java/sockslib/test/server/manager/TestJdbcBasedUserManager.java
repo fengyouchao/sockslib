@@ -37,7 +37,7 @@ public class TestJdbcBasedUserManager {
 
   private static final String DEFAULT_USERNAME = "fucksocks";
   private static final String DEFAULT_PASSWORD = "123";
-  private static final String JDBC_CONFIG_FILE = "classpath:jdbc.properties";
+  private static final String JDBC_CONFIG_FILE = "classpath:jdbc-h2.properties";
   private static final String SQL_DROP_TABLE = "DROP TABLE `SOCKS_USERS` IF EXISTS";
   private static final String SQL_CREATE_TABLE =
       "CREATE TABLE SOCKS_USERS (`username` varchar(50) PRIMARY KEY, `password` varchar(32))";
