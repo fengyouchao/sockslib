@@ -14,8 +14,14 @@
 
 package sockslib.test.client;
 
+import org.junit.After;
+import org.junit.Rule;
+import org.junit.Test;
+import socklib.test.Ports;
+import socklib.test.UnitPort;
 import sockslib.client.Socks5;
 import sockslib.client.SocksProxy;
+import sockslib.client.SocksSocket;
 import sockslib.common.AuthenticationException;
 import sockslib.common.UsernamePasswordCredentials;
 import sockslib.common.methods.NoAuthenticationRequiredMethod;
@@ -26,13 +32,8 @@ import sockslib.server.UsernamePasswordAuthenticator;
 import sockslib.server.manager.MemoryBasedUserManager;
 import sockslib.server.manager.User;
 import sockslib.server.manager.UserManager;
-import org.junit.After;
-import org.junit.Test;
-import sockslib.client.SocksSocket;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 
 /**
  * The class <code>TestSocketSocket</code> is a test class for {@link SocksSocket}
@@ -43,11 +44,12 @@ import java.net.SocketAddress;
  */
 public final class TestSocksSocket {
 
-  private final int SOCKS_SERVER_PORT = 1080;
-  private final String username = "admin";
-  private final String password = "12345";
+  private static final String username = "admin";
+  private static final String password = "12345";
   private SocksProxyServer socksProxyServer;
-  private SocketAddress socks5ServerAddress = new InetSocketAddress("127.0.0.1", SOCKS_SERVER_PORT);
+
+  @Rule
+  public final UnitPort port = new UnitPort();
 
   @After
   public void destroy() throws InterruptedException {
@@ -58,14 +60,14 @@ public final class TestSocksSocket {
   @Test
   public void testNoAuth() throws IOException {
     startNoAuthSocks5Server();
-    SocksProxy proxy = new Socks5(socks5ServerAddress);
+    SocksProxy proxy = new Socks5(Ports.localSocketAddress(port.get()));
     SocksTester.checkConnect(proxy);
   }
 
   @Test
   public void testUsernamePasswordAuth() throws IOException {
     startAuthSocks5Server();
-    SocksProxy proxy = new Socks5(socks5ServerAddress);
+    SocksProxy proxy = new Socks5(Ports.localSocketAddress(port.get()));
     proxy.setCredentials(new UsernamePasswordCredentials(username, password));
     SocksTester.checkConnect(proxy);
   }
@@ -73,21 +75,22 @@ public final class TestSocksSocket {
   @Test(expected = AuthenticationException.class)
   public void testUsernamePasswordAuthFailed() throws IOException {
     startAuthSocks5Server();
-    SocksProxy proxy = new Socks5(socks5ServerAddress);
+    SocksProxy proxy = new Socks5(Ports.localSocketAddress(port.get()));
     proxy.setCredentials(new UsernamePasswordCredentials(username, "wrong password"));
     SocksTester.checkConnect(proxy);
   }
 
-  @Test
+  @Test(timeout = 5000)
   public void testProxyChain() throws IOException {
-    SocksProxyServer server1 = SocksServerBuilder.buildAnonymousSocks5Server(1081);
-    SocksProxyServer server2 = SocksServerBuilder.buildAnonymousSocks5Server(1082);
+    int port1 = port.get(), port2 = Ports.unused(), port3 = Ports.unused();
+    SocksProxyServer server1 = SocksServerBuilder.buildAnonymousSocks5Server(port2);
+    SocksProxyServer server2 = SocksServerBuilder.buildAnonymousSocks5Server(port3);
     startNoAuthSocks5Server();
     server1.start();
     server2.start();
-    SocksProxy proxy = new Socks5("127.0.0.1", 1080);
-    SocksProxy proxy1 = new Socks5("127.0.0.1", 1081);
-    SocksProxy proxy2 = new Socks5("127.0.0.1", 1082);
+    SocksProxy proxy = new Socks5("127.0.0.1", port1);
+    SocksProxy proxy1 = new Socks5("127.0.0.1", port2);
+    SocksProxy proxy2 = new Socks5("127.0.0.1", port3);
     proxy.setChainProxy(proxy1);
     proxy1.setChainProxy(proxy2);
     SocksTester.checkConnect(proxy);
@@ -98,7 +101,8 @@ public final class TestSocksSocket {
 
   private void startNoAuthSocks5Server() throws IOException {
     SocksServerBuilder builder = SocksServerBuilder.newSocks5ServerBuilder();
-    builder.setBindPort(SOCKS_SERVER_PORT).setSocksMethods(new NoAuthenticationRequiredMethod())
+    builder.setBindPort(port.get())
+            .setSocksMethods(new NoAuthenticationRequiredMethod())
         .setDaemon(true);
     socksProxyServer = builder.build();
     socksProxyServer.start();
@@ -108,7 +112,7 @@ public final class TestSocksSocket {
     UserManager userManager = new MemoryBasedUserManager();
     userManager.create(new User(username, password));
     SocksServerBuilder builder = SocksServerBuilder.newSocks5ServerBuilder();
-    builder.setBindPort(SOCKS_SERVER_PORT)
+    builder.setBindPort(port.get())
             .setSocksMethods(new UsernamePasswordMethod(new UsernamePasswordAuthenticator(userManager)));
     socksProxyServer = builder.build();
     socksProxyServer.start();

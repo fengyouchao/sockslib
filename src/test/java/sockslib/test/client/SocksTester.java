@@ -14,6 +14,7 @@
 
 package sockslib.test.client;
 
+import socklib.test.Ports;
 import sockslib.client.SocksProxy;
 import sockslib.client.SocksSocket;
 import sockslib.test.quickstart.SampleTCPServer;
@@ -35,12 +36,9 @@ import java.net.SocketAddress;
  */
 public class SocksTester {
 
-  private static final int REMOTE_SERVER_PORT = 8888;
-  private static final SocketAddress remoteServerAddress =
-      new InetSocketAddress("127.0.0.1", REMOTE_SERVER_PORT);
-
   public static void checkConnect(SocksProxy proxy) throws IOException {
     SampleTCPServer server = new SampleTCPServer();
+    int REMOTE_SERVER_PORT = Ports.unused();
     server.start(REMOTE_SERVER_PORT);
     Socket socket = null;
     InputStream inputStream = null;
@@ -48,7 +46,7 @@ public class SocksTester {
     ByteArrayOutputStream cache = new ByteArrayOutputStream();
     String sendMessage = "Hello fucksocks!\n";
     try {
-      socket = new SocksSocket(proxy, remoteServerAddress);
+      socket = new SocksSocket(proxy, Ports.localSocketAddress(REMOTE_SERVER_PORT));
       inputStream = socket.getInputStream();
       outputStream = socket.getOutputStream();
       outputStream.write(sendMessage.getBytes());

@@ -2,7 +2,9 @@ package socklib.test;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 import sockslib.client.Socks5;
 import sockslib.server.SocksProxyServer;
 import sockslib.server.SocksServerBuilder;
@@ -22,9 +24,15 @@ public class TestSessionListener {
 
   private SocksProxyServer server;
 
+  @Rule
+  public Timeout globalTimeout = new Timeout(4 * 1000);
+
+  @Rule
+  public final UnitPort port = new UnitPort();
+
   @Before
-  public void init() {
-    server = SocksServerBuilder.buildAnonymousSocks5Server();
+  public void init() throws IOException {
+    server = SocksServerBuilder.buildAnonymousSocks5Server(port.get());
   }
 
   @After
@@ -56,7 +64,7 @@ public class TestSessionListener {
   }
 
    private void checkConnect() throws IOException {
-    SocksTester.checkConnect(new Socks5("localhost", 1080));
+    SocksTester.checkConnect(new Socks5("localhost", port.get()));
   }
 
 }

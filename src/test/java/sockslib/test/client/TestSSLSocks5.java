@@ -14,6 +14,9 @@
 
 package sockslib.test.client;
 
+import org.junit.Rule;
+import socklib.test.Ports;
+import socklib.test.UnitPort;
 import sockslib.client.SSLSocks5;
 import sockslib.client.SocksProxy;
 import sockslib.common.SSLConfigurationBuilder;
@@ -36,11 +39,10 @@ import java.net.SocketAddress;
  */
 public final class TestSSLSocks5 {
 
-  private final int PORT = 1080;
   private SocksProxyServer socksProxyServer;
-  private SocketAddress socks5ServerAddress = new InetSocketAddress("127.0.0.1", 1080);
 
-
+  @Rule
+  public final UnitPort port = new UnitPort();
 
   @After
   public void destroy() {
@@ -55,7 +57,7 @@ public final class TestSSLSocks5 {
     SSLConfigurationBuilder builder = SSLConfigurationBuilder.newBuilder();
     builder.setTrustKeyStorePath(SSLResource.getClientTrustStorePath());
     builder.setTrustKeyStorePassword(SSLResource.PASSWORD);
-    SocksProxy proxy = new SSLSocks5(socks5ServerAddress, builder.build());
+    SocksProxy proxy = new SSLSocks5(Ports.localSocketAddress(port.get()), builder.build());
     SocksTester.checkConnect(proxy);
   }
 
@@ -68,7 +70,7 @@ public final class TestSSLSocks5 {
         SSLResource.PASSWORD)
         .setKeyStorePath(SSLResource.getClientKeyStorePath()).setKeyStorePassword(
         SSLResource.PASSWORD);
-    SocksProxy proxy = new SSLSocks5(socks5ServerAddress, builder.build());
+    SocksProxy proxy = new SSLSocks5(Ports.localSocketAddress(port.get()), builder.build());
     SocksTester.checkConnect(proxy);
   }
 
@@ -77,7 +79,7 @@ public final class TestSSLSocks5 {
     builder.setClientAuth(false);
     builder.setKeyStorePath(SSLResource.getServerKeyStorePath());
     builder.setKeyStorePassword(SSLResource.PASSWORD);
-    socksProxyServer = SocksServerBuilder.buildAnonymousSSLSocks5Server(PORT, builder.build());
+    socksProxyServer = SocksServerBuilder.buildAnonymousSSLSocks5Server(port.get(), builder.build());
     socksProxyServer.start();
   }
 
@@ -89,7 +91,7 @@ public final class TestSSLSocks5 {
     builder.setTrustKeyStorePath(SSLResource.getServerTrustStorePath());
     builder.setTrustKeyStorePassword(SSLResource.PASSWORD);
     builder.setClientAuth(true);
-    socksProxyServer = SocksServerBuilder.buildAnonymousSSLSocks5Server(PORT, builder.build());
+    socksProxyServer = SocksServerBuilder.buildAnonymousSSLSocks5Server(port.get(), builder.build());
     socksProxyServer.start();
   }
 
