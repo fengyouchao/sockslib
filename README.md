@@ -1,6 +1,8 @@
 # SocksLib [![Build Status](https://travis-ci.org/fengyouchao/sockslib.svg?branch=master)](https://travis-ci.org/fengyouchao/sockslib) [![Coverage Status](https://coveralls.io/repos/fengyouchao/sockslib/badge.svg?branch=master&service=github)](https://coveralls.io/github/fengyouchao/sockslib?branch=master) [![Coverity Scan Build Status](https://scan.coverity.com/projects/6898/badge.svg)](https://scan.coverity.com/projects/fengyouchao-sockslib)
 
-**SocksLib** is a Java library for **SOCKS5** protocol.
+**SocksLib** is a Java library for **SOCKS5** protocol. 
+
+*This fork makes some minor changes and provides a Maven artifact.*
 
 See [Java API Documentation](http://fengyouchao.github.io/projects/fucksocks/apidocs/index.html)
 
@@ -10,12 +12,12 @@ If you are looking for a SOCKS5 server instead of a SOCKS5 library, I hope [Esoc
 
 ## Maven
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.github.mike10004/sockslib.svg)](https://repo1.maven.org/maven2/com/github/mike10004/fengyouchao-sockslib/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.mike10004/fengyouchao-sockslib.svg)](https://repo1.maven.org/maven2/com/github/mike10004/fengyouchao-sockslib/)
 
     <dependency>
         <groupId>com.github.mike10004</groupId>
         <artifactId>fengyouchao-sockslib</artifactId>
-        <version>1.0.0</version> <!-- use latest version from Maven badge above -->
+        <version>1.0.3</version> <!-- use latest version from Maven badge above -->
     </dependency>
 
 #### References
