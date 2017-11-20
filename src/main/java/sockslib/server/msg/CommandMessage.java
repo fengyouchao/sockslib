@@ -101,7 +101,8 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
 
   @Override
   public int getLength() {
-    return getBytes().length;
+    byte[] bytes = getBytes();
+    return (bytes != null) ? bytes.length : 0;
   }
 
   @Override
