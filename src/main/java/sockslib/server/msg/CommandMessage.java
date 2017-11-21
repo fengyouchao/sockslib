@@ -101,7 +101,8 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
 
   @Override
   public int getLength() {
-    return getBytes().length;
+    byte[] bytes = getBytes();
+    return (bytes != null) ? bytes.length : 0;
   }
 
   @Override
@@ -139,10 +140,12 @@ public class CommandMessage implements ReadableMessage, WritableMessage {
         break;
     }
 
-    bytes[0] = (byte) version;
-    bytes[1] = (byte) command.getValue();
-    bytes[2] = RESERVED;
-    bytes[3] = (byte) addressType;
+    if (bytes != null) {
+      bytes[0] = (byte) version;
+      bytes[1] = (byte) command.getValue();
+      bytes[2] = RESERVED;
+      bytes[3] = (byte) addressType;
+    }
 
     return bytes;
   }
