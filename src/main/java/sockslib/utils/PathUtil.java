@@ -26,7 +26,7 @@ import java.net.URL;
  */
 public class PathUtil {
 
-  private static final String RESOURCE_SEPARATOR = "/";
+  public static final String RESOURCE_SEPARATOR = "/";
 
   /**
    * Returns abstract path.

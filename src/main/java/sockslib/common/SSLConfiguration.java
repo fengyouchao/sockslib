@@ -29,6 +29,7 @@ import java.security.KeyStore;
 import java.util.Properties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static sockslib.utils.PathUtil.RESOURCE_SEPARATOR;
 
 /**
  * The class <code>SSLConfiguration</code> represents a configuration of SSL.
@@ -40,7 +41,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class SSLConfiguration {
 
   private static final Logger logger = LoggerFactory.getLogger(SSLConfiguration.class);
-  private static final String RESOURCE_SEPARATOR = "/";
 
   private KeyStoreInfo keyStoreInfo;
   private KeyStoreInfo trustKeyStoreInfo;
