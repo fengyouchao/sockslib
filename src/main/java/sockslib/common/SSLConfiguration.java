@@ -15,17 +15,12 @@
 package sockslib.common;
 
 import com.google.common.base.Strings;
-import sockslib.utils.PathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sockslib.utils.PathUtil;
 
 import javax.annotation.Nullable;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManagerFactory;
-import java.io.File;
+import javax.net.ssl.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -45,6 +40,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class SSLConfiguration {
 
   private static final Logger logger = LoggerFactory.getLogger(SSLConfiguration.class);
+  private static final String RESOURCE_SEPARATOR = "/";
 
   private KeyStoreInfo keyStoreInfo;
   private KeyStoreInfo trustKeyStoreInfo;
@@ -123,8 +119,8 @@ public class SSLConfiguration {
   public static SSLConfiguration loadClassPath(String filePath) throws FileNotFoundException,
       IOException {
     checkNotNull(filePath, "Argument [filePath] may not be null");
-    if (!filePath.startsWith(File.separator)) {
-      filePath = File.separator + filePath;
+    if (!filePath.startsWith(RESOURCE_SEPARATOR)) {
+      filePath = RESOURCE_SEPARATOR + filePath;
     }
     URL url = SSLConfiguration.class.getResource(filePath);
     if (url == null) {
