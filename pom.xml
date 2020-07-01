@@ -17,7 +17,7 @@
         <jdk.version>1.8</jdk.version>
         <guava.version>19.0</guava.version>
         <slf4j-api.version>1.7.12</slf4j-api.version>
-        <log4j.version>2.4</log4j.version>
+        <log4j.version>2.13.3</log4j.version>
         <jsr305.version>3.0.0</jsr305.version>
         <junit.version>4.9</junit.version>
         <mongo.verson>3.0.3</mongo.verson>
