@@ -120,7 +120,7 @@ public class StreamPipe implements Runnable, Pipe {
       runningThread = new Thread(this);
       runningThread.setDaemon(daemon);
       runningThread.start();
-      for (PipeListener listener : pipeListeners) {
+      for (PipeListener listener : getPipeListeners()) {
         listener.onStart(this);
       }
       return true;
@@ -136,8 +136,7 @@ public class StreamPipe implements Runnable, Pipe {
       if (runningThread != null) {
         runningThread.interrupt();
       }
-      for (int i = 0; i < pipeListeners.size(); i++) {
-        PipeListener listener = pipeListeners.get(i);
+      for (PipeListener listener : getPipeListeners()) {
         listener.onStop(this);
       }
       return true;
@@ -170,14 +169,14 @@ public class StreamPipe implements Runnable, Pipe {
       if (length > 0) { // transfer the buffer destination output stream.
         destination.write(buffer, 0, length);
         destination.flush();
-        for (int i = 0; i < pipeListeners.size(); i++) {
-          pipeListeners.get(i).onTransfer(this, buffer, length);
+        for (PipeListener listener : getPipeListeners()) {
+          listener.onTransfer(this, buffer, length);
         }
       }
 
     } catch (IOException e) {
-      for (int i = 0; i < pipeListeners.size(); i++) {
-        pipeListeners.get(i).onError(this, e);
+      for (PipeListener listener : getPipeListeners()) {
+        listener.onError(this, e);
       }
       stop();
     }
@@ -215,12 +214,12 @@ public class StreamPipe implements Runnable, Pipe {
   }
 
   @Override
-  public void addPipeListener(PipeListener pipeListener) {
+  public synchronized void addPipeListener(PipeListener pipeListener) {
     pipeListeners.add(pipeListener);
   }
 
   @Override
-  public void removePipeListener(PipeListener pipeListener) {
+  public synchronized void removePipeListener(PipeListener pipeListener) {
     pipeListeners.remove(pipeListener);
   }
 
@@ -229,8 +228,8 @@ public class StreamPipe implements Runnable, Pipe {
    *
    * @return All {@link PipeListener}.
    */
-  public List<PipeListener> getPipeListeners() {
-    return pipeListeners;
+  public synchronized List<PipeListener> getPipeListeners() {
+    return new ArrayList<>(pipeListeners);
   }
 
   /**
