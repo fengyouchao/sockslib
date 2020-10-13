@@ -19,7 +19,7 @@
         <slf4j-api.version>1.7.12</slf4j-api.version>
         <log4j.version>2.4</log4j.version>
         <jsr305.version>3.0.0</jsr305.version>
-        <junit.version>4.9</junit.version>
+        <junit.version>4.13.1</junit.version>
         <mongo.verson>3.0.3</mongo.verson>
         <tomcat.dbcp.version>6.0.44</tomcat.dbcp.version>
         <h2.version>1.4.188</h2.version>
