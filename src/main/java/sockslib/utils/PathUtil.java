@@ -14,7 +14,6 @@
 
 package sockslib.utils;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
 
@@ -27,6 +26,8 @@ import java.net.URL;
  */
 public class PathUtil {
 
+  public static final String RESOURCE_SEPARATOR = "/";
+
   /**
    * Returns abstract path.
    *
@@ -37,8 +38,8 @@ public class PathUtil {
   public static String getAbstractPath(String path) throws FileNotFoundException {
     if (path != null && path.startsWith("classpath:")) {
       String classPathValue = path.split(":")[1];
-      if (!classPathValue.startsWith(File.separator)) {
-        classPathValue = File.separator + classPathValue;
+      if (!classPathValue.startsWith(RESOURCE_SEPARATOR)) {
+        classPathValue = RESOURCE_SEPARATOR + classPathValue;
       }
 
       URL url = PathUtil.class.getResource(classPathValue);
