@@ -22,7 +22,7 @@
         <junit.version>4.13.1</junit.version>
         <mongo.verson>3.0.3</mongo.verson>
         <tomcat.dbcp.version>6.0.44</tomcat.dbcp.version>
-        <h2.version>1.4.188</h2.version>
+        <h2.version>2.1.210</h2.version>
     </properties>
 
     <dependencies>
